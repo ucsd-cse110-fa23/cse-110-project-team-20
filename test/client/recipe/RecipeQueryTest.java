@@ -18,6 +18,6 @@ public class RecipeQueryTest {
 
     String expected = "Create a recipe with Apple as Breakfast";
 
-    assertEquals(expected, query.toString());
+    assertEquals(expected, query.toQueryableString());
   }
 }

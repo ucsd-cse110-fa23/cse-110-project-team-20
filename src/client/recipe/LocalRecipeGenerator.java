@@ -26,7 +26,7 @@ public class LocalRecipeGenerator implements GenerateRecipe {
         onRecipeGenerationFailed.onRecipeGenerationFailed();
       }
 
-      String recipe = String.format(RECIPE_FORMAT, query);
+      String recipe = String.format(RECIPE_FORMAT, query.toQueryableString());
       onRecipeGenerated.onRecipeGenerated(recipe);
     });
     t.start();

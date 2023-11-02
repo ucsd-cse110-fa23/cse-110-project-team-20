@@ -6,5 +6,5 @@ public interface RecipeQueryable {
    *
    * @return queryable string
    */
-  public String toString();
+  public String toQueryableString();
 }

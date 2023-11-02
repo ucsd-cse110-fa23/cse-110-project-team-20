@@ -18,7 +18,7 @@ public class LocalRecipeGeneratorTest {
 
     RecipeQueryable query = new RecipeQueryable() {
       @Override
-      public String toString() {
+      public String toQueryableString() {
         return "this is a test query";
       }
     };
@@ -42,7 +42,7 @@ public class LocalRecipeGeneratorTest {
 
     RecipeQueryable query = new RecipeQueryable() {
       @Override
-      public String toString() {
+      public String toQueryableString() {
         return "this is a test query";
       }
     };

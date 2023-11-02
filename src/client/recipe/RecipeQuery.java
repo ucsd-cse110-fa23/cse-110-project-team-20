@@ -15,7 +15,7 @@ public class RecipeQuery implements RecipeQueryable {
   }
 
   @Override
-  public String toString() {
+  public String toQueryableString() {
     return String.format(PROMPT_TEMPLATE, this.ingredients, this.mealType);
   }
 }
