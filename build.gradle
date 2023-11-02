@@ -56,10 +56,12 @@ sourceSets {
 
 task runServer(type: JavaExec) {
     group = "Execution"
-    mainClass = 'edu.ucsd.cse110.pantrypal.server.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'server.Main'
 }
 
 task runApp(type: JavaExec) {
     group = "Execution"
-    mainClass = 'edu.ucsd.cse110.pantrypal.ui.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'client.Main'
 }
