@@ -60,7 +60,6 @@ class RecordingPage extends VBox {
     private Button stopButton;
     private AudioFormat audioFormat;
     private TargetDataLine targetDataLine;
-    private Label recordingLabel;
     private Label title;
 
     private boolean recording;
@@ -100,10 +99,7 @@ class RecordingPage extends VBox {
         startButton = new Button("Start recording");
         startButton.setStyle(defaultButtonStyle);
 
-        recordingLabel = new Label("Recording...");
-        recordingLabel.setStyle(defaultLabelStyle);
-
-        this.getChildren().addAll(title, startButton, recordingLabel);
+        this.getChildren().addAll(title, startButton);
 
         // Get the audio format
         audioFormat = getAudioFormat();
@@ -168,7 +164,6 @@ class RecordingPage extends VBox {
                     targetDataLine = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
                     targetDataLine.open(audioFormat);
                     targetDataLine.start();
-                    recordingLabel.setVisible(true);
 
                     // the AudioInputStream that will be used to write the audio data to a file
                     AudioInputStream audioInputStream = new AudioInputStream(targetDataLine);
@@ -176,7 +171,6 @@ class RecordingPage extends VBox {
                     // the file that will contain the audio data
                     File audioFile = new File(fileName);
                     AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, audioFile);
-                    recordingLabel.setVisible(false);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
