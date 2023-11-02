@@ -1,33 +1,27 @@
-package client;
+package com.example.project;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-
+import com.example.project.SceneFiles.HomeScene;
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.geometry.Pos;
+import javafx.stage.Stage;
 
-import java.util.ArrayList;
 /**
  * Home screen for PantryPals
  */
 public class PantryHome extends Application{
-    //TODO: Replace with Recipe object
-    ArrayList<String> recipleList;
-    public void PantryHome() {
-        //TODO:
+    //ArrayList<String> recipleList;
+    Stage mainStage;
 
+    public static void main(String[] args) {
+        launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'start'");
+        primaryStage.setTitle("PantryPals");
+        primaryStage.setResizable(false);
+        primaryStage.setScene(new Scene(new HomeScene()));
+        primaryStage.show();
     }
 }
+

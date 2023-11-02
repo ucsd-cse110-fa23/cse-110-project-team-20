@@ -1,44 +1,48 @@
-package client.SceneFiles;
+package com.example.project.SceneFiles;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-
-import java.util.*;
-
-import javafx.application.Application;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
+import com.example.project.Recipe;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.geometry.Pos;
 
-public class HomeScene {
-    Button createButton;
-    private Header header;
+import java.util.LinkedList;
 
-    //TODO: Replace "string" with the object type of recipe
-    LinkedList<String> recipeList;
+public class HomeScene extends BorderPane {
+    private static Header header = new Header();
+    private static RecipeList recipeList = new RecipeList();
+
     public HomeScene () {
-        //TODO: Add UI elements for scene
-        this.createButton = new Button("Create +");
-        this.recipeList = new LinkedList<>();
+        this.setTop(header);
+        this.setCenter(new ScrollPane(recipeList));
+        this.setPrefSize(500, 800);
     }
 }
 
-class Header extends HBox{
+class Header extends BorderPane {
+    private Label appName;
+    private Button createButton;
+
     public Header() {
         this.setPrefSize(500, 60); // Size of the header
         this.setStyle("-fx-background-color: #F0F8FF;");
 
         // titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
-        // this.getChildren().add(titleText);
-        this.setAlignment(Pos.CENTER); // Align the text to the Center
+        this.createButton = new Button("Create +");
+        this.appName = new Label("Pantry Pals");
+        this.setLeft(appName);
+        this.setRight(createButton);
+    }
+}
+
+class RecipeList extends VBox{
+    private static LinkedList<Recipe> recipes = new LinkedList<Recipe>();
+
+    public RecipeList() {
+        for (int i = 0; i < recipes.size(); i++)
+        {
+            this.getChildren().add(recipes.get(i));
+        }
     }
 }

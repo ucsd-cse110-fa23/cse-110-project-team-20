@@ -1,10 +1,4 @@
-package client;
-
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+package com.example.project;
 
 public class View {
     //TODO: 
