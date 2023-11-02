@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    version = "17.0.8"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+dependencies {
+    def junitVersion = '5.8.1'
+
+    // This provides the JUnit API.
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    // This provides the TestEngine to actually run the tests.
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        csv.required = true
+        html.required = true
+    }
+}
+
+sourceSets {
+    main.java.srcDirs = ['src']
+    main.resources.srcDirs = ['resources']
+    test.java.srcDirs = ['test']
+    test.resources.srcDirs = ['test/resources']
+}
+
+task runServer(type: JavaExec) {
+    group = "Execution"
+    mainClass = 'edu.ucsd.cse110.pantrypal.server.Main'
+}
+
+task runApp(type: JavaExec) {
+    group = "Execution"
+    mainClass = 'edu.ucsd.cse110.pantrypal.ui.Main'
+}
