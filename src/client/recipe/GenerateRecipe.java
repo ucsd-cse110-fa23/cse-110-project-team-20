@@ -10,5 +10,5 @@ public interface GenerateRecipe {
    * @param onRecipeGenerated
    * @param onRecipeGenerationFailed
    */
-  public void requestGeneratingRecipe(String query, RecipeGenerated onRecipeGenerated, RecipeGenerationFailed onRecipeGenerationFailed);
+  public void requestGeneratingRecipe(RecipeQueryable query, RecipeGenerated onRecipeGenerated, RecipeGenerationFailed onRecipeGenerationFailed);
 }

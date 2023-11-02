@@ -15,11 +15,19 @@ public class LocalRecipeGeneratorTest {
     CompletableFuture<String> future = new CompletableFuture<>();
 
     LocalRecipeGenerator generator = new LocalRecipeGenerator();
-    generator.requestGeneratingRecipe("Tomato, garlic, cucumber, and watermelon for dinner", (recipe) -> {
+
+    RecipeQueryable query = new RecipeQueryable() {
+      @Override
+      public String toString() {
+        return "this is a test query";
+      }
+    };
+
+    generator.requestGeneratingRecipe(query, (recipe) -> {
       future.complete(recipe);
     }, null);
 
-    String expected = "This is a recipe that is generated with a given query (query: \"Tomato, garlic, cucumber, and watermelon for dinner\")";
+    String expected = "This is a recipe that is generated with a given query (query: \"this is a test query\")";
     String actual = future.get();
 
     assertEquals(expected, actual);
@@ -32,7 +40,14 @@ public class LocalRecipeGeneratorTest {
     LocalRecipeGenerator generator = new LocalRecipeGenerator();
     generator.setAlwaysFail(true);
 
-    generator.requestGeneratingRecipe("Tomato, garlic, cucumber, and watermelon for dinner", null, () -> {
+    RecipeQueryable query = new RecipeQueryable() {
+      @Override
+      public String toString() {
+        return "this is a test query";
+      }
+    };
+
+    generator.requestGeneratingRecipe(query, null, () -> {
       future.complete(true);
     });
 

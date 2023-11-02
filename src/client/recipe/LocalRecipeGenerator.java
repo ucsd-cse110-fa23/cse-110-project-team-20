@@ -7,7 +7,8 @@ package client.recipe;
  * so that user interation is not interrupted during any generation.
  */
 public class LocalRecipeGenerator implements GenerateRecipe {
-  private String format = "This is a recipe that is generated with a given query (query: \"%s\")";
+  private static final String RECIPE_FORMAT = "This is a recipe that is generated with a given query (query: \"%s\")";
+
   private boolean alwaysFail = false;
 
   public void setAlwaysFail(boolean alwaysFail) {
@@ -15,13 +16,17 @@ public class LocalRecipeGenerator implements GenerateRecipe {
   }
 
   @Override
-  public void requestGeneratingRecipe(String query, RecipeGenerated onRecipeGenerated, RecipeGenerationFailed onRecipeGenerationFailed) {
+  public void requestGeneratingRecipe(
+    RecipeQueryable query,
+    RecipeGenerated onRecipeGenerated,
+    RecipeGenerationFailed onRecipeGenerationFailed) {
+
     Thread t = new Thread(() -> {
       if (alwaysFail) {
         onRecipeGenerationFailed.onRecipeGenerationFailed();
       }
 
-      String recipe = String.format(format, query);
+      String recipe = String.format(RECIPE_FORMAT, query);
       onRecipeGenerated.onRecipeGenerated(recipe);
     });
     t.start();
