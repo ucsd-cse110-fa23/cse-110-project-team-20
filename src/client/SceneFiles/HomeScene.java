@@ -1,6 +1,6 @@
-package com.example.project.SceneFiles;
+package client.SceneFiles;
 
-import com.example.project.Recipe;
+import client.RecipeBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -37,7 +37,7 @@ class Header extends BorderPane {
 }
 
 class RecipeList extends VBox{
-    private static LinkedList<Recipe> recipes = new LinkedList<Recipe>();
+    private static LinkedList<RecipeBox> recipes = new LinkedList<RecipeBox>();
 
     public RecipeList() {
         for (int i = 0; i < recipes.size(); i++)

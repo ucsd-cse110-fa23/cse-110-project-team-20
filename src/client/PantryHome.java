@@ -1,6 +1,6 @@
-package com.example.project;
+package client;
 
-import com.example.project.SceneFiles.HomeScene;
+import client.SceneFiles.HomeScene;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -9,7 +9,6 @@ import javafx.stage.Stage;
  * Home screen for PantryPals
  */
 public class PantryHome extends Application{
-    //ArrayList<String> recipleList;
     Stage mainStage;
 
     public static void main(String[] args) {

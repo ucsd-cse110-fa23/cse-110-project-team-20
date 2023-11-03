@@ -1,4 +1,4 @@
-package com.example.project;
+package client;
 
 public class Controller {
     //TODO:

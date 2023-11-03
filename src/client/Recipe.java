@@ -1,24 +1,23 @@
-package com.example.project;
+package client;
 
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-
-public class Recipe extends HBox {
-    private String name;
+public class Recipe {
+    private String title;
     private String description;
-    private Label nameLabel;
-    public Recipe(String name, String description) {
-        this.name = name;
-        this.description =description;
-        this.nameLabel = new Label(name);
-        this.getChildren().add(nameLabel);
+
+    public Recipe (String title, String description) {
+        this.title = title;
+        this.description = description;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
