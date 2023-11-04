@@ -1,5 +1,6 @@
 package server.request;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.HashMap;
@@ -19,6 +20,9 @@ public class HttpRequest implements IHttpRequest {
 
     private void parseQuery(HttpExchange httpExchange) {
         String queryData = httpExchange.getRequestURI().getRawQuery();
+        if (queryData == null) {
+            return;
+        }
         for (String parameter : queryData.split("&")) {
             String key = parameter.substring(0, parameter.indexOf("="));
             String value = parameter.substring(parameter.indexOf("=") + 1);
