@@ -1,17 +1,18 @@
 package client.recipe;
 
-import server.chatgpt.RecipeQueryable;
-
-// @TODO Update RecipeQueryable from strings to files
 public interface GenerateRecipe {
 
   /**
-   * Request generating recipe with query. When the generator created a recipe, onRecipeGenerated will be called with
-   * a generated recipe as string. When generation is failed, onRecipeGenerationFailed will be called.
+   * Request generating recipe with RecipeRequestParameter. When the generator created a recipe, onRecipeGenerated
+   * will be called with a generated recipe as string. When generation is failed, onRecipeGenerationFailed will be called.
    *
-   * @param query
+   * @param parameter
    * @param onRecipeGenerated
    * @param onRecipeGenerationFailed
    */
-  public void requestGeneratingRecipe(RecipeQueryable query, RecipeGenerated onRecipeGenerated, RecipeGenerationFailed onRecipeGenerationFailed);
+  public void requestGeneratingRecipe(
+    RecipeRequestParameter parameter,
+    RecipeGenerated onRecipeGenerated,
+    RecipeGenerationFailed onRecipeGenerationFailed
+  );
 }

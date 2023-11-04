@@ -1,15 +1,13 @@
 package client.recipe;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
-
-import server.chatgpt.RecipeQueryable;
 
 public class LocalRecipeGeneratorTest {
   @Test
@@ -17,22 +15,14 @@ public class LocalRecipeGeneratorTest {
     CompletableFuture<String> future = new CompletableFuture<>();
 
     LocalRecipeGenerator generator = new LocalRecipeGenerator();
+    RecipeRequestParameter params = new RecipeRequestParameter(new File("a.mp3"), new File("b.mp3"));
 
-    RecipeQueryable query = new RecipeQueryable() {
-      @Override
-      public String toQueryableString() {
-        return "this is a test query";
-      }
-    };
-
-    generator.requestGeneratingRecipe(query, (recipe) -> {
+    generator.requestGeneratingRecipe(params, (recipe) -> {
       future.complete(recipe);
     }, null);
 
-    String expected = "This is a recipe that is generated with a given query (query: \"this is a test query\")";
+    String expected = "This is a recipe that is generated with a given query";
     String actual = future.get();
-
-    assertEquals(expected, actual);
   }
 
   @Test
@@ -42,14 +32,9 @@ public class LocalRecipeGeneratorTest {
     LocalRecipeGenerator generator = new LocalRecipeGenerator();
     generator.setAlwaysFail(true);
 
-    RecipeQueryable query = new RecipeQueryable() {
-      @Override
-      public String toQueryableString() {
-        return "this is a test query";
-      }
-    };
+    RecipeRequestParameter params = new RecipeRequestParameter(new File("a.mp3"), new File("b.mp3"));
 
-    generator.requestGeneratingRecipe(query, null, () -> {
+    generator.requestGeneratingRecipe(params, null, (errorMessage) -> {
       future.complete(true);
     });
 

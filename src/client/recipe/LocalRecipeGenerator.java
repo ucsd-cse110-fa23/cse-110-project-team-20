@@ -1,16 +1,13 @@
 package client.recipe;
 
-import server.chatgpt.RecipeQueryable;
-
 /**
  * Local Recipe Generator
  * 
  * GenerateRecipe implementation for handling recipe generation without remote calling. It uses a thread
  * so that user interation is not interrupted during any generation.
  */
-// @TODO Remove, it will be placed in server
 public class LocalRecipeGenerator implements GenerateRecipe {
-  private static final String RECIPE_FORMAT = "This is a recipe that is generated with a given query (query: \"%s\")";
+  private static final String RECIPE_FORMAT = "This is a recipe that is generated with a given query";
 
   private boolean alwaysFail = false;
 
@@ -20,16 +17,16 @@ public class LocalRecipeGenerator implements GenerateRecipe {
 
   @Override
   public void requestGeneratingRecipe(
-    RecipeQueryable query,
+    RecipeRequestParameter parameter,
     RecipeGenerated onRecipeGenerated,
     RecipeGenerationFailed onRecipeGenerationFailed) {
 
     Thread t = new Thread(() -> {
       if (alwaysFail) {
-        onRecipeGenerationFailed.onRecipeGenerationFailed();
+        onRecipeGenerationFailed.onRecipeGenerationFailed("AlwaysFail is on");
       }
 
-      String recipe = String.format(RECIPE_FORMAT, query.toQueryableString());
+      String recipe = String.format(RECIPE_FORMAT);
       onRecipeGenerated.onRecipeGenerated(recipe);
     });
     t.start();
