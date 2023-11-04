@@ -27,6 +27,8 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     // This provides the TestEngine to actually run the tests.
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    // Add a dependency to json-20231013.jar in the lib directory
+    implementation group: 'org.json', name: 'json', version: '20231013'
 }
 
 test {
