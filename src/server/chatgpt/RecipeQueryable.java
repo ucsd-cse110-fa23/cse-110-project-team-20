@@ -1,4 +1,4 @@
-package client.recipe;
+package server.chatgpt;
 
 public interface RecipeQueryable {
   /**

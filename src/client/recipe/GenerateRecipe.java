@@ -1,5 +1,8 @@
 package client.recipe;
 
+import server.chatgpt.RecipeQueryable;
+
+// @TODO Update RecipeQueryable from strings to files
 public interface GenerateRecipe {
 
   /**

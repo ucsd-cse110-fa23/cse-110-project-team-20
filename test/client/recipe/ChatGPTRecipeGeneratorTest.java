@@ -9,8 +9,9 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import client.chatgpt.ChatGPTConfiguration;
-import client.chatgpt.IChatGPTConfiguration;
+import server.chatgpt.ChatGPTConfiguration;
+import server.chatgpt.IChatGPTConfiguration;
+import server.chatgpt.RecipeQuery;
 
 public class ChatGPTRecipeGeneratorTest {
   @Test

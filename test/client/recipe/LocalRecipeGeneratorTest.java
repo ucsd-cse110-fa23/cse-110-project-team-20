@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
+import server.chatgpt.RecipeQueryable;
+
 public class LocalRecipeGeneratorTest {
   @Test
   public void generateRecipe() throws InterruptedException, ExecutionException {

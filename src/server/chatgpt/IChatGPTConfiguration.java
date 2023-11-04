@@ -1,4 +1,4 @@
-package client.chatgpt;
+package server.chatgpt;
 
 public interface IChatGPTConfiguration {
   public String apiKey();
