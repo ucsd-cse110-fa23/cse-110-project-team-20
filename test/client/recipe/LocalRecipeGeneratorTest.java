@@ -1,5 +1,6 @@
 package client.recipe;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -23,6 +24,8 @@ public class LocalRecipeGeneratorTest {
 
     String expected = "This is a recipe that is generated with a given query";
     String actual = future.get();
+
+    assertEquals(expected, actual);
   }
 
   @Test
