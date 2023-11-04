@@ -6,9 +6,9 @@ import javafx.scene.layout.HBox;
 public class RecipeBox extends HBox {
     private Recipe recipe;
     private Label nameLabel;
-    public RecipeBox(String title, String description) {
-        recipe = new Recipe(title, description);
-        this.nameLabel = new Label(title);
+    public RecipeBox(Recipe recipe) {
+        this.recipe = recipe;
+        this.nameLabel = new Label(recipe.getTitle());
         this.getChildren().add(nameLabel);
     }
 
