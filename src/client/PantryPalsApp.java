@@ -1,7 +1,5 @@
 package client;
-
-import client.components.HomeScene;
-import java.util.ArrayList;
+import client.Controller;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -22,9 +20,7 @@ public class PantryPalsApp extends Application {
     public void
     start(Stage primaryStage) throws Exception
     {
-        primaryStage.setTitle("PantryPals");
-        primaryStage.setResizable(false);
-        controller = new Controller(primaryStage);
-        primaryStage.show();
+        Controller controller = new Controller(primaryStage);
+        controller.start();
     }
 }

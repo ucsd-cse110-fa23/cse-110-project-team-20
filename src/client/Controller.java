@@ -1,6 +1,7 @@
 package client;
 
 import client.components.AnimatedLoadingBar;
+import client.components.HomePage;
 import client.components.RecordingPage;
 import java.util.ArrayList;
 import javafx.scene.Scene;
@@ -24,8 +25,9 @@ public class Controller {
     private State state;
     private Stage primaryStage;
     private Model model;
-    private Scene recordMealType, recordIngredients, loading;
+    private Scene recordMealType, recordIngredients, loading, home;
     private RecordingPage mealTypePage, ingredientsPage;
+    private HomePage homePage;
     private AnimatedLoadingBar loadingPage;
     private static final int WIDTH = 500, HEIGHT = 500;
 
@@ -38,7 +40,7 @@ public class Controller {
         this.primaryStage = primaryStage;
         this.model = new Model();
         this.recording = false;
-        this.state = State.RECORDING_MEAL_TYPE;
+        this.state = State.HOME;
 
         mealTypePage = new RecordingPage(
             "What kind of meal do you want?\nLunch, Dinner, Snack etc.", MEAL_TYPE_AUDIO);
@@ -52,10 +54,14 @@ public class Controller {
         loadingPage = new AnimatedLoadingBar();
         loadingPage.setLoadingText("Finding the perfect recipe...");
         this.loading = new Scene(loadingPage, WIDTH, HEIGHT);
+
+        homePage = new HomePage(new ArrayList());
+        homePage.setCreateButtonCallback(() -> createRecipeButtonClicked());
+        this.home = new Scene(homePage, WIDTH, HEIGHT);
         // Set the title of the app
         primaryStage.setTitle("PantryPal");
         // Create scene of mentioned size with the border pane
-        primaryStage.setScene(recordMealType);
+        primaryStage.setScene(this.home);
         // Make window non-resizable
         primaryStage.setResizable(false);
     }
@@ -128,6 +134,12 @@ public class Controller {
             this.mealTypePage.startRecording();
         }
         recording = !recording;
+    }
+
+    public void
+    createRecipeButtonClicked()
+    {
+        this.transitionToMealTypeScene();
     }
 
     // TODO: Add methods for making requests through Model, and add button actions when adding the
