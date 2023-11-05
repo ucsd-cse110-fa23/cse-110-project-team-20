@@ -1,4 +1,4 @@
-package client.recipe;
+package server.chatgpt;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,9 +10,7 @@ import java.net.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import client.chatgpt.IChatGPTConfiguration;
-
-public class ChatGPTRecipeGenerator implements GenerateRecipe {
+public class ChatGPTService implements IChatGPTService {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/completions";
   private static final String MODEL = "text-davinci-003";
 
@@ -21,30 +19,11 @@ public class ChatGPTRecipeGenerator implements GenerateRecipe {
 
   IChatGPTConfiguration configuration;
 
-  public ChatGPTRecipeGenerator(IChatGPTConfiguration configuration) {
+  public ChatGPTService(IChatGPTConfiguration configuration) {
     this.configuration = configuration;
   }
 
-  @Override
-  public void requestGeneratingRecipe(
-      RecipeQueryable query,
-      RecipeGenerated onRecipeGenerated,
-      RecipeGenerationFailed onRecipeGenerationFailed) {
-
-    Thread t = new Thread(() -> {
-      try {
-        String recipe = request(query);
-        onRecipeGenerated.onRecipeGenerated(recipe);
-      } catch (Exception e) {
-        e.printStackTrace();
-        onRecipeGenerationFailed.onRecipeGenerationFailed();
-      }
-    });
-    t.start();
-  }
-
-  private String request(RecipeQueryable query)
-      throws IOException, InterruptedException, URISyntaxException {
+  public String request(RecipeQueryable query) throws ChatGPTServiceException {
 
     String prompt = query.toQueryableString();
 
@@ -55,20 +34,41 @@ public class ChatGPTRecipeGenerator implements GenerateRecipe {
     requestBody.put("temperature", TEMPERATURE);
     requestBody.put("prompt", prompt);
 
+    URI uri;
+
+    try {
+      uri = new URI(API_ENDPOINT);
+    } catch (URISyntaxException e) {
+      throw new ChatGPTServiceException(e);
+    }
+
     HttpClient client = HttpClient.newHttpClient();
     HttpRequest request = HttpRequest.newBuilder()
-        .uri(new URI(API_ENDPOINT))
+        .uri(uri)
         .header("Content-Type", "application/json")
         .header("Authorization", String.format("Bearer %s", configuration.apiKey()))
         .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
         .build();
 
-    HttpResponse<String> response = client.send(
-        request, HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> response;
+
+    try {
+      response = client.send(
+          request, HttpResponse.BodyHandlers.ofString());
+
+    } catch (IOException e) {
+      throw new ChatGPTServiceException(e);
+    } catch (InterruptedException e) {
+      throw new ChatGPTServiceException(e);
+    }
 
     String responseBody = response.body();
 
     JSONObject responseJson = new JSONObject(responseBody);
+
+    if (responseJson.has("error")) {
+      throw new ChatGPTServiceException(responseJson.getJSONObject("error").getString("message"));
+    }
 
     JSONArray choices = responseJson.getJSONArray("choices");
     String generatedText = choices.getJSONObject(0).getString("text");

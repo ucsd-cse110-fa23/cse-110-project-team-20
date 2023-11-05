@@ -1,4 +1,4 @@
-package client.chatgpt;
+package server.chatgpt;
 
 import java.io.FileInputStream;
 import java.util.Properties;
