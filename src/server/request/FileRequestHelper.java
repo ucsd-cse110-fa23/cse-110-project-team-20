@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,28 +22,28 @@ public class FileRequestHelper {
 
         Map<String, File> fileMap = new HashMap<>();
         MultipartStream multipartStream = new MultipartStream(input,
-                contentTypeHeaderFields.get("boundary").getBytes(StandardCharsets.UTF_8),
+                contentTypeHeaderFields.get("boundary").getBytes(),
                 Integer.valueOf(contentLengthHeader),
                 null);
 
         boolean nextPart = multipartStream.skipPreamble();
         while (nextPart) {
             // process headers
-            Map<String, String> allHeaders = splitHeaders(multipartStream.readHeaders());
-            String inputFieldName = extractFields(allHeaders.get("Content-Disposition")).get("name");
-            String inputFileName = extractFields(allHeaders.get("Content-Disposition")).get("filename");
+            String fileHeaders = multipartStream.readHeaders();
+            if (fileHeaders != null) {
+                Map<String, String> allHeaders = splitHeaders(fileHeaders);
+                String inputFieldName = extractFields(allHeaders.get("Content-Disposition")).get("name");
+                String inputFileName = extractFields(allHeaders.get("Content-Disposition")).get("filename");
 
-            String fileName = inputFileName.replace("\"", "");
-            String fieldName = inputFieldName.replace("\"", "");
-            File newFile = new File("build/tmp/sound-" + System.currentTimeMillis() + "-" + fieldName + "-" + fileName);
-            newFile.createNewFile();
+                String fileName = inputFileName.replace("\"", "");
+                String fieldName = inputFieldName.replace("\"", "");
+                File newFile = new File("build/tmp/sound-" + System.currentTimeMillis() + "-" + fieldName + "-" + fileName);
 
-            FileOutputStream output = new FileOutputStream(newFile);
-            multipartStream.readBodyData(output);
-            output.flush();
-            output.close();
+                FileOutputStream output = new FileOutputStream(newFile);
+                multipartStream.readBodyData(output);
 
-            fileMap.put(fieldName, newFile);
+                fileMap.put(fieldName, newFile);
+            }
             nextPart = multipartStream.readBoundary();
         }
 

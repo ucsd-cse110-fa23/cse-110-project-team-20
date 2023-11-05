@@ -100,7 +100,7 @@ public class ServerRecipeGenerator implements GenerateRecipe {
       String fieldName,
       File file,
       String boundary) throws IOException {
-    outputStream.write(("\r\n--" + boundary + "\r\n").getBytes());
+    outputStream.write(("--" + boundary + "\r\n").getBytes());
     outputStream.write(
         ("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" +
             file.getName() +
@@ -113,6 +113,7 @@ public class ServerRecipeGenerator implements GenerateRecipe {
     while ((bytesRead = fileInputStream.read(buffer)) != -1) {
       outputStream.write(buffer, 0, bytesRead);
     }
+    outputStream.write(("\r\n--" + boundary + "\r\n").getBytes());
     fileInputStream.close();
   }
 
