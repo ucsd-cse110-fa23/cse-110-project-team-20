@@ -24,6 +24,7 @@ public class LocalRecipeGenerator implements GenerateRecipe {
     Thread t = new Thread(() -> {
       if (alwaysFail) {
         onRecipeGenerationFailed.onRecipeGenerationFailed("AlwaysFail is on");
+        return;
       }
 
       String recipe = String.format(RECIPE_FORMAT);
