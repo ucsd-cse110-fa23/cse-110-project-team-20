@@ -327,8 +327,7 @@ gradle-app.setting
 *.hprof
 
 # .wav recording files
-ingredients.wav
-meal_type.wav
+*.wav
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,java,gradle,visualstudiocode,intellij,eclipse
 
