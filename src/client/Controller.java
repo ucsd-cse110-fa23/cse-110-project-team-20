@@ -5,7 +5,6 @@ import client.components.HomePage;
 import client.components.RecordingPage;
 import client.components.NewRecipeConfirmPage;
 import client.recipe.GenerateRecipe;
-import client.recipe.GenerateRecipeHelper;
 import client.recipe.RecipeRequestParameter;
 
 import java.io.File;
@@ -115,8 +114,7 @@ public class Controller {
             params,
             (recipe) -> {
                 Platform.runLater(() -> {
-                    Recipe recipeObj = GenerateRecipeHelper.convertJsonResponseToRecipe(recipe);
-                    transitionToNewRecipeConfirmPage(recipeObj);
+                    transitionToNewRecipeConfirmPage(recipe);
                 });
             },
             (errorMessage) -> {
