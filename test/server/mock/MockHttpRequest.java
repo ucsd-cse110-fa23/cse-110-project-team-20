@@ -3,12 +3,15 @@ package server.mock;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import com.sun.net.httpserver.Headers;
+
 import server.request.IHttpRequest;
 
 public class MockHttpRequest implements IHttpRequest {
     private HashMap<String, String> mockQuery;
     private String mockRequestBodyAsString;
     private InputStream mockRequestBody;
+    private Headers mockHeaders;
 
     public void setQuery(HashMap<String, String> query) {
         mockQuery = query;
@@ -20,6 +23,10 @@ public class MockHttpRequest implements IHttpRequest {
 
     public void setRequestBody(InputStream requestBody) {
         mockRequestBody = requestBody;
+    }
+
+    public void setHeaders(Headers headers) {
+        mockHeaders = headers;
     }
 
     @Override
@@ -35,5 +42,10 @@ public class MockHttpRequest implements IHttpRequest {
     @Override
     public InputStream getRequestBody() {
         return mockRequestBody;
+    }
+
+    @Override
+    public Headers getHeaders() {
+        return mockHeaders;
     }
 }

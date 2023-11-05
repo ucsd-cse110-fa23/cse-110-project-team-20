@@ -64,8 +64,8 @@ public class ServerRecipeGenerator implements GenerateRecipe {
     OutputStream outputStream = connection.getOutputStream();
 
     // Write file parameter to request body
-    writeFileToOutputStream(outputStream, mealTypeFile, boundary);
-    writeFileToOutputStream(outputStream, ingredientsFile, boundary);
+    writeFileToOutputStream(outputStream, "meal_type_file", mealTypeFile, boundary);
+    writeFileToOutputStream(outputStream, "ingredients_file", ingredientsFile, boundary);
 
     // Write closing boundary to request body
     outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
@@ -97,11 +97,12 @@ public class ServerRecipeGenerator implements GenerateRecipe {
   // ref: Lab 4
   private static void writeFileToOutputStream(
       OutputStream outputStream,
+      String fieldName,
       File file,
       String boundary) throws IOException {
-    outputStream.write(("--" + boundary + "\r\n").getBytes());
+    outputStream.write(("\r\n--" + boundary + "\r\n").getBytes());
     outputStream.write(
-        ("Content-Disposition: form-data; name=\"file\"; filename=\"" +
+        ("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" +
             file.getName() +
             "\"\r\n").getBytes());
     outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());

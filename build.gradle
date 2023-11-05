@@ -27,6 +27,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     implementation 'org.json:json:20230227'
 
+    // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
+    implementation 'commons-fileupload:commons-fileupload:1.5'
+
     // This provides the JUnit API.
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     // This provides the TestEngine to actually run the tests.

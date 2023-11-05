@@ -1,11 +1,11 @@
 package server.request;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 public class HttpRequest implements IHttpRequest {
@@ -51,5 +51,10 @@ public class HttpRequest implements IHttpRequest {
 
         scanner.close();
         return sb.toString();
+    }
+
+    @Override
+    public Headers getHeaders() {
+        return httpExchange.getRequestHeaders();
     }
 }

@@ -2,9 +2,15 @@ package client.recipe.mock;
 
 import com.sun.net.httpserver.*;
 import java.util.concurrent.*;
+
+import org.json.JSONObject;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 
 public class MockHttpServer {
     private static final int SERVER_PORT = 8100;
@@ -44,6 +50,12 @@ class MockRequestHandler implements HttpHandler {
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("test/resources/audio-request-header.json"));
+        writer.write(new JSONObject(httpExchange.getRequestHeaders()).toString(2));
+        writer.close();
+        BufferedWriter bwriter = new BufferedWriter(new FileWriter("test/resources/audio-request-body.txt"));
+        bwriter.write(new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
+        bwriter.close();
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream outStream = httpExchange.getResponseBody();
         outStream.write(response.getBytes());
