@@ -90,46 +90,58 @@ public class Whisper {
     transcribe(File file)
     {
         // Set up HTTP connection
-        URL url = new URI(API_ENDPOINT).toURL();
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-
-        // Set up request headers
-        String boundary = "Boundary-" + System.currentTimeMillis();
-        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-        connection.setRequestProperty("Authorization", "Bearer " + TOKEN);
-
-        // Set up output stream to write request body
-        OutputStream outputStream = connection.getOutputStream();
-
-        // Write model parameter to request body
-        writeParameterToOutputStream(outputStream, "model", MODEL, boundary);
-
-        // Write file parameter to request body
-        writeFileToOutputStream(outputStream, file, boundary);
-
-        // Write closing boundary to request body
-        outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
-
-        // Flush and close output stream
-        outputStream.flush();
-        outputStream.close();
-
-        // Get response code
-        int responseCode = connection.getResponseCode();
-
-        String transcription;
-
-        // Check response code and handle response accordingly
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            transcription = handleSuccessResponse(connection);
-        } else {
-            transcription = handleErrorResponse(connection);
+        URL url;
+        try {
+            url = new URI(API_ENDPOINT).toURL();
+        } catch (Exception e) {
+            System.err.println("Could not parse API endpoint");
+            return "";
         }
+        HttpURLConnection connection;
+        String transcription;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true);
 
-        // Disconnect connection
-        connection.disconnect();
+            // Set up request headers
+            String boundary = "Boundary-" + System.currentTimeMillis();
+            connection.setRequestProperty(
+                "Content-Type", "multipart/form-data; boundary=" + boundary);
+            connection.setRequestProperty("Authorization", "Bearer " + TOKEN);
+
+            // Set up output stream to write request body
+            OutputStream outputStream = connection.getOutputStream();
+
+            // Write model parameter to request body
+            writeParameterToOutputStream(outputStream, "model", MODEL, boundary);
+
+            // Write file parameter to request body
+            writeFileToOutputStream(outputStream, file, boundary);
+
+            // Write closing boundary to request body
+            outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
+
+            // Flush and close output stream
+            outputStream.flush();
+            outputStream.close();
+
+            // Get response code
+            int responseCode = connection.getResponseCode();
+
+            // Check response code and handle response accordingly
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                transcription = handleSuccessResponse(connection);
+            } else {
+                transcription = handleErrorResponse(connection);
+            }
+
+            // Disconnect connection
+            connection.disconnect();
+        } catch (IOException e) {
+            System.err.println("IO Exception with connection");
+            return "";
+        }
 
         return transcription;
     }
