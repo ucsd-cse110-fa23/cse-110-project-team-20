@@ -23,6 +23,10 @@ javafx {
 dependencies {
     def junitVersion = '5.8.1'
 
+    // This provides json handling in ChatGPT API
+    // https://mvnrepository.com/artifact/org.json/json
+    implementation 'org.json:json:20230227'
+
     // This provides the JUnit API.
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     // This provides the TestEngine to actually run the tests.
@@ -54,10 +58,12 @@ sourceSets {
 
 task runServer(type: JavaExec) {
     group = "Execution"
-    mainClass = 'edu.ucsd.cse110.pantrypal.server.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'server.Main'
 }
 
 task runApp(type: JavaExec) {
     group = "Execution"
-    mainClass = 'edu.ucsd.cse110.pantrypal.ui.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'client.Main'
 }

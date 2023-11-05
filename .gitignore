@@ -331,3 +331,5 @@ ingredients.wav
 meal_type.wav
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,java,gradle,visualstudiocode,intellij,eclipse
+
+app.properties
