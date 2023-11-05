@@ -43,7 +43,8 @@ public class Controller {
         this.state = State.HOME;
 
         mealTypePage = new RecordingPage(
-                "What kind of meal do you want?\nLunch, Dinner, Snack etc.", MEAL_TYPE_AUDIO);
+            "What kind of meal do you want?\nLunch, Dinner, Snack etc.", MEAL_TYPE_AUDIO);
+
         mealTypePage.setButtonCallback(() -> mealTypeRecordingButtonClicked());
         this.recordMealType = new Scene(mealTypePage, WIDTH, HEIGHT);
 
@@ -144,4 +145,3 @@ public class Controller {
 
     // TODO: Add methods for making requests through Model, and add button actions when adding the
     // scenes
-}

@@ -326,6 +326,9 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+# .wav recording files
+*.wav
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,java,gradle,visualstudiocode,intellij,eclipse
 
 app.properties
