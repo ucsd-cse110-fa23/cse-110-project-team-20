@@ -9,7 +9,7 @@ TEST_DIR = test
 # Java compiler and flags
 JAVAC = javac
 CLASSPATH = lib:src/client/components
-VMARGS = --module-path './lib' --add-modules javafx.controls,javafx.fxml
+VMARGS = --module-path './lib' --add-modules javafx.controls,javafx.fxml,org.json
 
 # Define the source and test files
 CLIENT_SRC_FILES = $(wildcard $(SRC_DIR)/client/*.java) $(wildcard $(SRC_DIR)/client/components/*.java)
@@ -27,7 +27,7 @@ compile:
 	@echo "Compiling client source files..."
 	$(JAVAC) $(VMARGS) -cp $(CLASSPATH) $(CLIENT_SRC_FILES)
 	@echo "Compiling server source files..."
-	$(JAVAC)   -cp $(CLASSPATH) $(SERVER_SRC_FILES)
+	$(JAVAC)  $(VMARGS) -cp $(CLASSPATH) $(SERVER_SRC_FILES)
 
 # Run tests using JUnit
 test: compile
@@ -50,6 +50,7 @@ run-server: compile
 clean:
 	@echo "Cleaning up..."
 	@rm -f src/client/*.class
+	@rm -f src/client/components/*.class
 	@rm -f src/server/*.class
 
 .PHONY: all compile test run-client run-server clean

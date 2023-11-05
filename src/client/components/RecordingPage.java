@@ -26,8 +26,6 @@ public class RecordingPage extends VBox {
     private TargetDataLine targetDataLine;
     private Label title;
 
-    private boolean recording;
-    private Runnable doneCallback;
     private String fileName;
     private String message;
 
@@ -42,10 +40,8 @@ public class RecordingPage extends VBox {
 
     public RecordingPage(String message, String fileName)
     {
-        this.recording = false;
         // File to save audio to
         this.fileName = fileName;
-        this.doneCallback = doneCallback;
         this.message = message;
         // Set properties for the flowpane
         this.setPrefSize(370, 120);
@@ -98,19 +94,6 @@ public class RecordingPage extends VBox {
         return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
     }
 
-    private void
-    toggleRecording()
-    {
-        if (this.recording) {
-            stopRecording();
-            this.doneCallback.run();
-        } else {
-            startRecording();
-            this.startButton.setText("Stop recording");
-        }
-        this.recording = !this.recording;
-    }
-
     public void
     startRecording()
     {
@@ -137,6 +120,7 @@ public class RecordingPage extends VBox {
                 }
             }
         });
+        this.startButton.setText("Stop recording");
         t.start();
     }
 

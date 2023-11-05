@@ -35,5 +35,6 @@ public class Main extends Application {
     start(Stage primaryStage)
     {
         Controller controller = new Controller(primaryStage);
+        controller.start();
     }
 }

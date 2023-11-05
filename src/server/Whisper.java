@@ -11,28 +11,26 @@ public class Whisper {
 
     // Helper method to write a parameter to the output stream in multipart form
     // data format
-    private static void writeParameterToOutputStream(
-            OutputStream outputStream,
-            String parameterName,
-            String parameterValue,
-            String boundary) throws IOException {
+    private static void
+    writeParameterToOutputStream(OutputStream outputStream, String parameterName,
+        String parameterValue, String boundary) throws IOException
+    {
         outputStream.write(("--" + boundary + "\r\n").getBytes());
         outputStream.write(
-                ("Content-Disposition: form-data; name=\"" + parameterName + "\"\r\n\r\n").getBytes());
+            ("Content-Disposition: form-data; name=\"" + parameterName + "\"\r\n\r\n").getBytes());
         outputStream.write((parameterValue + "\r\n").getBytes());
     }
 
     // Helper method to write a file to the output stream in multipart form data
     // format
-    private static void writeFileToOutputStream(
-            OutputStream outputStream,
-            File file,
-            String boundary) throws IOException {
+    private static void
+    writeFileToOutputStream(OutputStream outputStream, File file, String boundary)
+        throws IOException
+    {
         outputStream.write(("--" + boundary + "\r\n").getBytes());
-        outputStream.write(
-                ("Content-Disposition: form-data; name=\"file\"; filename=\"" +
-                        file.getName() +
-                        "\"\r\n").getBytes());
+        outputStream.write(("Content-Disposition: form-data; name=\"file\"; filename=\""
+            + file.getName() + "\"\r\n")
+                               .getBytes());
         outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());
 
         FileInputStream fileInputStream = new FileInputStream(file);
@@ -45,10 +43,10 @@ public class Whisper {
     }
 
     // Helper method to handle a successful response
-    private static String handleSuccessResponse(HttpURLConnection connection)
-            throws IOException, JSONException {
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(connection.getInputStream()));
+    private static String
+    handleSuccessResponse(HttpURLConnection connection) throws IOException
+    {
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String inputLine;
         StringBuilder response = new StringBuilder();
         while ((inputLine = in.readLine()) != null) {
@@ -59,17 +57,18 @@ public class Whisper {
         JSONObject responseJson = new JSONObject(response.toString());
 
         String generatedText = responseJson.getString("text");
-        
+
         // Print the transcription result
         System.out.println("Transcription Result: " + generatedText);
 
         return generatedText;
     }
 
-    private static String handleErrorResponse(HttpURLConnection connection)
-            throws IOException, JSONException {
-        BufferedReader errorReader = new BufferedReader(
-                new InputStreamReader(connection.getErrorStream()));
+    private static String
+    handleErrorResponse(HttpURLConnection connection) throws IOException
+    {
+        BufferedReader errorReader =
+            new BufferedReader(new InputStreamReader(connection.getErrorStream()));
         String errorLine;
         StringBuilder errorResponse = new StringBuilder();
         while ((errorLine = errorReader.readLine()) != null) {
@@ -82,8 +81,9 @@ public class Whisper {
         return errorResult;
     }
 
-    
-    private static String callAPI(String FILE_PATH) throws IOException, URISyntaxException{
+    private static String
+    callAPI(String FILE_PATH) throws IOException, URISyntaxException
+    {
         File file = new File(FILE_PATH);
 
         // Set up HTTP connection
@@ -94,9 +94,7 @@ public class Whisper {
 
         // Set up request headers
         String boundary = "Boundary-" + System.currentTimeMillis();
-        connection.setRequestProperty(
-                "Content-Type",
-                "multipart/form-data; boundary=" + boundary);
+        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
         connection.setRequestProperty("Authorization", "Bearer " + TOKEN);
 
         // Set up output stream to write request body
@@ -133,12 +131,15 @@ public class Whisper {
         return transcription;
     }
 
-    public static String getIngredientTranscription() throws IOException, URISyntaxException{
+    public static String
+    getIngredientTranscription() throws IOException, URISyntaxException
+    {
         return callAPI("ingredients.wav");
     }
 
-    public static String getMealTypeTranscription() throws IOException, URISyntaxException{
+    public static String
+    getMealTypeTranscription() throws IOException, URISyntaxException
+    {
         return callAPI("meal_type.wav");
     }
 }
-

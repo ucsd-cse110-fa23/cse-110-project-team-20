@@ -25,6 +25,9 @@ public class Controller {
     private Stage primaryStage;
     private Model model;
     private Scene recordMealType, recordIngredients, loading;
+    private RecordingPage mealTypePage, ingredientsPage;
+    private AnimatedLoadingBar loadingPage;
+    private static final int WIDTH = 500, HEIGHT = 500;
 
     private String mealTypeTranscription, ingredientsTranscription;
 
@@ -37,26 +40,29 @@ public class Controller {
         this.recording = false;
         this.state = State.RECORDING_MEAL_TYPE;
 
-        RecordingPage mealTypePage = new RecordingPage(
+        mealTypePage = new RecordingPage(
             "What kind of meal do you want?\nLunch, Dinner, Snack etc.", MEAL_TYPE_AUDIO);
         mealTypePage.setButtonCallback(() -> mealTypeRecordingButtonClicked());
-        this.recordMealType = new Scene(mealTypePage);
+        this.recordMealType = new Scene(mealTypePage, WIDTH, HEIGHT);
 
-        RecordingPage ingredientsPage =
-            new RecordingPage("What ingredients do you have?", INGREDIENTS_AUDIO);
+        ingredientsPage = new RecordingPage("What ingredients do you have?", INGREDIENTS_AUDIO);
         ingredientsPage.setButtonCallback(() -> ingredientsRecordingButtonClicked());
-        this.recordIngredients = new Scene(ingredientsPage);
+        this.recordIngredients = new Scene(ingredientsPage, WIDTH, HEIGHT);
 
-        AnimatedLoadingBar loadingPage = new AnimatedLoadingBar();
+        loadingPage = new AnimatedLoadingBar();
         loadingPage.setLoadingText("Finding the perfect recipe...");
-        this.loading = new Scene(loadingPage);
-
+        this.loading = new Scene(loadingPage, WIDTH, HEIGHT);
         // Set the title of the app
         primaryStage.setTitle("PantryPal");
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(recordMealType);
         // Make window non-resizable
         primaryStage.setResizable(false);
+    }
+
+    public void
+    start()
+    {
         // Show the app
         primaryStage.show();
     }
@@ -99,23 +105,29 @@ public class Controller {
     public void
     ingredientsRecordingButtonClicked()
     {
-        recording = !recording;
-        if (!recording) {
+        if (recording) {
             // Called after second click
+            this.ingredientsPage.stopRecording();
             this.requestIngredientsTranscription();
             this.transitionToLoadingScene();
+        } else {
+            this.ingredientsPage.startRecording();
         }
+        recording = !recording;
     }
 
     public void
     mealTypeRecordingButtonClicked()
     {
-        recording = !recording;
-        if (!recording) {
+        if (recording) {
             // Called after second click
+            this.mealTypePage.stopRecording();
             this.requestMealTypeTranscription();
             this.transitionToIngredientsScene();
+        } else {
+            this.mealTypePage.startRecording();
         }
+        recording = !recording;
     }
 
     // TODO: Add methods for making requests through Model, and add button actions when adding the
