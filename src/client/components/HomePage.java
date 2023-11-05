@@ -1,7 +1,7 @@
 package client.components;
 
 import client.Recipe;
-import client.RecipeBox;
+// import client.RecipeBox;
 import java.util.List;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -56,7 +56,8 @@ class RecipeList extends VBox {
     public RecipeList(List<Recipe> recipes)
     {
         for (Recipe recipe : recipes) {
-            this.getChildren().add(new RecipeBox(recipe));
+            // @TODO add RecipeBox
+            // this.getChildren().add(new RecipeBox(recipe));
         }
     }
 }

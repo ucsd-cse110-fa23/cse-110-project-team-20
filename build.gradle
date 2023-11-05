@@ -25,7 +25,7 @@ dependencies {
 
     // This provides json handling in ChatGPT API
     // https://mvnrepository.com/artifact/org.json/json
-    implementation 'org.json:json:20230227'
+    implementation 'org.json:json:20231013'
 
     // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
     implementation 'commons-fileupload:commons-fileupload:1.5'
@@ -34,8 +34,6 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     // This provides the TestEngine to actually run the tests.
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-    // Add a dependency to json-20231013.jar in the lib directory
-    implementation group: 'org.json', name: 'json', version: '20231013'
 }
 
 test {
@@ -56,7 +54,7 @@ sourceSets {
     main.java.srcDirs = ['src']
     main.resources.srcDirs = ['resources']
     test.java.srcDirs = ['test']
-    test.resources.srcDirs = ['test/resources']
+    test.resources.srcDirs = ['test']
 }
 
 task runServer(type: JavaExec) {

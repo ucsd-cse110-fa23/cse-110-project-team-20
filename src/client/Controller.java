@@ -145,3 +145,4 @@ public class Controller {
 
     // TODO: Add methods for making requests through Model, and add button actions when adding the
     // scenes
+}

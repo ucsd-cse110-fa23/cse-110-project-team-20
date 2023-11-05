@@ -24,7 +24,7 @@ public class ServerRecipeGeneratorTest {
 
     server.start();
 
-    RecipeRequestParameter params = new RecipeRequestParameter(new File("silence.mp3"), new File("silence.mp3"));
+    RecipeRequestParameter params = new RecipeRequestParameter(new File("test/resources/silence.mp3"), new File("test/resources/silence.mp3"));
 
     generator.requestGeneratingRecipe(params, (recipe) -> {
       future.complete(recipe);
@@ -52,7 +52,7 @@ public class ServerRecipeGeneratorTest {
     CompletableFuture<String> future = new CompletableFuture<>();
     ServerRecipeGenerator generator = new ServerRecipeGenerator();
 
-    RecipeRequestParameter params = new RecipeRequestParameter(new File("silence.mp3"), new File("not-exist-flie.mp3"));
+    RecipeRequestParameter params = new RecipeRequestParameter(new File("test/resources/silence.mp3"), new File("not-exist-flie.mp3"));
 
     generator.requestGeneratingRecipe(params, null, (errorMessage) -> {
       future.complete(errorMessage);
@@ -73,7 +73,7 @@ public class ServerRecipeGeneratorTest {
     CompletableFuture<String> future = new CompletableFuture<>();
     ServerRecipeGenerator generator = new ServerRecipeGenerator();
 
-    RecipeRequestParameter params = new RecipeRequestParameter(new File("not-exist-file.mp3"), new File("silence.mp3"));
+    RecipeRequestParameter params = new RecipeRequestParameter(new File("not-exist-file.mp3"), new File("test/resources/silence.mp3"));
 
     generator.requestGeneratingRecipe(params, null, (errorMessage) -> {
       future.complete(errorMessage);
