@@ -1,7 +1,7 @@
 package client;
-import client.Controller;
+
+import client.recipe.LocalRecipeGenerator;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -20,7 +20,12 @@ public class PantryPalsApp extends Application {
     public void
     start(Stage primaryStage) throws Exception
     {
-        Controller controller = new Controller(primaryStage);
+        LocalRecipeGenerator generateRecipe = new LocalRecipeGenerator();
+        generateRecipe.setAlwaysFail(true);
+        // @TODO replace the server one when server is ready
+        // GenerateRecipe generateRecipe = new ServerRecipeGenerator();
+
+        Controller controller = new Controller(primaryStage, generateRecipe);
         controller.start();
     }
 }
