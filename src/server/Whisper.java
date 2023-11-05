@@ -27,19 +27,24 @@ public class Whisper {
     writeFileToOutputStream(OutputStream outputStream, File file, String boundary)
         throws IOException
     {
+        InputStream fileInputStream = new FileInputStream(file);
         outputStream.write(("--" + boundary + "\r\n").getBytes());
         outputStream.write(("Content-Disposition: form-data; name=\"file\"; filename=\""
             + file.getName() + "\"\r\n")
                                .getBytes());
         outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());
-
-        FileInputStream fileInputStream = new FileInputStream(file);
         byte[] buffer = new byte[1024];
         int bytesRead;
         while ((bytesRead = fileInputStream.read(buffer)) != -1) {
             outputStream.write(buffer, 0, bytesRead);
         }
         fileInputStream.close();
+    }
+
+    private static void
+    writeToOutputStream(OutputStream outputStream, InputStream file, String boundary)
+        throws IOException
+    {
     }
 
     // Helper method to handle a successful response
@@ -81,11 +86,9 @@ public class Whisper {
         return errorResult;
     }
 
-    private static String
-    callAPI(String FILE_PATH) throws IOException, URISyntaxException
+    public static String
+    transcribe(File file) throws IOException, URISyntaxException
     {
-        File file = new File(FILE_PATH);
-
         // Set up HTTP connection
         URL url = new URI(API_ENDPOINT).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -129,17 +132,5 @@ public class Whisper {
         connection.disconnect();
 
         return transcription;
-    }
-
-    public static String
-    getIngredientTranscription() throws IOException, URISyntaxException
-    {
-        return callAPI("ingredients.wav");
-    }
-
-    public static String
-    getMealTypeTranscription() throws IOException, URISyntaxException
-    {
-        return callAPI("meal_type.wav");
     }
 }

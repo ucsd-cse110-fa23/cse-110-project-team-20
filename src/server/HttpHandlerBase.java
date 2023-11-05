@@ -1,12 +1,13 @@
 package server;
 
-import java.io.*;
 import com.sun.net.httpserver.*;
+import java.io.*;
 import server.request.*;
 
 public abstract class HttpHandlerBase implements HttpHandler {
-
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void
+    handle(HttpExchange httpExchange) throws IOException
+    {
         String response = "Request Received";
         String method = httpExchange.getRequestMethod();
 
@@ -36,19 +37,27 @@ public abstract class HttpHandlerBase implements HttpHandler {
         outStream.close();
     }
 
-    protected String handleGet(IHttpRequest request) throws UnsupportedMethodException {
+    protected String
+    handleGet(IHttpRequest request) throws UnsupportedMethodException
+    {
         throw new UnsupportedMethodException();
     }
 
-    protected String handlePost(IHttpRequest request) throws UnsupportedMethodException {
+    protected String
+    handlePost(IHttpRequest request) throws UnsupportedMethodException
+    {
         throw new UnsupportedMethodException();
     }
 
-    protected String handlePut(IHttpRequest request) throws UnsupportedMethodException {
+    protected String
+    handlePut(IHttpRequest request) throws UnsupportedMethodException
+    {
         throw new UnsupportedMethodException();
     }
 
-    protected String handleDelete(IHttpRequest request) throws UnsupportedMethodException {
+    protected String
+    handleDelete(IHttpRequest request) throws UnsupportedMethodException
+    {
         throw new UnsupportedMethodException();
     }
 }
