@@ -87,7 +87,7 @@ public class Whisper {
     }
 
     public static String
-    transcribe(File file) throws IOException, URISyntaxException
+    transcribe(File file)
     {
         // Set up HTTP connection
         URL url = new URI(API_ENDPOINT).toURL();
