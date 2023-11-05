@@ -1,5 +1,6 @@
 package client.recipe;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -10,11 +11,13 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
+import client.Recipe;
+
 
 public class LocalRecipeGeneratorTest {
   @Test
   public void generateRecipe() throws InterruptedException, ExecutionException {
-    CompletableFuture<String> future = new CompletableFuture<>();
+    CompletableFuture<Recipe> future = new CompletableFuture<>();
 
     LocalRecipeGenerator generator = new LocalRecipeGenerator();
     RecipeRequestParameter params = new RecipeRequestParameter(new File("a.mp3"), new File("b.mp3"));
@@ -27,10 +30,10 @@ public class LocalRecipeGeneratorTest {
 
     future.completeOnTimeout(null, 3, TimeUnit.SECONDS);
 
-    String actual = future.get();
+    Recipe actual = future.get();
     String expectedTitle = "Tomato, Cucumber, and Egg Salad";
     
-    assertTrue(actual.contains(expectedTitle));
+    assertEquals(expectedTitle, actual.getTitle());
   }
 
   @Test

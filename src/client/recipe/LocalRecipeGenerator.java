@@ -1,5 +1,7 @@
 package client.recipe;
 
+import client.Recipe;
+
 /**
  * Local Recipe Generator
  * 
@@ -14,7 +16,7 @@ public class LocalRecipeGenerator implements GenerateRecipe {
       + "  \"title\": \"Tomato, Cucumber, and Egg Salad\","
       + "  \"meal_type\": \"Dinner\","
       + "  \"ingredients\": \"Tomato, eggs, cucumber\","
-      + "  \"description\": \"1. Boil the eggs until they are hard-boiled. Let them cool and then peel and chop them.\n2. Wash and dice the tomato and cucumber.\n3. In a large bowl, combine the chopped eggs, diced tomato, and cucumber.\n4. Toss the ingredients together.\n5. Season with salt and pepper to taste.\n6. Serve as a refreshing and healthy dinner salad.\""
+      + "  \"description\": \"1. Boil the eggs until they are hard-boiled. Let them cool and then peel and chop them.\\n2. Wash and dice the tomato and cucumber.\\n3. In a large bowl, combine the chopped eggs, diced tomato, and cucumber.\\n4. Toss the ingredients together.\\n5. Season with salt and pepper to taste.\\n6. Serve as a refreshing and healthy dinner salad.\""
       + "}";
 
   private boolean alwaysFail = false;
@@ -28,7 +30,6 @@ public class LocalRecipeGenerator implements GenerateRecipe {
       RecipeRequestParameter parameter,
       RecipeGenerated onRecipeGenerated,
       RecipeGenerationFailed onRecipeGenerationFailed) {
-
     Thread t = new Thread(() -> {
       if (alwaysFail) {
         onRecipeGenerationFailed.onRecipeGenerationFailed("AlwaysFail is on");
@@ -36,7 +37,8 @@ public class LocalRecipeGenerator implements GenerateRecipe {
       }
 
       String recipeResponse = String.format(RECIPE_FORMAT);
-      onRecipeGenerated.onRecipeGenerated(recipeResponse);
+      Recipe recipe = GenerateRecipeHelper.convertJsonResponseToRecipe(recipeResponse);
+      onRecipeGenerated.onRecipeGenerated(recipe);
     });
     t.start();
   }
