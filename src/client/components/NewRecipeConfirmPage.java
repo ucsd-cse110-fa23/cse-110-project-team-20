@@ -7,12 +7,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-public class NewRecipeConfirmScene extends BorderPane {
+public class NewRecipeConfirmPage extends BorderPane {
     private Label header;
     private Label body;
     private Footer footer;
 
-    public NewRecipeConfirmScene(Recipe recipe)
+    public NewRecipeConfirmPage(Recipe recipe)
     {
         header = new Label(recipe.getTitle());
         body = new Label(recipe.getDescription());
