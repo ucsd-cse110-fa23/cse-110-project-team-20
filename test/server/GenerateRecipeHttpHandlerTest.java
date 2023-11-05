@@ -1,5 +1,6 @@
 package server;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.io.File;
@@ -40,10 +41,10 @@ public class GenerateRecipeHttpHandlerTest {
     @Disabled("Disabled until file handling and Whipser API is implemented")
     public void post() throws IOException
     {
-        File audioRequestBodyFile = new File("test/resources/audio-request-body.txt");
+        File audioRequestBodyFile = new File("test/resources/audio-request-body-with-voice.txt");
         InputStream inputStream = new FileInputStream(audioRequestBodyFile);
 
-        String audioRequestHeaderText = Files.readString(Path.of("test/resources/audio-request-header.json"));
+        String audioRequestHeaderText = Files.readString(Path.of("test/resources/audio-request-header-with-voice.json"));
         Headers headers = new Headers();
         JSONObject headersJson = new JSONObject(audioRequestHeaderText);
 
@@ -61,7 +62,7 @@ public class GenerateRecipeHttpHandlerTest {
         IChatGPTService chatGPTService = new IChatGPTService() {
             @Override
             public String request(RecipeQueryable query) throws ChatGPTServiceException {
-                return "";
+                return query.toQueryableString();
             }
         };
 
@@ -72,5 +73,6 @@ public class GenerateRecipeHttpHandlerTest {
         request.setRequestBody(inputStream);
 
         String response = handler.handlePost(request);
+        assertEquals("Create a recipe with tomato, eggs, broccoli, and bacon. as Dinner", response);
     }
 }
