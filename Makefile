@@ -8,11 +8,11 @@ TEST_DIR = test
 
 # Java compiler and flags
 JAVAC = javac
-CLASSPATH = lib
+CLASSPATH = lib:src/client/components
 VMARGS = --module-path './lib' --add-modules javafx.controls,javafx.fxml
 
 # Define the source and test files
-CLIENT_SRC_FILES = $(wildcard $(SRC_DIR)/client/*.java)
+CLIENT_SRC_FILES = $(wildcard $(SRC_DIR)/client/*.java) $(wildcard $(SRC_DIR)/client/components/*.java)
 SERVER_SRC_FILES = $(wildcard $(SRC_DIR)/server/*.java)
 CLIENT_TEST_FILES = $(wildcard $(TEST_DIR)/client/*.java)
 SERVER_TEST_FILES = $(wildcard $(TEST_DIR)/server/*.java)

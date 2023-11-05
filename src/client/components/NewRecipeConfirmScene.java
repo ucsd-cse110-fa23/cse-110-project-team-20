@@ -1,4 +1,4 @@
-package client.SceneFiles;
+package client.components;
 
 import client.Recipe;
 import javafx.scene.control.Button;
@@ -12,7 +12,8 @@ public class NewRecipeConfirmScene extends BorderPane {
     private Label body;
     private Footer footer;
 
-    public NewRecipeConfirmScene(Recipe recipe) {
+    public NewRecipeConfirmScene(Recipe recipe)
+    {
         header = new Label(recipe.getTitle());
         body = new Label(recipe.getDescription());
         body.setWrapText(true);
@@ -29,7 +30,8 @@ class Footer extends HBox {
     private Button saveButton;
     private Button cancelButton;
 
-    public Footer() {
+    public Footer()
+    {
         this.cancelButton = new Button("Discard");
         this.saveButton = new Button("Save");
 

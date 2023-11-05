@@ -1,20 +1,20 @@
-package client.SceneFiles;
+package client.components;
 
 import client.Recipe;
 import client.RecipeBox;
+import java.util.LinkedList;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-import java.util.LinkedList;
-
 public class HomeScene extends BorderPane {
     private Header header;
     private RecipeList recipeList;
 
-    public HomeScene (LinkedList<Recipe> recipes) {
+    public HomeScene(LinkedList<Recipe> recipes)
+    {
         header = new Header();
         recipeList = new RecipeList(recipes);
         this.setTop(header);
@@ -27,7 +27,8 @@ class Header extends BorderPane {
     private Label appName;
     private Button createButton;
 
-    public Header() {
+    public Header()
+    {
         this.setPrefSize(500, 60); // Size of the header
         this.setStyle("-fx-background-color: #F0F8FF;");
 
@@ -39,9 +40,9 @@ class Header extends BorderPane {
     }
 }
 
-class RecipeList extends VBox{
-
-    public RecipeList(LinkedList<Recipe> recipes) {
+class RecipeList extends VBox {
+    public RecipeList(LinkedList<Recipe> recipes)
+    {
         for (Recipe recipe : recipes) {
             this.getChildren().add(new RecipeBox(recipe));
         }
