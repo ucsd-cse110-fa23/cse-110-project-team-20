@@ -1,11 +1,11 @@
 package client.SceneFiles;
 
 import client.Recipe;
-import client.RecipeBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.LinkedList;
@@ -36,6 +36,20 @@ class Header extends BorderPane {
         this.appName = new Label("Pantry Pals");
         this.setLeft(appName);
         this.setRight(createButton);
+    }
+}
+
+class RecipeBox extends HBox {
+    private Recipe recipe;
+    private Label nameLabel;
+    public RecipeBox(Recipe recipe) {
+        this.recipe = recipe;
+        this.nameLabel = new Label(recipe.getTitle());
+        this.getChildren().add(nameLabel);
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
     }
 }
 
