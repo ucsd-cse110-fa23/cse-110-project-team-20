@@ -65,7 +65,7 @@ sourceSets {
 task runServer(type: JavaExec) {
     group = "Execution"
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'server.PantryPalsServer'
+    mainClass = 'server.PantryPalServer'
 }
 
 task runApp(type: JavaExec) {
