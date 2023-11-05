@@ -6,6 +6,10 @@ public class Recipe {
     private String ingredients;
     private String mealType;
 
+    public Recipe (String title, String description) {
+        this(title, description, null, null);
+    }
+
     public Recipe (String title, String description, String ingredients, String mealType) {
         this.title = title;
         this.description = description;
