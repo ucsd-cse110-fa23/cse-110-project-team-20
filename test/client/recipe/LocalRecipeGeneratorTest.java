@@ -1,7 +1,7 @@
 package client.recipe;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+
 
 public class LocalRecipeGeneratorTest {
   @Test
@@ -20,12 +21,16 @@ public class LocalRecipeGeneratorTest {
 
     generator.requestGeneratingRecipe(params, (recipe) -> {
       future.complete(recipe);
-    }, null);
+    }, (errorMessage) -> {
+      fail(errorMessage);
+    });
 
-    String expected = "This is a recipe that is generated with a given query";
+    future.completeOnTimeout(null, 3, TimeUnit.SECONDS);
+
     String actual = future.get();
-
-    assertEquals(expected, actual);
+    String expectedTitle = "Tomato, Cucumber, and Egg Salad";
+    
+    assertTrue(actual.contains(expectedTitle));
   }
 
   @Test
