@@ -1,5 +1,7 @@
 package client.recipe;
 
+import client.Recipe;
+
 /**
  * RecipeGenerated event
  */
@@ -9,5 +11,5 @@ public interface RecipeGenerated {
      *
      * @param recipe
      */
-    void onRecipeGenerated(String recipe);
+    void onRecipeGenerated(Recipe recipe);
 }

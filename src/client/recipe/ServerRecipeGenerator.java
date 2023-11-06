@@ -11,6 +11,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import client.Recipe;
+
 public class ServerRecipeGenerator implements GenerateRecipe {
   private static final String API_ENDPOINT = "http://localhost:8100/generate_recipe";
 
@@ -22,7 +24,8 @@ public class ServerRecipeGenerator implements GenerateRecipe {
 
     Thread t = new Thread(() -> {
       try {
-        String recipe = request(parameter);
+        String recipeResponse = request(parameter);
+        Recipe recipe = GenerateRecipeHelper.convertJsonResponseToRecipe(recipeResponse);
         onRecipeGenerated.onRecipeGenerated(recipe);
       } catch (Exception e) {
         e.printStackTrace();

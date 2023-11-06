@@ -3,10 +3,18 @@ package client;
 public class Recipe {
     private String title;
     private String description;
+    private String ingredients;
+    private String mealType;
 
     public Recipe (String title, String description) {
+        this(title, description, null, null);
+    }
+
+    public Recipe (String title, String description, String ingredients, String mealType) {
         this.title = title;
         this.description = description;
+        this.ingredients = ingredients;
+        this.mealType = mealType;
     }
 
     public String getTitle() {
@@ -15,6 +23,14 @@ public class Recipe {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public String getMealType() {
+        return mealType;
     }
 
     public void setDescription(String description) {

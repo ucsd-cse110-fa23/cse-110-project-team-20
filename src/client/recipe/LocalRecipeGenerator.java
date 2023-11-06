@@ -1,13 +1,23 @@
 package client.recipe;
 
+import client.Recipe;
+
 /**
  * Local Recipe Generator
  * 
- * GenerateRecipe implementation for handling recipe generation without remote calling. It uses a thread
+ * GenerateRecipe implementation for handling recipe generation without remote
+ * calling. It uses a thread
  * so that user interation is not interrupted during any generation.
  */
 public class LocalRecipeGenerator implements GenerateRecipe {
-  private static final String RECIPE_FORMAT = "This is a recipe that is generated with a given query";
+
+  // based on DS5 #60 doc
+  private static final String RECIPE_FORMAT = "{"
+      + "  \"title\": \"Tomato, Cucumber, and Egg Salad\","
+      + "  \"meal_type\": \"Dinner\","
+      + "  \"ingredients\": \"Tomato, eggs, cucumber\","
+      + "  \"description\": \"1. Boil the eggs until they are hard-boiled. Let them cool and then peel and chop them.\\n2. Wash and dice the tomato and cucumber.\\n3. In a large bowl, combine the chopped eggs, diced tomato, and cucumber.\\n4. Toss the ingredients together.\\n5. Season with salt and pepper to taste.\\n6. Serve as a refreshing and healthy dinner salad.\""
+      + "}";
 
   private boolean alwaysFail = false;
 
@@ -17,16 +27,17 @@ public class LocalRecipeGenerator implements GenerateRecipe {
 
   @Override
   public void requestGeneratingRecipe(
-    RecipeRequestParameter parameter,
-    RecipeGenerated onRecipeGenerated,
-    RecipeGenerationFailed onRecipeGenerationFailed) {
-
+      RecipeRequestParameter parameter,
+      RecipeGenerated onRecipeGenerated,
+      RecipeGenerationFailed onRecipeGenerationFailed) {
     Thread t = new Thread(() -> {
       if (alwaysFail) {
         onRecipeGenerationFailed.onRecipeGenerationFailed("AlwaysFail is on");
+        return;
       }
 
-      String recipe = String.format(RECIPE_FORMAT);
+      String recipeResponse = String.format(RECIPE_FORMAT);
+      Recipe recipe = GenerateRecipeHelper.convertJsonResponseToRecipe(recipeResponse);
       onRecipeGenerated.onRecipeGenerated(recipe);
     });
     t.start();

@@ -10,16 +10,17 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
+import client.Recipe;
 import client.recipe.mock.MockHttpServer;
 
 public class ServerRecipeGeneratorTest {
   @Test
   public void generateRecipeWithServer() throws InterruptedException, ExecutionException, IOException
   {
-    String mockRecipeResponse = "This is AI generated recipe with tomato, garlic, cucumber, watermelon.";
+    String mockRecipeResponse = "{\"description\": \"This is AI generated recipe with tomato, garlic, cucumber, watermelon.\"}";
     MockHttpServer server = new MockHttpServer("/generate_recipe", mockRecipeResponse);
 
-    CompletableFuture<String> future = new CompletableFuture<>();
+    CompletableFuture<Recipe> future = new CompletableFuture<>();
     ServerRecipeGenerator generator = new ServerRecipeGenerator();
 
     server.start();
@@ -32,18 +33,18 @@ public class ServerRecipeGeneratorTest {
     }, null);
 
     // if the test takes more than 3 seconds, consider empty string is returned.
-    future.completeOnTimeout("", 15, TimeUnit.SECONDS);
+    future.completeOnTimeout(null, 15, TimeUnit.SECONDS);
 
-    String actual = future.get();
+    Recipe actual = future.get();
 
-    assertTrue(actual.length() > 20,
+    assertTrue(actual.getDescription().length() > 20,
       "Expected a recipe with at least 20 characters from the ChatGPT response.");
 
     // quick check with ingredients
-    assertTrue(actual.toLowerCase().contains("tomato"));
-    assertTrue(actual.toLowerCase().contains("garlic"));
-    assertTrue(actual.toLowerCase().contains("cucumber"));
-    assertTrue(actual.toLowerCase().contains("watermelon"));
+    assertTrue(actual.getDescription().toLowerCase().contains("tomato"));
+    assertTrue(actual.getDescription().toLowerCase().contains("garlic"));
+    assertTrue(actual.getDescription().toLowerCase().contains("cucumber"));
+    assertTrue(actual.getDescription().toLowerCase().contains("watermelon"));
   }
 
   @Test

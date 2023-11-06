@@ -3,7 +3,14 @@ package client;
 import client.components.AnimatedLoadingBar;
 import client.components.HomePage;
 import client.components.RecordingPage;
+import client.components.NewRecipeConfirmPage;
+import client.recipe.GenerateRecipe;
+import client.recipe.RecipeRequestParameter;
+
+import java.io.File;
 import java.util.ArrayList;
+
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -28,6 +35,10 @@ public class Controller {
     private Scene recordMealType, recordIngredients, loading, home;
     private RecordingPage mealTypePage, ingredientsPage;
     private HomePage homePage;
+
+    private Scene newRecipeConfirm;
+    private NewRecipeConfirmPage newRecipeConfirmPage;
+
     private AnimatedLoadingBar loadingPage;
     private static final int WIDTH = 500, HEIGHT = 500;
 
@@ -35,9 +46,13 @@ public class Controller {
 
     private boolean recording;
 
-    public Controller(Stage primaryStage)
+    private GenerateRecipe generateRecipe;
+
+    public Controller(Stage primaryStage, GenerateRecipe generateRecipe)
     {
         this.primaryStage = primaryStage;
+        this.generateRecipe = generateRecipe;
+
         this.model = new Model();
         this.recording = false;
         this.state = State.HOME;
@@ -89,17 +104,23 @@ public class Controller {
     }
 
     public void
-    requestMealTypeTranscription()
+    requestTranscription()
     {
-        // TODO: send API request through model
-        // this.model.requestTranscription(audioFilePath);
-    }
+        File mealTypeFile = new File(MEAL_TYPE_AUDIO);
+        File ingredientsFile = new File(INGREDIENTS_AUDIO);
+        RecipeRequestParameter params = new RecipeRequestParameter(mealTypeFile, ingredientsFile);
 
-    public void
-    requestIngredientsTranscription()
-    {
-        // TODO: send API request through model
-        // this.model.requestTranscription(audioFilePath);
+        generateRecipe.requestGeneratingRecipe(
+            params,
+            (recipe) -> {
+                Platform.runLater(() -> {
+                    transitionToNewRecipeConfirmPage(recipe);
+                });
+            },
+            (errorMessage) -> {
+
+            }
+        );
     }
 
     public void
@@ -115,7 +136,7 @@ public class Controller {
         if (recording) {
             // Called after second click
             this.ingredientsPage.stopRecording();
-            this.requestIngredientsTranscription();
+            this.requestTranscription();
             this.transitionToLoadingScene();
         } else {
             this.ingredientsPage.startRecording();
@@ -129,7 +150,6 @@ public class Controller {
         if (recording) {
             // Called after second click
             this.mealTypePage.stopRecording();
-            this.requestMealTypeTranscription();
             this.transitionToIngredientsScene();
         } else {
             this.mealTypePage.startRecording();
@@ -141,6 +161,14 @@ public class Controller {
     createRecipeButtonClicked()
     {
         this.transitionToMealTypeScene();
+    }
+
+    public void
+    transitionToNewRecipeConfirmPage(Recipe recipe)
+    {
+        newRecipeConfirmPage = new NewRecipeConfirmPage(recipe);
+        newRecipeConfirm = new Scene(newRecipeConfirmPage);
+        primaryStage.setScene(newRecipeConfirm);
     }
 
     // TODO: Add methods for making requests through Model, and add button actions when adding the
