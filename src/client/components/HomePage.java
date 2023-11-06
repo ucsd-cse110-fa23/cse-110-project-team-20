@@ -8,12 +8,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
 
 public class HomePage extends BorderPane {
     private Header header;
     private RecipeList recipeList;
-    private RecipeBox recipeBox;
 
     public HomePage(List<Recipe> recipes)
     {
@@ -29,20 +27,6 @@ public class HomePage extends BorderPane {
     {
         this.header.setCreateButtonCallback(r);
     }
-
-    public void
-    setDetailsButtonCallback(Runnable r) 
-    {
-        this.recipeBox.setDetailsButtonCallback(r);
-    }
-
-    public void
-    updateRecipeList(List<Recipe> recipes) {
-        this.getChildren().remove(recipeList);
-        this.recipeList = new RecipeList(recipes);
-        this.setCenter(recipeList);
-    }
-
 }
 
 class Header extends BorderPane {
@@ -68,29 +52,12 @@ class Header extends BorderPane {
     }
 }
 
-// TODO: add transition to RecipeDetails
-class RecipeBox extends HBox {
-    private Button detailsButton;
-    public RecipeBox(Recipe recipe) {
-        Recipe myRecipe = recipe;
-        Label titleLabel = new Label(recipe.getTitle());
-        this.detailsButton = new Button("Details");
-        this.getChildren().addAll(titleLabel, detailsButton);
-    }
-
-    
-    public void
-    setDetailsButtonCallback(Runnable r) 
-    {
-        this.detailsButton.setOnAction(e -> r.run());
-    }
-
-}
-
 class RecipeList extends VBox {
-    public RecipeList(List<Recipe> recipes) {
+    public RecipeList(List<Recipe> recipes)
+    {
         for (Recipe recipe : recipes) {
-            this.getChildren().add(new RecipeBox(recipe));
+            // @TODO add RecipeBox
+            // this.getChildren().add(new RecipeBox(recipe));
         }
     }
 }
