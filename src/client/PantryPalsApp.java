@@ -10,9 +10,10 @@ import javafx.stage.Stage;
 public class PantryPalsApp extends Application {
     Controller controller;
 
-    public static void
-    main(String[] args)
-    {
+    // public static void main(String[] args) {
+    //     launch(args);
+    // }
+    public static void launcher(String[] args) {
         launch(args);
     }
 
