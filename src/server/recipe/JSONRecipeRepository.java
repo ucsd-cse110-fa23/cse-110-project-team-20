@@ -1,0 +1,130 @@
+package server.recipe;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import client.Recipe;
+import client.recipe.GenerateRecipeHelper;
+
+public class JSONRecipeRepository implements IRecipeRepository {
+  String path;
+
+  public JSONRecipeRepository(String jsonFilePath) {
+    path = jsonFilePath;
+
+    if (!new File(path).exists()) {
+      initDatabase(jsonFilePath);
+    }
+  }
+
+  private void initDatabase(String jsonFilePath) {
+    JSONObject object = new JSONObject();
+    object.put("recipes", new JSONArray(0));
+
+    write(object.toString(2));
+  }
+
+  @Override
+  public List<Recipe> getRecipes() {
+    return getListOfRecipes();
+  }
+
+  @Override
+  public Recipe getRecipe(int id) {
+    return getListOfRecipes().get(id);
+  }
+
+  @Override
+  public void createRecipe(Recipe recipe) {
+    List<Recipe> recipes = getListOfRecipes();
+    Recipe newRecipe = new Recipe(
+        recipe.getTitle(),
+        recipe.getDescription(),
+        recipe.getIngredients(),
+        recipe.getMealType());
+    recipes.add(0, newRecipe);
+    commit(recipes);
+  }
+
+  @Override
+  public void updateRecipe(int id, Recipe recipe) {
+    List<Recipe> recipes = getListOfRecipes();
+    Recipe originalRecipe = recipes.get(id);
+
+    Recipe newRecipe = new Recipe(
+        recipe.getTitle(),
+        recipe.getDescription(),
+        originalRecipe.getIngredients(),
+        originalRecipe.getMealType());
+
+    recipes.set(id, newRecipe);
+    commit(recipes);
+  }
+
+  @Override
+  public void deleteRecipe(int id) {
+    List<Recipe> recipes = getListOfRecipes();
+    recipes.remove(id);
+    commit(recipes);
+  }
+
+  private void commit(List<Recipe> recipes) {
+    JSONObject object = new JSONObject();
+    object.put("recipes", new JSONArray(recipes));
+
+    write(object.toString(2));
+  }
+
+  private void write(String data) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+      writer.write(data);
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  // ref: https://www.baeldung.com/reading-file-in-java
+  private String readFile(InputStream inputStream)
+      throws IOException {
+    StringBuilder resultStringBuilder = new StringBuilder();
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+      String line;
+      while ((line = br.readLine()) != null) {
+        resultStringBuilder.append(line).append("\n");
+      }
+    }
+    return resultStringBuilder.toString();
+  }
+
+  private ArrayList<Recipe> getListOfRecipes() {
+    JSONObject obj = new JSONObject();
+    try {
+      String fileString = readFile(new FileInputStream(new File(path)));
+      obj = new JSONObject(fileString);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    JSONArray recipesArr = obj.getJSONArray("recipes");
+    ArrayList<Recipe> recipes = new ArrayList<>();
+
+    for (int i = 0; i < recipesArr.length(); i++) {
+      JSONObject recipeJson = recipesArr.getJSONObject(i);
+      recipes.add(GenerateRecipeHelper.convertJsonResponseToRecipe(recipeJson.toString()));
+    }
+
+    return recipes;
+  }
+
+}
