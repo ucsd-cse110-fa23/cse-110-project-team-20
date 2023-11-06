@@ -22,8 +22,8 @@ public class PantryPalsServer {
         HttpServer server = HttpServer.create(
                 new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
 
-        String contextPath = "/";
-        server.createContext(contextPath, new RequestHandler());
+        server.createContext("/", new IndexHttpHandler());
+
         server.setExecutor(threadPoolExecutor);
         server.start();
 
