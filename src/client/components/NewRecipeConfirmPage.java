@@ -19,11 +19,24 @@ public class NewRecipeConfirmPage extends BorderPane {
         body.setWrapText(true);
         footer = new Footer();
 
+
         this.setTop(header);
         this.setCenter(new ScrollPane(body));
         this.setBottom(footer);
         this.setPrefSize(500, 800);
     }
+
+    public void setCancelCallback(Runnable r) 
+    {
+        this.footer.setOnCancel(r);
+    }
+
+    public void setSaveCallback(Runnable r)
+    {
+        this.footer.setOnSave(r);
+    }
+
+
 }
 
 class Footer extends HBox {
@@ -34,7 +47,14 @@ class Footer extends HBox {
     {
         this.cancelButton = new Button("Discard");
         this.saveButton = new Button("Save");
-
         this.getChildren().addAll(cancelButton, saveButton);
+    }
+
+    public void setOnCancel(Runnable onCancel) {
+        this.cancelButton.setOnAction(e -> onCancel.run());
+    }
+
+    public void setOnSave(Runnable onSave) {
+        this.saveButton.setOnAction(e-> onSave.run());
     }
 }

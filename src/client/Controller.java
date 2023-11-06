@@ -4,6 +4,7 @@ import client.components.AnimatedLoadingBar;
 import client.components.HomePage;
 import client.components.RecordingPage;
 import client.components.NewRecipeConfirmPage;
+import client.components.RecipeDetails;
 import client.recipe.GenerateRecipe;
 import client.recipe.RecipeRequestParameter;
 
@@ -35,9 +36,9 @@ public class Controller {
     private Scene recordMealType, recordIngredients, loading, home;
     private RecordingPage mealTypePage, ingredientsPage;
     private HomePage homePage;
-
-    private Scene newRecipeConfirm;
+    private Scene newRecipeConfirm, recipeDetails;
     private NewRecipeConfirmPage newRecipeConfirmPage;
+    private RecipeDetails newRecipeDetails;
 
     private AnimatedLoadingBar loadingPage;
     private static final int WIDTH = 500, HEIGHT = 500;
@@ -73,6 +74,7 @@ public class Controller {
 
         homePage = new HomePage(new ArrayList());
         homePage.setCreateButtonCallback(() -> createRecipeButtonClicked());
+
         this.home = new Scene(homePage, WIDTH, HEIGHT);
         // Set the title of the app
         primaryStage.setTitle("PantryPal");
@@ -80,6 +82,7 @@ public class Controller {
         primaryStage.setScene(this.home);
         // Make window non-resizable
         primaryStage.setResizable(false);
+
     }
 
     public void
@@ -104,10 +107,19 @@ public class Controller {
     }
 
     public void
+    transitionToHomeScene() 
+    {
+        this.state = State.HOME;
+        primaryStage.setScene(home);
+    }
+
+
+    public void
     requestTranscription()
     {
         File mealTypeFile = new File(MEAL_TYPE_AUDIO);
         File ingredientsFile = new File(INGREDIENTS_AUDIO);
+        if (mealTypeFile != null && ingredientsFile != null) {
         RecipeRequestParameter params = new RecipeRequestParameter(mealTypeFile, ingredientsFile);
 
         generateRecipe.requestGeneratingRecipe(
@@ -121,6 +133,7 @@ public class Controller {
 
             }
         );
+        }
     }
 
     public void
@@ -169,7 +182,29 @@ public class Controller {
         newRecipeConfirmPage = new NewRecipeConfirmPage(recipe);
         newRecipeConfirm = new Scene(newRecipeConfirmPage);
         primaryStage.setScene(newRecipeConfirm);
+        newRecipeConfirmPage.setCancelCallback(()->discardGeneratedRecipeClicked());
+        newRecipeConfirmPage.setSaveCallback(() -> saveRecipeClicked(recipe));
     }
+
+    public void
+    discardGeneratedRecipeClicked() {
+            this.transitionToHomeScene();
+    }
+
+
+    public void
+    saveRecipeClicked(Recipe recipe) {
+            recipes.add(recipe);
+            homePage.updateRecipeList(recipes);
+            this.transitionToHomeScene();
+    }
+
+    // public void
+    // detailsButtonClicked(Recipe recipe) {
+    //     RecipeDetails detailsPage = new RecipeDetails(recipe);
+    //     Scene detailsScene = new Scene(detailsPage);
+    //     primaryStage.setScene(detailsScene);
+    // }
 
     // TODO: Add methods for making requests through Model, and add button actions when adding the
     // scenes
