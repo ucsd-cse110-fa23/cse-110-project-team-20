@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,17 +43,22 @@ public class JSONRecipeRepository implements IRecipeRepository {
 
   @Override
   public Recipe getRecipe(int id) {
-    return getListOfRecipes().get(id);
+    List<Recipe> recipes = getListOfRecipes();
+    if (id >= recipes.size() || id < 0) {
+      return null;
+    } else {
+      return recipes.get(id);
+    }
   }
 
   @Override
   public void createRecipe(Recipe recipe) {
     List<Recipe> recipes = getListOfRecipes();
     Recipe newRecipe = new Recipe(
-        recipe.getTitle(),
-        recipe.getDescription(),
-        recipe.getIngredients(),
-        recipe.getMealType());
+        Optional.ofNullable(recipe.getTitle()).orElse(""),
+        Optional.ofNullable(recipe.getDescription()).orElse(""),
+        Optional.ofNullable(recipe.getIngredients()).orElse(""),
+        Optional.ofNullable(recipe.getMealType()).orElse(""));
     recipes.add(0, newRecipe);
     commit(recipes);
   }
@@ -63,10 +69,10 @@ public class JSONRecipeRepository implements IRecipeRepository {
     Recipe originalRecipe = recipes.get(id);
 
     Recipe newRecipe = new Recipe(
-        recipe.getTitle(),
-        recipe.getDescription(),
-        originalRecipe.getIngredients(),
-        originalRecipe.getMealType());
+        Optional.ofNullable(recipe.getTitle()).orElse(""),
+        Optional.ofNullable(recipe.getDescription()).orElse(""),
+        Optional.ofNullable(originalRecipe.getIngredients()).orElse(""),
+        Optional.ofNullable(originalRecipe.getMealType()).orElse(""));
 
     recipes.set(id, newRecipe);
     commit(recipes);

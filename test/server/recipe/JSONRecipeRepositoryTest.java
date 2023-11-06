@@ -1,6 +1,7 @@
 package server.recipe;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
@@ -67,6 +68,13 @@ public class JSONRecipeRepositoryTest {
     assertEquals("description_B", recipe.getDescription());
     assertEquals("ingredients_B", recipe.getIngredients());
     assertEquals("meal_type_B", recipe.getMealType());
+  }
+
+  @Test
+  public void getRecipeNonExist() {
+    IRecipeRepository repo = new JSONRecipeRepository(dbPath);
+    Recipe recipe = repo.getRecipe(1111);
+    assertNull(recipe);
   }
 
   @Test
