@@ -74,7 +74,7 @@ public class UserStoryTest extends UserStoryTestBase {
       // saying "dinner"
       controller.mealTypeRecordingButtonClicked();
       next.run();
-    }, 500);
+    }, 2000);
   }
 
   private void ThenTheRecipeGenerationPromptWindowBecomesActive(Stage primaryStage) {
@@ -111,7 +111,7 @@ public class UserStoryTest extends UserStoryTestBase {
       // saying "dinner"
       controller.mealTypeRecordingButtonClicked();
       next.run();
-    }, 300);
+    }, 2000);
   }
 
   private void WhenTheQueryHasTheIngredients(Controller controller, Runnable next) {
@@ -120,7 +120,7 @@ public class UserStoryTest extends UserStoryTestBase {
       // saying "“banana, flour, eggs”"
       controller.ingredientsRecordingButtonClicked();
       next.run();
-    }, 300);
+    }, 1000);
   }
 
   private void ThenAWindowWithTheNewRecipeAlongWithAListOfInstructionsAndIngredientsBecomesActive(Stage primaryStage) {
