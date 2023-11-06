@@ -13,15 +13,18 @@ abstract public class UserStoryTestBase {
   private static Double delayMultifactor;
 
   @BeforeAll
-  public static void setUpDelay()
-  {
+  public static void setUpDelay() {
     String value = System.getProperty("test_delay_factor");
 
-    try {
-      delayMultifactor = Double.parseDouble(value);
-   } catch(NumberFormatException ex) {
+    if (value != null) {
+      try {
+        delayMultifactor = Double.parseDouble(value);
+      } catch (NumberFormatException ex) {
+        delayMultifactor = 1.0;
+      }
+    } else {
       delayMultifactor = 1.0;
-   }
+    }
   }
 
   // setTimeout helper
@@ -57,7 +60,9 @@ abstract public class UserStoryTestBase {
       this.primaryStage = primaryStage;
       this.controller = controller;
 
-      runnable.run();
+      setTimeout(() -> {
+        runnable.run();
+      }, 10);
     });
     inspectionThread.start();
 
