@@ -1,20 +1,35 @@
 package client;
 
 import client.recipe.GenerateRecipe;
+import client.helpers.AppInspection;
 import client.recipe.LocalRecipeGenerator;
 import client.recipe.ServerRecipeGenerator;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 /**
  * PantryPals JavaFX Application
  */
 public class PantryPalsApp extends Application {
-    Controller controller;
+    private static AppInspection inspector;
 
     public static void
     main(String[] args)
     {
+        launch(args);
+    }
+
+    public static void
+    inspect(AppInspection thisInspector)
+    {
+        inspect(thisInspector, null);
+    }
+
+    public static void
+    inspect(AppInspection thisInspector, String[] args)
+    {
+        inspector = thisInspector;
         launch(args);
     }
 
@@ -29,5 +44,10 @@ public class PantryPalsApp extends Application {
 
         Controller controller = new Controller(primaryStage, generateRecipe);
         controller.start();
+
+        if (inspector != null) {
+            inspector.inspect(this, primaryStage, controller);
+            Platform.exit();
+        }
     }
 }
