@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
 import client.Controller;
 import client.components.HomePage;
@@ -16,6 +17,11 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+@DisabledIfSystemProperty(
+  named = "user_story_test",
+  matches = "excluded",
+  disabledReason = "GitHub Actions cannot handle the UI interaction, so we need to do manually on local for this case"
+)
 @TestMethodOrder(OrderAnnotation.class)
 public class UserStoryTest extends UserStoryTestBase {
   @Test
