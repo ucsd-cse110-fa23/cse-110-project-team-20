@@ -5,7 +5,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- * Home screen for PantryPals
+ * PantryPals JavaFX Application
  */
 public class PantryPalsApp extends Application {
     Controller controller;
