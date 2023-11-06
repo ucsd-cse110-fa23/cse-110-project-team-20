@@ -59,7 +59,7 @@ public class UserStoryTest extends UserStoryTestBase {
     condition(() -> {
       GivenTheUserIsCurrentlyOnTheMealTypePromptWindow(controller);
       WhenAMealTypeDinnerIsGiven(controller, () -> {});
-    });
+    }, 5000);
 
     ThenTheRecipeGenerationPromptWindowBecomesActive(primaryStage);
   }
@@ -74,7 +74,7 @@ public class UserStoryTest extends UserStoryTestBase {
       // saying "dinner"
       controller.mealTypeRecordingButtonClicked();
       next.run();
-    }, 2000);
+    }, 500);
   }
 
   private void ThenTheRecipeGenerationPromptWindowBecomesActive(Stage primaryStage) {
@@ -99,7 +99,7 @@ public class UserStoryTest extends UserStoryTestBase {
       GivenTheUserIsOnTheIngredientsPromptWindow(controller, () -> {
         WhenTheQueryHasTheIngredients(controller, () -> {});
       });
-    });
+    }, 5000);
 
     ThenAWindowWithTheNewRecipeAlongWithAListOfInstructionsAndIngredientsBecomesActive(primaryStage);
   }
@@ -111,7 +111,7 @@ public class UserStoryTest extends UserStoryTestBase {
       // saying "dinner"
       controller.mealTypeRecordingButtonClicked();
       next.run();
-    }, 2000);
+    }, 300);
   }
 
   private void WhenTheQueryHasTheIngredients(Controller controller, Runnable next) {
@@ -120,7 +120,7 @@ public class UserStoryTest extends UserStoryTestBase {
       // saying "“banana, flour, eggs”"
       controller.ingredientsRecordingButtonClicked();
       next.run();
-    }, 1000);
+    }, 500);
   }
 
   private void ThenAWindowWithTheNewRecipeAlongWithAListOfInstructionsAndIngredientsBecomesActive(Stage primaryStage) {
