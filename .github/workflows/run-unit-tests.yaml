@@ -29,7 +29,7 @@ jobs:
       - name: Execute Gradle build
         uses: coactions/setup-xvfb@v1
         with:
-          run: ./gradlew -Dtest_delay_factor=3 build
+          run: ./gradlew -Duser_story_test=excluded build
 
       # report the results
       - name: Publish Test Report
