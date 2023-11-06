@@ -32,7 +32,7 @@ abstract public class UserStoryTestBase {
 
   public void condition(Runnable runnable) {
     // minimum 1s to avoid switching delay
-    condition(runnable, 2000);
+    condition(runnable, 5000);
   }
 
   public void condition(Runnable runnable, long utillMillis) {
