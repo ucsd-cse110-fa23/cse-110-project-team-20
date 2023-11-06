@@ -1,6 +1,10 @@
 package server;
 
 import com.sun.net.httpserver.*;
+
+import server.recipe.IRecipeRepository;
+import server.recipe.JSONRecipeRepository;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.*;
@@ -22,8 +26,11 @@ public class PantryPalsServer {
         HttpServer server = HttpServer.create(
                 new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
 
-        String contextPath = "/";
-        server.createContext(contextPath, new RequestHandler());
+        IRecipeRepository recipeRepository = new JSONRecipeRepository("database.json");
+
+        server.createContext("/", new IndexHttpHandler());
+        server.createContext("/recipe", new RecipeHttpHandler(recipeRepository));
+
         server.setExecutor(threadPoolExecutor);
         server.start();
 
