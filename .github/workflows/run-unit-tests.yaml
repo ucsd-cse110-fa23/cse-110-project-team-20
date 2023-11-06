@@ -27,9 +27,7 @@ jobs:
 
       # build everything (includes running unit tests)
       - name: Execute Gradle build
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: ./gradlew -Duser_story_test=excluded build
+        run: ./gradlew -Duser_story_test=excluded build
 
       # report the results
       - name: Publish Test Report
