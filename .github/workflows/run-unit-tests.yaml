@@ -27,7 +27,9 @@ jobs:
 
       # build everything (includes running unit tests)
       - name: Execute Gradle build
-        run: ./gradlew build
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: ./gradlew build
 
       # report the results
       - name: Publish Test Report
