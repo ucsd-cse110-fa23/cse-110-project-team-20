@@ -21,10 +21,13 @@ public class PantryPalsApp extends Application {
     public void
     start(Stage primaryStage) throws Exception
     {
-        // LocalRecipeGenerator generateRecipe = new LocalRecipeGenerator();
-        // generateRecipe.setAlwaysFail(true); // if we need to test failing
+        GenerateRecipe generateRecipe;
 
-        GenerateRecipe generateRecipe = new ServerRecipeGenerator();
+        if (inspector != null) {
+            generateRecipe = new LocalRecipeGenerator();
+        } else {
+            generateRecipe = new ServerRecipeGenerator();
+        }
 
         Controller controller = new Controller(primaryStage, generateRecipe);
         controller.start();
