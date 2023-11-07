@@ -71,5 +71,5 @@ task runServer(type: JavaExec) {
 task runApp(type: JavaExec) {
     group = "Execution"
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'client.PantryPalsApp'
+    mainClass = 'client.Main'
 }
