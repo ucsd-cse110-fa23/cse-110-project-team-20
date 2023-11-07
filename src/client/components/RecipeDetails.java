@@ -39,7 +39,7 @@ class DetailsFooter extends HBox {
 
     public DetailsFooter()
     {
-        this.cancelButton = new Button("Discard");
+        this.cancelButton = new Button("Go Back");
         this.getChildren().addAll(cancelButton);
     }
 
