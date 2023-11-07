@@ -2,6 +2,12 @@ package server;
 
 import com.sun.net.httpserver.*;
 
+import server.api.ChatGPTService;
+import server.api.IOpenAIConfiguration;
+import server.api.ITextGenerateService;
+import server.api.IVoiceToTextService;
+import server.api.OpenAIConfiguration;
+import server.api.WhisperService;
 import server.recipe.IRecipeRepository;
 import server.recipe.JSONRecipeRepository;
 
@@ -25,10 +31,16 @@ public class PantryPalServer {
         HttpServer server =
             HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
 
+        IOpenAIConfiguration configuration = new OpenAIConfiguration();
+        
+        ITextGenerateService textGenerateService = new ChatGPTService(configuration);
+        IVoiceToTextService voiceToTextService = new WhisperService(configuration);
+
         IRecipeRepository recipeRepository = new JSONRecipeRepository("database.json");
 
         server.createContext("/", new IndexHttpHandler());
         server.createContext("/recipe", new RecipeHttpHandler(recipeRepository));
+        server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService));
 
         server.setExecutor(threadPoolExecutor);
         server.start();
