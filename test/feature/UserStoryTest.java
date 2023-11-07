@@ -2,7 +2,6 @@ package feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
@@ -12,11 +11,14 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
 import client.Controller;
+import client.Recipe;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecordingPage;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 @DisabledIfSystemProperty(
@@ -137,8 +139,7 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   @Test
-  @Order(23)
-  @Disabled()
+  @Order(24)
   public void scenario_2_3_saveButtionIsClicked() {
     /**
      * Scenario 2.3: Save Button Is Clicked
@@ -164,13 +165,29 @@ public class UserStoryTest extends UserStoryTestBase {
     });
   }
 
-  private void WhenTheSaveButtonIsPressed(Controller controller) {}
-  private void ThenTheRecipeListBecomesActive(Stage primaryStage) {}
-  private void ThenTheGeneratedRecipeIsAtTheTopOfTheList(Stage primaryStage) {}
+  private void WhenTheSaveButtonIsPressed(Controller controller) {
+    // assume the recipe is generated
+    Recipe recipe = new Recipe("Banana Pancake", "Some generated recipe for banana pancake.");
+    setTimeout(() -> {
+      controller.saveRecipeClicked(recipe);
+    }, 200);
+  }
+
+  private void ThenTheRecipeListBecomesActive(Stage primaryStage) {
+    assertEquals(primaryStage.getScene().getRoot().getClass(), HomePage.class);
+  }
+
+  private void ThenTheGeneratedRecipeIsAtTheTopOfTheList(Stage primaryStage) {
+    HomePage homePage = (HomePage) primaryStage.getScene().getRoot();
+    ScrollPane scrollPane = (ScrollPane) homePage.getCenter();
+    Pane recipeList = (Pane) scrollPane.getContent();
+
+    // supposed to new one
+    assertEquals(1, recipeList.getChildren().size());
+  }
 
   @Test
-  @Order(24)
-  @Disabled()
+  @Order(23)
   public void scenario_2_4_cancelButtionIsClicked() {
     /**
      * Scenario 2.4: Cancel Button Is Clicked
@@ -190,7 +207,18 @@ public class UserStoryTest extends UserStoryTestBase {
     ThenTheListOfRecipesIsUnchanged(primaryStage);
   }
 
-  private void WhenTheCancelButtonIsPressed(Controller controller) {}
-  private void ThenTheListOfRecipesIsUnchanged(Stage primaryStage) {}
+  private void WhenTheCancelButtonIsPressed(Controller controller) {
+    setTimeout(() -> {
+      controller.discardGeneratedRecipeClicked();
+    }, 200);
+  }
+
+  private void ThenTheListOfRecipesIsUnchanged(Stage primaryStage) {
+    HomePage homePage = (HomePage) primaryStage.getScene().getRoot();
+    ScrollPane scrollPane = (ScrollPane) homePage.getCenter();
+    Pane recipeList = (Pane) scrollPane.getContent();
+
+    assertEquals(0, recipeList.getChildren().size());
+  }
 
 }
