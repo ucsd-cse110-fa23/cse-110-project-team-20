@@ -73,18 +73,13 @@ public class GenerateRecipeHttpHandlerTest {
         };
 
         IVoiceToTextService voiceToTextService = new IVoiceToTextService() {
-            private int toggle = 0;
             @Override
             public String transcribe(File file) {
-                switch (toggle++) {
-                    case 0:
-                        return "tomato, eggs, broccoli, and bacon";
-                    case 1:
-                        return "dinner";
-                    default:
-                        break;
+                if (file.getName().contains("ingredients")) {
+                    return "tomato, eggs, broccoli, and bacon";
+                } else {
+                    return "dinner";
                 }
-                return "";
             }
         };
 
