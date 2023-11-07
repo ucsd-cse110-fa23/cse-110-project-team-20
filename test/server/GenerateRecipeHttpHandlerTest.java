@@ -12,12 +12,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.json.JSONObject;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.sun.net.httpserver.Headers;
 
 import server.api.ITextGenerateService;
+import server.api.IVoiceToTextService;
 import server.api.IRecipeQuery;
 import server.api.TextGenerateServiceException;
 import server.mock.MockHttpRequest;
@@ -26,20 +26,26 @@ public class GenerateRecipeHttpHandlerTest {
     @Test
     public void instance()
     {
-        ITextGenerateService chatGPTService = new ITextGenerateService() {
+        ITextGenerateService textGenerateService = new ITextGenerateService() {
             @Override
             public String request(IRecipeQuery query) throws TextGenerateServiceException {
                 return "";
             }
         };
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(chatGPTService);
+        IVoiceToTextService voiceToTextService = new IVoiceToTextService() {
+            @Override
+            public String transcribe(File file) {
+                return "";
+            }
+        };
+
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService);
         assertInstanceOf(GenerateRecipeHttpHandler.class, handler);
     }
 
     @Test
-    @Disabled("Disabled until file handling and Whipser API is implemented")
-    public void post() throws IOException
+    public void integrationTestWithMock() throws IOException
     {
         File audioRequestBodyFile = new File("test/resources/audio-request-body-with-voice.txt");
         InputStream inputStream = new FileInputStream(audioRequestBodyFile);
@@ -59,20 +65,36 @@ public class GenerateRecipeHttpHandlerTest {
         headers.put("Content-Type", contentTypeArr);
         headers.put("Content-Length", contentLengthArr);
 
-        ITextGenerateService chatGPTService = new ITextGenerateService() {
+        ITextGenerateService textGenerateService = new ITextGenerateService() {
             @Override
             public String request(IRecipeQuery query) throws TextGenerateServiceException {
-                return query.toQueryableString();
+                return String.format("Generated recipe based on: %s", query.toQueryableString());
             }
         };
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(chatGPTService);
+        IVoiceToTextService voiceToTextService = new IVoiceToTextService() {
+            private int toggle = 0;
+            @Override
+            public String transcribe(File file) {
+                switch (toggle++) {
+                    case 0:
+                        return "tomato, eggs, broccoli, and bacon";
+                    case 1:
+                        return "dinner";
+                    default:
+                        break;
+                }
+                return "";
+            }
+        };
+
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService);
         MockHttpRequest request = new MockHttpRequest();
 
         request.setHeaders(headers);
         request.setRequestBody(inputStream);
 
         String response = handler.handlePost(request);
-        assertEquals("Create a recipe with tomato, eggs, broccoli, and bacon. as Dinner", response);
+        assertEquals("Generated recipe based on: Create a recipe with tomato, eggs, broccoli, and bacon as dinner", response);
     }
 }

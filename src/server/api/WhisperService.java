@@ -1,14 +1,19 @@
-package server;
+package server.api;
 
 import java.io.*;
 import java.net.*;
 import org.json.*;
 
-public class Whisper {
+public class WhisperService implements IVoiceToTextService {
     private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
-    private static final String TOKEN = "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";
     private static final String MODEL = "whisper-1";
 
+    IOpenAIConfiguration configuration;
+
+    public WhisperService(IOpenAIConfiguration configuration) {
+      this.configuration = configuration;
+    }
+  
     // Helper method to write a parameter to the output stream in multipart form
     // data format
     private static void
@@ -86,7 +91,7 @@ public class Whisper {
         return errorResult;
     }
 
-    public static String
+    public String
     transcribe(File file)
     {
         // Set up HTTP connection
@@ -108,7 +113,7 @@ public class Whisper {
             String boundary = "Boundary-" + System.currentTimeMillis();
             connection.setRequestProperty(
                 "Content-Type", "multipart/form-data; boundary=" + boundary);
-            connection.setRequestProperty("Authorization", "Bearer " + TOKEN);
+            connection.setRequestProperty("Authorization", "Bearer " + configuration.apiKey());
 
             // Set up output stream to write request body
             OutputStream outputStream = connection.getOutputStream();

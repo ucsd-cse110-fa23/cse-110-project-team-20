@@ -6,16 +6,19 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import server.api.ITextGenerateService;
+import server.api.IVoiceToTextService;
 import server.api.RecipeQuery;
 import server.request.FileRequestHelper;
 import server.request.IHttpRequest;
 
 public class GenerateRecipeHttpHandler extends HttpHandlerBase {
     private ITextGenerateService textGenerateService;
+    private IVoiceToTextService voiceToTextService;
 
-    public GenerateRecipeHttpHandler(ITextGenerateService textGenerateService)
+    public GenerateRecipeHttpHandler(ITextGenerateService textGenerateService, IVoiceToTextService voiceToTextService)
     {
         this.textGenerateService = textGenerateService;
+        this.voiceToTextService = voiceToTextService;
     }
 
     @Override
@@ -35,9 +38,9 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
 
         // Run concurrently
         CompletableFuture<String> future1 =
-            CompletableFuture.supplyAsync(() -> Whisper.transcribe(ingredientsFile));
+            CompletableFuture.supplyAsync(() -> voiceToTextService.transcribe(ingredientsFile));
         CompletableFuture<String> future2 =
-            CompletableFuture.supplyAsync(() -> Whisper.transcribe(mealTypeFile));
+            CompletableFuture.supplyAsync(() -> voiceToTextService.transcribe(mealTypeFile));
 
         String ingredients = future1.join();
         String mealType = future2.join();
