@@ -5,7 +5,7 @@ import java.net.*;
 import org.json.*;
 
 public class WhisperService implements IVoiceToTextService {
-    private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/transcriptions";
+    private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/translations";
     private static final String MODEL = "whisper-1";
 
     IOpenAIConfiguration configuration;

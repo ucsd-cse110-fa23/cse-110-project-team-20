@@ -1,7 +1,7 @@
 package server;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,8 +24,7 @@ import server.mock.MockHttpRequest;
 
 public class GenerateRecipeHttpHandlerTest {
     @Test
-    public void instance()
-    {
+    public void instance() {
         ITextGenerateService textGenerateService = new ITextGenerateService() {
             @Override
             public String request(IRecipeQuery query) throws TextGenerateServiceException {
@@ -45,12 +44,12 @@ public class GenerateRecipeHttpHandlerTest {
     }
 
     @Test
-    public void integrationTestWithMock() throws IOException
-    {
+    public void integrationTestWithMock() throws IOException {
         File audioRequestBodyFile = new File("test/resources/audio-request-body-with-voice.txt");
         InputStream inputStream = new FileInputStream(audioRequestBodyFile);
 
-        String audioRequestHeaderText = Files.readString(Path.of("test/resources/audio-request-header-with-voice.json"));
+        String audioRequestHeaderText = Files
+                .readString(Path.of("test/resources/audio-request-header-with-voice.json"));
         Headers headers = new Headers();
         JSONObject headersJson = new JSONObject(audioRequestHeaderText);
 
@@ -68,7 +67,7 @@ public class GenerateRecipeHttpHandlerTest {
         ITextGenerateService textGenerateService = new ITextGenerateService() {
             @Override
             public String request(IRecipeQuery query) throws TextGenerateServiceException {
-                return String.format("Generated recipe based on: %s", query.toQueryableString());
+                return String.format("Title of recipe\n\nGenerated recipe based on: %s", query.toQueryableString());
             }
         };
 
@@ -90,6 +89,7 @@ public class GenerateRecipeHttpHandlerTest {
         request.setRequestBody(inputStream);
 
         String response = handler.handlePost(request);
-        assertEquals("Generated recipe based on: Create a recipe with tomato, eggs, broccoli, and bacon as dinner", response);
+        JSONObject responseJson = new JSONObject(response);
+        assertTrue(responseJson.getString("description").contains("Generated recipe based on:"));
     }
 }

@@ -14,8 +14,8 @@ public class ChatGPTService implements ITextGenerateService {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/completions";
   private static final String MODEL = "text-davinci-003";
 
-  private static final int MAX_TOKENS = 100;
-  private static final double TEMPERATURE = 1.0;
+  private static final int MAX_TOKENS = 1000;
+  private static final double TEMPERATURE = 0.5;
 
   IOpenAIConfiguration configuration;
 
