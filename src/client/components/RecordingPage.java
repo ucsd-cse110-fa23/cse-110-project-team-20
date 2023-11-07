@@ -129,5 +129,6 @@ public class RecordingPage extends VBox {
     {
         targetDataLine.stop();
         targetDataLine.close();
+        this.startButton.setText("Start Recording");
     }
 }

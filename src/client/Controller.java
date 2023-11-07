@@ -72,7 +72,7 @@ public class Controller {
         loadingPage.setLoadingText("Finding the perfect recipe...");
         this.loading = new Scene(loadingPage, WIDTH, HEIGHT);
 
-        homePage = new HomePage(new ArrayList());
+        homePage = new HomePage(new ArrayList(), this);
         homePage.setCreateButtonCallback(() -> createRecipeButtonClicked());
 
         this.home = new Scene(homePage, WIDTH, HEIGHT);
@@ -136,6 +136,22 @@ public class Controller {
         }
     }
 
+
+    public void 
+    openRecipeDetails(Recipe recipe) {
+        RecipeDetails detailsPage = new RecipeDetails(recipe);
+        Scene detailsScene = new Scene(detailsPage, WIDTH, HEIGHT);
+        
+        detailsPage.setCancelCallback(() -> backToHomeScene());
+
+        primaryStage.setScene(detailsScene);
+    }
+
+    public void 
+    backToHomeScene() {
+        primaryStage.setScene(home);
+    }
+
     public void
     transitionToLoadingScene()
     {
@@ -195,7 +211,7 @@ public class Controller {
     public void
     saveRecipeClicked(Recipe recipe) {
             recipes.add(recipe);
-            homePage.updateRecipeList(recipes);
+            homePage.updateRecipeList(recipe);
             this.transitionToHomeScene();
     }
 
