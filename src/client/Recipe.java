@@ -1,7 +1,5 @@
 package client;
 
-import org.json.JSONPropertyName;
-
 public class Recipe {
     private String title;
     private String description;
@@ -31,7 +29,6 @@ public class Recipe {
         return ingredients;
     }
 
-    @JSONPropertyName("meal_type")
     public String getMealType() {
         return mealType;
     }

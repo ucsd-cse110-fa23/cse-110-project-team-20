@@ -8,7 +8,7 @@ import com.sun.net.httpserver.Headers;
 import server.request.IHttpRequest;
 
 public class MockHttpRequest implements IHttpRequest {
-    private HashMap<String, String> mockQuery = new HashMap<>();
+    private HashMap<String, String> mockQuery;
     private String mockRequestBodyAsString;
     private InputStream mockRequestBody;
     private Headers mockHeaders;
