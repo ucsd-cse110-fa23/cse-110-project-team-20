@@ -13,14 +13,14 @@ import java.net.URL;
 
 import client.Recipe;
 
-public class ServerRecipeGenerator implements GenerateRecipe {
+public class ServerRecipeGenerator implements IGenerateRecipe {
   private static final String API_ENDPOINT = "http://localhost:8100/recipe/generate";
 
   @Override
   public void requestGeneratingRecipe(
       RecipeRequestParameter parameter,
-      RecipeGenerated onRecipeGenerated,
-      RecipeGenerationFailed onRecipeGenerationFailed) {
+      IRecipeGenerated onRecipeGenerated,
+      IRecipeGenerationFailed onRecipeGenerationFailed) {
 
     Thread t = new Thread(() -> {
       try {

@@ -2,6 +2,7 @@ package client;
 
 import org.json.JSONPropertyName;
 
+
 public class Recipe {
     private String title;
     private String description;
