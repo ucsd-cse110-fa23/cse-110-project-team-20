@@ -27,7 +27,7 @@ jobs:
 
       # build everything (includes running unit tests)
       - name: Execute Gradle build
-        run: ./gradlew build
+        run: ./gradlew -Duser_story_test=excluded build
 
       # report the results
       - name: Publish Test Report

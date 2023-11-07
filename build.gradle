@@ -39,6 +39,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    options {
+        systemProperty "test_delay_factor", System.getProperty("test_delay_factor")
+        systemProperty "user_story_test", System.getProperty("user_story_test")
+    }
+
     finalizedBy jacocoTestReport
 }
 
