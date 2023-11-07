@@ -10,15 +10,16 @@ import javafx.stage.Stage;
 public class PantryPalsApp extends Application {
     Controller controller;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-    // public static void launcher(String[] args) {
+    // public static void main(String[] args) {
     //     launch(args);
     // }
+    public static void launcher(String[] args) {
+        launch(args);
+    }
 
     @Override
-    public void start(Stage primaryStage) throws Exception
+    public void
+    start(Stage primaryStage) throws Exception
     {
         LocalRecipeGenerator generateRecipe = new LocalRecipeGenerator();
         // generateRecipe.setAlwaysFail(true); // if we need to test failing
