@@ -1,29 +1,32 @@
 package client.components;
 
+import client.Controller;
 import client.Recipe;
+import java.util.List;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 // import client.RecipeBox;
 import javafx.scene.Scene;
-import java.util.List;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import client.Controller;
-import javafx.geometry.Pos;
-import javafx.geometry.Insets;
-import javafx.stage.Stage;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class HomePage extends BorderPane {
     private Header header;
     private RecipeList recipeList;
     private Controller controller;
+    private String headerStyle =
+        "-fx-background-color: #3498db;-fx-text-fill: #fff;-fx-font-size: 36px;-fx-padding: 10px 20px;-fx-alignment: center-left;-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 1);-fx-font-weight: bold;-fx-border-color: #2980b9;-fx-border-width: 0 0 2 0;-fx-border-radius: 0;";
 
     public HomePage(List<Recipe> recipes, Controller controller)
     {
         this.controller = controller;
         header = new Header();
+        header.setStyle(headerStyle);
         recipeList = new RecipeList(recipes, this.controller);
         this.setTop(header);
         this.setCenter(new ScrollPane(recipeList));
@@ -37,16 +40,16 @@ public class HomePage extends BorderPane {
     }
 
     public void
-    updateRecipeList(Recipe recipe) {
-    
-       this.recipeList.addRecipe(recipe);
+    updateRecipeList(Recipe recipe)
+    {
+        this.recipeList.addRecipe(recipe);
     }
 
-    public void 
-    openDetailedView(Recipe recipe) {
-    controller.openRecipeDetails(recipe);
+    public void
+    openDetailedView(Recipe recipe)
+    {
+        controller.openRecipeDetails(recipe);
     }
-
 }
 
 class Header extends BorderPane {
@@ -59,7 +62,15 @@ class Header extends BorderPane {
         this.setStyle("-fx-background-color: #F0F8FF;");
 
         // titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
-        this.createButton = new Button("Create +");
+        this.createButton = new Button("+");
+        createButton.setStyle("-fx-background-radius: 1.5em; "
+            + "-fx-min-width: 1.5em; "
+            + "-fx-min-height: 1.5em; "
+            + "-fx-max-width: 1.5em; "
+            + "-fx-max-height: 1.5em; "
+            + "-fx-background-color: -fx-body-color;"
+            + "-fx-background-insets: 0px; "
+            + "-fx-padding: 0px;");
         this.appName = new Label("Pantry Pals");
         this.setLeft(appName);
         this.setRight(createButton);
@@ -75,10 +86,11 @@ class Header extends BorderPane {
 // TODO: add transition toRecipe
 class RecipeBox extends HBox {
     private Button detailsButton;
-    public RecipeBox(Recipe recipe, Controller controller) {
+    public RecipeBox(Recipe recipe, Controller controller)
+    {
         Controller myController = controller;
         Recipe myRecipe = recipe;
-        
+
         VBox recipeDetails = new VBox(10);
         this.setStyle("-fx-border-color: black; -fx-border-width: 1;");
         recipeDetails.setPadding(new Insets(10, 10, 10, 10));
@@ -90,22 +102,19 @@ class RecipeBox extends HBox {
 
         this.getChildren().add(recipeDetails);
         detailsButton.setOnAction(event -> myController.openRecipeDetails(myRecipe));
-
-        
     }
 
-    
     public void
-    setDetailsButtonCallback(Runnable r) 
+    setDetailsButtonCallback(Runnable r)
     {
         this.detailsButton.setOnAction(e -> r.run());
     }
-
 }
 
 class RecipeList extends VBox {
     Controller myController;
-    public RecipeList(List<Recipe> recipes, Controller controller) {
+    public RecipeList(List<Recipe> recipes, Controller controller)
+    {
         myController = controller;
         this.setSpacing(10); // sets spacing between contacts
         this.setPrefSize(500, 460);
@@ -116,7 +125,8 @@ class RecipeList extends VBox {
     }
 
     public void
-    addRecipe(Recipe recipe) {
+    addRecipe(Recipe recipe)
+    {
         RecipeBox newRecipeBox = new RecipeBox(recipe, myController);
         this.getChildren().add(newRecipeBox);
     }
