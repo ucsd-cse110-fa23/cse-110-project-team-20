@@ -1,6 +1,6 @@
-package server.chatgpt;
+package server.api;
 
-public class RecipeQuery implements RecipeQueryable {
+public class RecipeQuery implements IRecipeQuery {
   /**
    * Prompt template for ChatGPT query
    */

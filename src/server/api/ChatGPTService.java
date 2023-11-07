@@ -1,4 +1,4 @@
-package server.chatgpt;
+package server.api;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,20 +10,20 @@ import java.net.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ChatGPTService implements IChatGPTService {
+public class ChatGPTService implements ITextGenerateService {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/completions";
   private static final String MODEL = "text-davinci-003";
 
   private static final int MAX_TOKENS = 100;
   private static final double TEMPERATURE = 1.0;
 
-  IChatGPTConfiguration configuration;
+  IOpenAIConfiguration configuration;
 
-  public ChatGPTService(IChatGPTConfiguration configuration) {
+  public ChatGPTService(IOpenAIConfiguration configuration) {
     this.configuration = configuration;
   }
 
-  public String request(RecipeQueryable query) throws ChatGPTServiceException {
+  public String request(IRecipeQuery query) throws TextGenerateServiceException {
 
     String prompt = query.toQueryableString();
 
@@ -39,7 +39,7 @@ public class ChatGPTService implements IChatGPTService {
     try {
       uri = new URI(API_ENDPOINT);
     } catch (URISyntaxException e) {
-      throw new ChatGPTServiceException(e);
+      throw new TextGenerateServiceException(e);
     }
 
     HttpClient client = HttpClient.newHttpClient();
@@ -57,9 +57,9 @@ public class ChatGPTService implements IChatGPTService {
           request, HttpResponse.BodyHandlers.ofString());
 
     } catch (IOException e) {
-      throw new ChatGPTServiceException(e);
+      throw new TextGenerateServiceException(e);
     } catch (InterruptedException e) {
-      throw new ChatGPTServiceException(e);
+      throw new TextGenerateServiceException(e);
     }
 
     String responseBody = response.body();
@@ -67,7 +67,7 @@ public class ChatGPTService implements IChatGPTService {
     JSONObject responseJson = new JSONObject(responseBody);
 
     if (responseJson.has("error")) {
-      throw new ChatGPTServiceException(responseJson.getJSONObject("error").getString("message"));
+      throw new TextGenerateServiceException(responseJson.getJSONObject("error").getString("message"));
     }
 
     JSONArray choices = responseJson.getJSONArray("choices");

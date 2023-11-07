@@ -17,18 +17,18 @@ import org.junit.jupiter.api.Test;
 
 import com.sun.net.httpserver.Headers;
 
-import server.chatgpt.ChatGPTServiceException;
-import server.chatgpt.IChatGPTService;
-import server.chatgpt.RecipeQueryable;
+import server.api.ITextGenerateService;
+import server.api.IRecipeQuery;
+import server.api.TextGenerateServiceException;
 import server.mock.MockHttpRequest;
 
 public class GenerateRecipeHttpHandlerTest {
     @Test
     public void instance()
     {
-        IChatGPTService chatGPTService = new IChatGPTService() {
+        ITextGenerateService chatGPTService = new ITextGenerateService() {
             @Override
-            public String request(RecipeQueryable query) throws ChatGPTServiceException {
+            public String request(IRecipeQuery query) throws TextGenerateServiceException {
                 return "";
             }
         };
@@ -59,9 +59,9 @@ public class GenerateRecipeHttpHandlerTest {
         headers.put("Content-Type", contentTypeArr);
         headers.put("Content-Length", contentLengthArr);
 
-        IChatGPTService chatGPTService = new IChatGPTService() {
+        ITextGenerateService chatGPTService = new ITextGenerateService() {
             @Override
-            public String request(RecipeQueryable query) throws ChatGPTServiceException {
+            public String request(IRecipeQuery query) throws TextGenerateServiceException {
                 return query.toQueryableString();
             }
         };

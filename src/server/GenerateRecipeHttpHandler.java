@@ -4,17 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import server.chatgpt.IChatGPTService;
-import server.chatgpt.RecipeQuery;
+
+import server.api.ITextGenerateService;
+import server.api.RecipeQuery;
 import server.request.FileRequestHelper;
 import server.request.IHttpRequest;
 
 public class GenerateRecipeHttpHandler extends HttpHandlerBase {
-    private IChatGPTService chatGPTService;
+    private ITextGenerateService textGenerateService;
 
-    public GenerateRecipeHttpHandler(IChatGPTService chatGPTService)
+    public GenerateRecipeHttpHandler(ITextGenerateService textGenerateService)
     {
-        this.chatGPTService = chatGPTService;
+        this.textGenerateService = textGenerateService;
     }
 
     @Override
@@ -45,7 +46,7 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
         RecipeQuery query = new RecipeQuery(ingredients, mealType);
 
         // create recipe via ChatGPT
-        String recipeText = chatGPTService.request(query);
+        String recipeText = textGenerateService.request(query);
 
         return recipeText;
     }
