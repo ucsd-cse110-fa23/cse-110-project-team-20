@@ -70,7 +70,7 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
         // clean up
         String result[] = recipeText
             .trim()
-            .split(System.lineSeparator(), 2);
+            .split("\n", 2);
 
         // write(result[0], "text-generated-0.txt");
         // write(result[1], "text-generated-1.txt");
