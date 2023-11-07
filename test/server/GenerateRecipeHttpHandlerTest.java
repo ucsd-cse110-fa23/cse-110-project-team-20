@@ -1,6 +1,7 @@
 package server;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,39 +12,44 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.json.JSONObject;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.sun.net.httpserver.Headers;
 
-import server.chatgpt.ChatGPTServiceException;
-import server.chatgpt.IChatGPTService;
-import server.chatgpt.RecipeQueryable;
+import server.api.ITextGenerateService;
+import server.api.IVoiceToTextService;
+import server.api.IRecipeQuery;
+import server.api.TextGenerateServiceException;
 import server.mock.MockHttpRequest;
 
 public class GenerateRecipeHttpHandlerTest {
     @Test
-    public void instance()
-    {
-        IChatGPTService chatGPTService = new IChatGPTService() {
+    public void instance() {
+        ITextGenerateService textGenerateService = new ITextGenerateService() {
             @Override
-            public String request(RecipeQueryable query) throws ChatGPTServiceException {
+            public String request(IRecipeQuery query) throws TextGenerateServiceException {
                 return "";
             }
         };
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(chatGPTService);
+        IVoiceToTextService voiceToTextService = new IVoiceToTextService() {
+            @Override
+            public String transcribe(File file) {
+                return "";
+            }
+        };
+
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService);
         assertInstanceOf(GenerateRecipeHttpHandler.class, handler);
     }
 
     @Test
-    @Disabled("Disabled until file handling and Whipser API is implemented")
-    public void post() throws IOException
-    {
-        File audioRequestBodyFile = new File("test/resources/audio-request-body.txt");
+    public void integrationTestWithMock() throws IOException {
+        File audioRequestBodyFile = new File("test/resources/audio-request-body-with-voice.txt");
         InputStream inputStream = new FileInputStream(audioRequestBodyFile);
 
-        String audioRequestHeaderText = Files.readString(Path.of("test/resources/audio-request-header.json"));
+        String audioRequestHeaderText = Files
+                .readString(Path.of("test/resources/audio-request-header-with-voice.json"));
         Headers headers = new Headers();
         JSONObject headersJson = new JSONObject(audioRequestHeaderText);
 
@@ -58,19 +64,32 @@ public class GenerateRecipeHttpHandlerTest {
         headers.put("Content-Type", contentTypeArr);
         headers.put("Content-Length", contentLengthArr);
 
-        IChatGPTService chatGPTService = new IChatGPTService() {
+        ITextGenerateService textGenerateService = new ITextGenerateService() {
             @Override
-            public String request(RecipeQueryable query) throws ChatGPTServiceException {
-                return "";
+            public String request(IRecipeQuery query) throws TextGenerateServiceException {
+                return String.format("Title of recipe\n\nGenerated recipe based on: %s", query.toQueryableString());
             }
         };
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(chatGPTService);
+        IVoiceToTextService voiceToTextService = new IVoiceToTextService() {
+            @Override
+            public String transcribe(File file) {
+                if (file.getName().contains("ingredients")) {
+                    return "tomato, eggs, broccoli, and bacon";
+                } else {
+                    return "dinner";
+                }
+            }
+        };
+
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService);
         MockHttpRequest request = new MockHttpRequest();
 
         request.setHeaders(headers);
         request.setRequestBody(inputStream);
 
         String response = handler.handlePost(request);
+        JSONObject responseJson = new JSONObject(response);
+        assertTrue(responseJson.getString("description").contains("Generated recipe based on:"));
     }
 }

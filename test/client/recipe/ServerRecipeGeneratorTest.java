@@ -18,7 +18,7 @@ public class ServerRecipeGeneratorTest {
   public void generateRecipeWithServer() throws InterruptedException, ExecutionException, IOException
   {
     String mockRecipeResponse = "{\"description\": \"This is AI generated recipe with tomato, garlic, cucumber, watermelon.\"}";
-    MockHttpServer server = new MockHttpServer("/generate_recipe", mockRecipeResponse);
+    MockHttpServer server = new MockHttpServer("/recipe/generate", mockRecipeResponse);
 
     CompletableFuture<Recipe> future = new CompletableFuture<>();
     ServerRecipeGenerator generator = new ServerRecipeGenerator();

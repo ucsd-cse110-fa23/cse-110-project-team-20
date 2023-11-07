@@ -6,7 +6,7 @@ import client.Recipe;
 
 public class GenerateRecipeHelper {
     public static Recipe convertJsonResponseToRecipe(String response) {
-        JSONObject recipeJson = new JSONObject(response);
+        JSONObject recipeJson = new JSONObject(response.trim());
 
         String title = recipeJson.has("title") ? recipeJson.getString("title") : null;
         String mealType = recipeJson.has("meal_type") ? recipeJson.getString("meal_type") : null;

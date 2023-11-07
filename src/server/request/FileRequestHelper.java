@@ -29,7 +29,13 @@ public class FileRequestHelper {
         boolean nextPart = multipartStream.skipPreamble();
         while (nextPart) {
             // process headers
-            String fileHeaders = multipartStream.readHeaders();
+            String fileHeaders = null;
+            try {
+                fileHeaders = multipartStream.readHeaders();
+            } catch (Exception e) {
+                // hit the end of the file steam
+                break;
+            }
             if (fileHeaders != null) {
                 Map<String, String> allHeaders = splitHeaders(fileHeaders);
                 String inputFieldName = extractFields(allHeaders.get("Content-Disposition")).get("name");
@@ -41,7 +47,7 @@ public class FileRequestHelper {
 
                 FileOutputStream output = new FileOutputStream(newFile);
                 multipartStream.readBodyData(output);
-
+                output.close();
                 fileMap.put(fieldName, newFile);
             }
             nextPart = multipartStream.readBoundary();

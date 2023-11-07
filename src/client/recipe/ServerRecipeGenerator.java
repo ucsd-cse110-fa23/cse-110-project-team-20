@@ -14,7 +14,7 @@ import java.net.URL;
 import client.Recipe;
 
 public class ServerRecipeGenerator implements GenerateRecipe {
-  private static final String API_ENDPOINT = "http://localhost:8100/generate_recipe";
+  private static final String API_ENDPOINT = "http://localhost:8100/recipe/generate";
 
   @Override
   public void requestGeneratingRecipe(

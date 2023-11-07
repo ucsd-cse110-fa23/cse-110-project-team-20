@@ -1,10 +1,10 @@
-package server.chatgpt;
+package server.api;
 
-public class RecipeQuery implements RecipeQueryable {
+public class RecipeQuery implements IRecipeQuery {
   /**
    * Prompt template for ChatGPT query
    */
-  private static final String PROMPT_TEMPLATE = "Create a recipe with %s as %s";
+  private static final String PROMPT_TEMPLATE = "Create a recipe with limited ingredients: %s. I want to make a meal for %s. Response step by step recipe instructions in details for cooking beginner. Put the title of recipe in the first line of the response.";
 
   private String ingredients;
   private String mealType;

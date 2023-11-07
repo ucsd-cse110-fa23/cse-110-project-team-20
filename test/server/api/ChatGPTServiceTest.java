@@ -1,4 +1,4 @@
-package server.chatgpt;
+package server.api;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 public class ChatGPTServiceTest {
   @Test
   public void instance() {
-    IChatGPTConfiguration config = new IChatGPTConfiguration() {
+    IOpenAIConfiguration config = new IOpenAIConfiguration() {
       @Override
       public String apiKey() {
         return "";
@@ -26,8 +26,8 @@ public class ChatGPTServiceTest {
 
   @Test
   @Disabled // due to limited ChatGPT credit, disabled for now
-  public void generateRecipeWithChatGPT() throws ChatGPTServiceException, IOException, InterruptedException, URISyntaxException {
-    IChatGPTConfiguration config = new ChatGPTConfiguration();
+  public void generateRecipeWithChatGPT() throws TextGenerateServiceException, IOException, InterruptedException, URISyntaxException {
+    IOpenAIConfiguration config = new OpenAIConfiguration();
     ChatGPTService service = new ChatGPTService(config);
 
     RecipeQuery query = new RecipeQuery(
@@ -49,7 +49,7 @@ public class ChatGPTServiceTest {
   @Test
   public void generatingRecipeInvalidKey() {
 
-    IChatGPTConfiguration config = new IChatGPTConfiguration() {
+    IOpenAIConfiguration config = new IOpenAIConfiguration() {
       @Override
       public String apiKey() {
         return "api-key-does-not-exist";
@@ -62,7 +62,7 @@ public class ChatGPTServiceTest {
         "Tomato, garlic, cucumber, and watermelon",
         "dinner");
 
-    Exception exception = assertThrows(ChatGPTServiceException.class, () -> {
+    Exception exception = assertThrows(TextGenerateServiceException.class, () -> {
       service.request(query);
     });
 

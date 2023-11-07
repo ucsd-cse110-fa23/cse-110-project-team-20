@@ -8,12 +8,12 @@ TEST_DIR = test
 
 # Java compiler and flags
 JAVAC = javac
-CLASSPATH = lib:src/client/components
+CLASSPATH = lib:src/client/components:src/server/chatgpt:src/server/request
 VMARGS = --module-path './lib' --add-modules javafx.controls,javafx.fxml,org.json
 
 # Define the source and test files
 CLIENT_SRC_FILES = $(wildcard $(SRC_DIR)/client/*.java) $(wildcard $(SRC_DIR)/client/components/*.java)
-SERVER_SRC_FILES = $(wildcard $(SRC_DIR)/server/*.java)
+SERVER_SRC_FILES = $(wildcard $(SRC_DIR)/server/*.java) $(wildcard $(SRC_DIR)/server/*/*.java)
 CLIENT_TEST_FILES = $(wildcard $(TEST_DIR)/client/*.java)
 SERVER_TEST_FILES = $(wildcard $(TEST_DIR)/server/*.java)
 
@@ -44,7 +44,7 @@ run-client: compile
 # Run the server application
 run-server: compile
 	@echo "Running the server application..."
-	java -cp src $(SERVER_MAIN_CLASS)
+	java -cp src $(VMARGS) $(SERVER_MAIN_CLASS)
 
 # Clean compiled files
 clean:

@@ -1,0 +1,8 @@
+{
+  "Connection": ["keep-alive"],
+  "Content-type": ["multipart/form-data; boundary=Boundary-1699218781394"],
+  "Host": ["localhost:8100"],
+  "Content-length": ["15720"],
+  "Accept": ["text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2"],
+  "User-agent": ["Java/11.0.20"]
+}
