@@ -1,6 +1,6 @@
 # Define the main class for the client and server
-CLIENT_MAIN_CLASS = client.Main
-SERVER_MAIN_CLASS = server.Main
+CLIENT_MAIN_CLASS = client.PantryPalsApp
+SERVER_MAIN_CLASS = server.PanetryPalsServer
 
 # Java source and test directories
 SRC_DIR = src
@@ -12,8 +12,8 @@ CLASSPATH = lib:src/client/components
 VMARGS = --module-path './lib' --add-modules javafx.controls,javafx.fxml,org.json
 
 # Define the source and test files
-CLIENT_SRC_FILES = $(wildcard $(SRC_DIR)/client/*.java) $(wildcard $(SRC_DIR)/client/components/*.java)
-SERVER_SRC_FILES = $(wildcard $(SRC_DIR)/server/*.java)
+CLIENT_SRC_FILES = $(wildcard $(SRC_DIR)/client/*.java) $(wildcard $(SRC_DIR)/client/*/*.java)
+SERVER_SRC_FILES = $(wildcard $(SRC_DIR)/server/*.java) $(wildcard $(SRC_DIR)/server/*/*.java)
 CLIENT_TEST_FILES = $(wildcard $(TEST_DIR)/client/*.java)
 SERVER_TEST_FILES = $(wildcard $(TEST_DIR)/server/*.java)
 
