@@ -15,21 +15,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Controller {
-    private enum State {
-        HOME,
-        RECORDING_MEAL_TYPE,
-        RECORDING_INGREDIENTS,
-        LOADING_RECIPE,
-        EXPANDED,
-        EDIT,
-        DELETE,
-        NEW
-    }
     private final String MEAL_TYPE_AUDIO = "meal_type.wav";
     private final String INGREDIENTS_AUDIO = "ingredients.wav";
 
     ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-    private State state;
     private Stage primaryStage;
     private Model model;
     private Scene recordMealType, recordIngredients, loading, home;
@@ -55,7 +44,6 @@ public class Controller {
 
         this.model = new Model();
         this.recording = false;
-        this.state = State.HOME;
 
         mealTypePage = new RecordingPage(
             "What kind of meal do you want?\nLunch, Dinner, Snack etc.", MEAL_TYPE_AUDIO);
@@ -92,14 +80,13 @@ public class Controller {
     public void
     transitionToMealTypeScene()
     {
-        this.state = State.RECORDING_MEAL_TYPE;
+        // this.state = State.RECORDING_MEAL_TYPE;
         primaryStage.setScene(recordMealType);
     }
 
     public void
     transitionToIngredientsScene()
     {
-        this.state = State.RECORDING_INGREDIENTS;
         primaryStage.setScene(recordIngredients);
     }
 
@@ -126,7 +113,6 @@ public class Controller {
     public void
     transitionToLoadingScene()
     {
-        this.state = State.LOADING_RECIPE;
         primaryStage.setScene(loading);
     }
 
