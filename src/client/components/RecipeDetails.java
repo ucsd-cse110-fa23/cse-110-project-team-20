@@ -12,13 +12,12 @@ public class RecipeDetails extends BorderPane {
     private Label body;
     private DetailsFooter footer;
 
-    public RecipeDetails(Recipe recipe)
+    public RecipeDetails()
     {
-        header = new Label(recipe.getTitle());
-        body = new Label(recipe.getDescription());
+        header = new Label();
+        body = new Label();
         body.setWrapText(true);
         footer = new DetailsFooter();
-
 
         this.setTop(header);
         this.setCenter(new ScrollPane(body));
@@ -26,11 +25,18 @@ public class RecipeDetails extends BorderPane {
         this.setPrefSize(500, 800);
     }
 
-    public void setCancelCallback(Runnable r) 
+    public void
+    setCancelCallback(Runnable r)
     {
         this.footer.setOnCancel(r);
     }
 
+    public void
+    displayRecipe(Recipe recipe)
+    {
+        header.setText(recipe.getTitle());
+        body.setText(recipe.getDescription());
+    }
 }
 
 class DetailsFooter extends HBox {
@@ -43,11 +49,15 @@ class DetailsFooter extends HBox {
         this.getChildren().addAll(cancelButton);
     }
 
-    public void setOnCancel(Runnable onCancel) {
+    public void
+    setOnCancel(Runnable onCancel)
+    {
         this.cancelButton.setOnAction(e -> onCancel.run());
     }
 
-    public void setOnSave(Runnable onSave) {
-        this.saveButton.setOnAction(e-> onSave.run());
+    public void
+    setOnSave(Runnable onSave)
+    {
+        this.saveButton.setOnAction(e -> onSave.run());
     }
 }

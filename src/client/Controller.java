@@ -2,15 +2,13 @@ package client;
 
 import client.components.AnimatedLoadingBar;
 import client.components.HomePage;
-import client.components.RecordingPage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetails;
+import client.components.RecordingPage;
 import client.recipe.GenerateRecipe;
 import client.recipe.RecipeRequestParameter;
-
 import java.io.File;
 import java.util.ArrayList;
-
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -36,9 +34,9 @@ public class Controller {
     private Scene recordMealType, recordIngredients, loading, home;
     private RecordingPage mealTypePage, ingredientsPage;
     private HomePage homePage;
-    private Scene newRecipeConfirm, recipeDetails;
+    private Scene newRecipeConfirm, details;
     private NewRecipeConfirmPage newRecipeConfirmPage;
-    private RecipeDetails newRecipeDetails;
+    private RecipeDetails detailsPage;
 
     private AnimatedLoadingBar loadingPage;
     private static final int WIDTH = 500, HEIGHT = 500;
@@ -74,15 +72,19 @@ public class Controller {
 
         homePage = new HomePage(new ArrayList(), this);
         homePage.setCreateButtonCallback(() -> createRecipeButtonClicked());
-
         this.home = new Scene(homePage, WIDTH, HEIGHT);
+
+        this.detailsPage = new RecipeDetails();
+        this.details = new Scene(detailsPage, WIDTH, HEIGHT);
+
+        detailsPage.setCancelCallback(() -> backToHomeScene());
+
         // Set the title of the app
         primaryStage.setTitle("PantryPal");
         // Create scene of mentioned size with the border pane
         primaryStage.setScene(this.home);
         // Make window non-resizable
         primaryStage.setResizable(false);
-
     }
 
     public void
@@ -107,12 +109,11 @@ public class Controller {
     }
 
     public void
-    transitionToHomeScene() 
+    transitionToHomeScene()
     {
         this.state = State.HOME;
         primaryStage.setScene(home);
     }
-
 
     public void
     requestTranscription()
@@ -120,35 +121,29 @@ public class Controller {
         File mealTypeFile = new File(MEAL_TYPE_AUDIO);
         File ingredientsFile = new File(INGREDIENTS_AUDIO);
         if (mealTypeFile != null && ingredientsFile != null) {
-        RecipeRequestParameter params = new RecipeRequestParameter(mealTypeFile, ingredientsFile);
+            RecipeRequestParameter params =
+                new RecipeRequestParameter(mealTypeFile, ingredientsFile);
 
-        generateRecipe.requestGeneratingRecipe(
-            params,
-            (recipe) -> {
-                Platform.runLater(() -> {
-                    transitionToNewRecipeConfirmPage(recipe);
-                });
-            },
-            (errorMessage) -> {
+            generateRecipe.requestGeneratingRecipe(params,
+                (recipe)
+                    -> { Platform.runLater(() -> { transitionToNewRecipeConfirmPage(recipe); }); },
+                (errorMessage)
+                    -> {
 
-            }
-        );
+                    });
         }
     }
 
-
-    public void 
-    openRecipeDetails(Recipe recipe) {
-        RecipeDetails detailsPage = new RecipeDetails(recipe);
-        Scene detailsScene = new Scene(detailsPage, WIDTH, HEIGHT);
-        
-        detailsPage.setCancelCallback(() -> backToHomeScene());
-
-        primaryStage.setScene(detailsScene);
+    public void
+    openRecipeDetails(Recipe recipe)
+    {
+        this.detailsPage.displayRecipe(recipe);
+        primaryStage.setScene(this.details);
     }
 
-    public void 
-    backToHomeScene() {
+    public void
+    backToHomeScene()
+    {
         primaryStage.setScene(home);
     }
 
@@ -198,21 +193,22 @@ public class Controller {
         newRecipeConfirmPage = new NewRecipeConfirmPage(recipe);
         newRecipeConfirm = new Scene(newRecipeConfirmPage);
         primaryStage.setScene(newRecipeConfirm);
-        newRecipeConfirmPage.setCancelCallback(()->discardGeneratedRecipeClicked());
+        newRecipeConfirmPage.setCancelCallback(() -> discardGeneratedRecipeClicked());
         newRecipeConfirmPage.setSaveCallback(() -> saveRecipeClicked(recipe));
     }
 
     public void
-    discardGeneratedRecipeClicked() {
-            this.transitionToHomeScene();
+    discardGeneratedRecipeClicked()
+    {
+        this.transitionToHomeScene();
     }
 
-
     public void
-    saveRecipeClicked(Recipe recipe) {
-            recipes.add(recipe);
-            homePage.updateRecipeList(recipe);
-            this.transitionToHomeScene();
+    saveRecipeClicked(Recipe recipe)
+    {
+        recipes.add(recipe);
+        homePage.updateRecipeList(recipe);
+        this.transitionToHomeScene();
     }
 
     // public void
