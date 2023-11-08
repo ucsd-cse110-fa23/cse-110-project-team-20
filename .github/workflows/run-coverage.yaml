@@ -28,7 +28,7 @@ jobs:
 
       # build everything (includes running unit tests)
       - name: Execute Gradle build
-        run: ./gradlew -Duser_story_test=excluded build
+        run: ./gradlew build
 
       - name: Jacoco Report to PR
         id: jacoco
