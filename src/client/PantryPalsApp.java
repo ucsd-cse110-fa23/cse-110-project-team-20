@@ -4,6 +4,8 @@ import client.recipe.GenerateRecipe;
 import client.helpers.AppInspection;
 import client.recipe.LocalRecipeGenerator;
 import client.recipe.ServerRecipeGenerator;
+import client.utils.transitions.CompositeTransitioner;
+import client.utils.transitions.PrintConsoleTransitioner;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -29,8 +31,16 @@ public class PantryPalsApp extends Application {
             generateRecipe = new ServerRecipeGenerator();
         }
 
-        Controller controller = new Controller(primaryStage, generateRecipe);
+        CompositeTransitioner transitioner = new CompositeTransitioner();
+        // @TODO remove primaryStage from controller
+        Controller controller = new Controller(transitioner, generateRecipe, primaryStage);
+
+        transitioner
+            .add(Routes.getRoutes(primaryStage, controller))
+            .add(new PrintConsoleTransitioner());
+
         controller.start();
+        // call inside of start: transitioner.transitionTo(HomePage.class);
 
         // debug purposes
         handleInspect(primaryStage, controller);

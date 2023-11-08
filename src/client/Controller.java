@@ -7,8 +7,11 @@ import client.components.RecipeDetails;
 import client.components.RecordingPage;
 import client.recipe.GenerateRecipe;
 import client.recipe.RecipeRequestParameter;
+import client.utils.transitions.ITransitioner;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -47,8 +50,13 @@ public class Controller {
 
     private GenerateRecipe generateRecipe;
 
-    public Controller(Stage primaryStage, GenerateRecipe generateRecipe)
+    private ITransitioner transitioner;
+
+    public Controller(ITransitioner transitioner, GenerateRecipe generateRecipe, Stage primaryStage)
     {
+        this.transitioner = transitioner;
+        // @TODO remove primaryStage from controller and replace it with transitioner
+        // @TODO move all pages into Routes.java
         this.primaryStage = primaryStage;
         this.generateRecipe = generateRecipe;
 
@@ -90,8 +98,8 @@ public class Controller {
     public void
     start()
     {
-        // Show the app
-        primaryStage.show();
+        List<Recipe> recipes = new ArrayList<>();
+        transitioner.transitionTo(HomePage.class, recipes);
     }
 
     public void
