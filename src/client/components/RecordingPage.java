@@ -1,33 +1,20 @@
 package client.components;
 import java.io.*;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 import javax.sound.sampled.*;
 
 public class RecordingPage extends VBox {
-    private Button startButton;
-    private Button stopButton;
+    private Button recodingButton;
     private AudioFormat audioFormat;
     private TargetDataLine targetDataLine;
     private Label title;
 
     private String fileName;
-    private String message;
+    private boolean recordingInProgress = false;
 
     // Set a default style for buttons and fields - background color, font size,
     // italics
@@ -42,7 +29,6 @@ public class RecordingPage extends VBox {
     {
         // File to save audio to
         this.fileName = fileName;
-        this.message = message;
         // Set properties for the flowpane
         this.setPrefSize(370, 120);
         this.setPadding(new Insets(5, 0, 5, 5));
@@ -56,10 +42,10 @@ public class RecordingPage extends VBox {
         title.setStyle(titleStyle);
 
         // Add the buttons and text fields
-        startButton = new Button("Start recording");
-        startButton.setStyle(defaultButtonStyle);
+        recodingButton = new Button("Start recording");
+        recodingButton.setStyle(defaultButtonStyle);
 
-        this.getChildren().addAll(title, startButton);
+        this.getChildren().addAll(title, recodingButton);
 
         // Get the audio format
         audioFormat = getAudioFormat();
@@ -69,7 +55,15 @@ public class RecordingPage extends VBox {
     setButtonCallback(Runnable r)
     {
         // Start Button
-        startButton.setOnAction(e -> r.run());
+        recodingButton.setOnAction(e -> {
+            if (recordingInProgress) {
+                stopRecording();
+                r.run();
+            } else {
+                startRecording();
+                recordingInProgress = true;
+            }
+        });
     }
 
     private AudioFormat
@@ -120,7 +114,7 @@ public class RecordingPage extends VBox {
                 }
             }
         });
-        this.startButton.setText("Stop recording");
+        this.recodingButton.setText("Stop recording");
         t.start();
     }
 
@@ -129,6 +123,6 @@ public class RecordingPage extends VBox {
     {
         targetDataLine.stop();
         targetDataLine.close();
-        this.startButton.setText("Start Recording");
+        this.recodingButton.setText("Start Recording");
     }
 }

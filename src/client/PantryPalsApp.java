@@ -32,8 +32,7 @@ public class PantryPalsApp extends Application {
         }
 
         CompositeTransitioner transitioner = new CompositeTransitioner();
-        // @TODO remove primaryStage from controller
-        Controller controller = new Controller(transitioner, generateRecipe, primaryStage);
+        Controller controller = new Controller(transitioner, generateRecipe);
 
         transitioner
             .add(Routes.getRoutes(primaryStage, controller))

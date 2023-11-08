@@ -11,116 +11,61 @@ import client.utils.transitions.ITransitioner;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 public class Controller {
-    private enum State {
-        HOME,
-        RECORDING_MEAL_TYPE,
-        RECORDING_INGREDIENTS,
-        LOADING_RECIPE,
-        EXPANDED,
-        EDIT,
-        DELETE,
-        NEW
-    }
     private final String MEAL_TYPE_AUDIO = "meal_type.wav";
     private final String INGREDIENTS_AUDIO = "ingredients.wav";
 
+    // @TODO need to replace with model
     ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-    private State state;
-    private Stage primaryStage;
-    private Model model;
-    private Scene recordMealType, recordIngredients, loading, home;
-    private RecordingPage mealTypePage, ingredientsPage;
-    private HomePage homePage;
-    private Scene newRecipeConfirm, details;
-    private NewRecipeConfirmPage newRecipeConfirmPage;
-    private RecipeDetails detailsPage;
-
-    private AnimatedLoadingBar loadingPage;
-    private static final int WIDTH = 500, HEIGHT = 500;
-
-    private String mealTypeTranscription, ingredientsTranscription;
-
-    private boolean recording;
 
     private GenerateRecipe generateRecipe;
-
     private ITransitioner transitioner;
 
-    public Controller(ITransitioner transitioner, GenerateRecipe generateRecipe, Stage primaryStage)
+    public Controller(ITransitioner transitioner, GenerateRecipe generateRecipe)
     {
         this.transitioner = transitioner;
-        // @TODO remove primaryStage from controller and replace it with transitioner
-        // @TODO move all pages into Routes.java
-        this.primaryStage = primaryStage;
         this.generateRecipe = generateRecipe;
-
-        this.model = new Model();
-        this.recording = false;
-        this.state = State.HOME;
-
-        mealTypePage = new RecordingPage(
-            "What kind of meal do you want?\nLunch, Dinner, Snack etc.", MEAL_TYPE_AUDIO);
-
-        mealTypePage.setButtonCallback(() -> mealTypeRecordingButtonClicked());
-        this.recordMealType = new Scene(mealTypePage, WIDTH, HEIGHT);
-
-        ingredientsPage = new RecordingPage("What ingredients do you have?", INGREDIENTS_AUDIO);
-        ingredientsPage.setButtonCallback(() -> ingredientsRecordingButtonClicked());
-        this.recordIngredients = new Scene(ingredientsPage, WIDTH, HEIGHT);
-
-        loadingPage = new AnimatedLoadingBar();
-        loadingPage.setLoadingText("Finding the perfect recipe...");
-        this.loading = new Scene(loadingPage, WIDTH, HEIGHT);
-
-        homePage = new HomePage(new ArrayList(), this);
-        homePage.setCreateButtonCallback(() -> createRecipeButtonClicked());
-        this.home = new Scene(homePage, WIDTH, HEIGHT);
-
-        this.detailsPage = new RecipeDetails();
-        this.details = new Scene(detailsPage, WIDTH, HEIGHT);
-
-        detailsPage.setCancelCallback(() -> backToHomeScene());
-
-        // Set the title of the app
-        primaryStage.setTitle("PantryPal");
-        // Create scene of mentioned size with the border pane
-        primaryStage.setScene(this.home);
-        // Make window non-resizable
-        primaryStage.setResizable(false);
     }
 
     public void
     start()
     {
-        List<Recipe> recipes = new ArrayList<>();
-        transitioner.transitionTo(HomePage.class, recipes);
+        transitionToHomeScene();
     }
 
     public void
     transitionToMealTypeScene()
     {
-        this.state = State.RECORDING_MEAL_TYPE;
-        primaryStage.setScene(recordMealType);
+        Runnable buttonCallback = () -> mealTypeRecordingCompleted();
+
+        transitioner.transitionTo(
+            RecordingPage.class,
+            "What kind of meal do you want?\nLunch, Dinner, Snack etc.",
+            MEAL_TYPE_AUDIO,
+            buttonCallback
+        );
     }
 
     public void
     transitionToIngredientsScene()
     {
-        this.state = State.RECORDING_INGREDIENTS;
-        primaryStage.setScene(recordIngredients);
+        Runnable buttonCallback = () -> ingredientsRecordingCompleted();
+
+        transitioner.transitionTo(
+            RecordingPage.class,
+            "What ingredients do you have?",
+            INGREDIENTS_AUDIO,
+            buttonCallback
+        );
     }
 
     public void
     transitionToHomeScene()
     {
-        this.state = State.HOME;
-        primaryStage.setScene(home);
+        // @TODO need to get recipes from the model
+        Runnable createButtonCallback = () -> createRecipeButtonClicked();
+        transitioner.transitionTo(HomePage.class, recipes, createButtonCallback);
     }
 
     public void
@@ -128,65 +73,51 @@ public class Controller {
     {
         File mealTypeFile = new File(MEAL_TYPE_AUDIO);
         File ingredientsFile = new File(INGREDIENTS_AUDIO);
+
         if (mealTypeFile != null && ingredientsFile != null) {
             RecipeRequestParameter params =
                 new RecipeRequestParameter(mealTypeFile, ingredientsFile);
 
             generateRecipe.requestGeneratingRecipe(params,
-                (recipe)
-                    -> { Platform.runLater(() -> { transitionToNewRecipeConfirmPage(recipe); }); },
-                (errorMessage)
-                    -> {
-
-                    });
+                (recipe) -> {
+                    transitionToNewRecipeConfirmPage(recipe);
+                },
+                (errorMessage) -> {
+                    transitionToHomeScene();
+                });
         }
     }
 
     public void
     openRecipeDetails(Recipe recipe)
     {
-        this.detailsPage.displayRecipe(recipe);
-        primaryStage.setScene(this.details);
+        Runnable cancelCallback = () -> backToHomeScene();
+        transitioner.transitionTo(RecipeDetails.class, recipe, cancelCallback);
     }
 
     public void
     backToHomeScene()
     {
-        primaryStage.setScene(home);
+        transitionToHomeScene();
     }
 
     public void
     transitionToLoadingScene()
     {
-        this.state = State.LOADING_RECIPE;
-        primaryStage.setScene(loading);
+        transitioner.transitionTo(AnimatedLoadingBar.class, "Finding the perfect recipe...");
     }
 
     public void
-    ingredientsRecordingButtonClicked()
+    ingredientsRecordingCompleted()
     {
-        if (recording) {
-            // Called after second click
-            this.ingredientsPage.stopRecording();
-            this.requestTranscription();
-            this.transitionToLoadingScene();
-        } else {
-            this.ingredientsPage.startRecording();
-        }
-        recording = !recording;
+        this.requestTranscription();
+        this.transitionToLoadingScene();
     }
 
     public void
-    mealTypeRecordingButtonClicked()
+    mealTypeRecordingCompleted()
     {
-        if (recording) {
-            // Called after second click
-            this.mealTypePage.stopRecording();
-            this.transitionToIngredientsScene();
-        } else {
-            this.mealTypePage.startRecording();
-        }
-        recording = !recording;
+        this.transitionToIngredientsScene();
     }
 
     public void
@@ -198,11 +129,9 @@ public class Controller {
     public void
     transitionToNewRecipeConfirmPage(Recipe recipe)
     {
-        newRecipeConfirmPage = new NewRecipeConfirmPage(recipe);
-        newRecipeConfirm = new Scene(newRecipeConfirmPage);
-        primaryStage.setScene(newRecipeConfirm);
-        newRecipeConfirmPage.setCancelCallback(() -> discardGeneratedRecipeClicked());
-        newRecipeConfirmPage.setSaveCallback(() -> saveRecipeClicked(recipe));
+        Runnable saveCallback = () -> saveRecipeClicked(recipe);
+        Runnable discardCallback = () -> discardGeneratedRecipeClicked();
+        transitioner.transitionTo(NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback);
     }
 
     public void
@@ -214,18 +143,8 @@ public class Controller {
     public void
     saveRecipeClicked(Recipe recipe)
     {
+        // @TODO need to move into model
         recipes.add(recipe);
-        homePage.updateRecipeList(recipe);
         this.transitionToHomeScene();
     }
-
-    // public void
-    // detailsButtonClicked(Recipe recipe) {
-    //     RecipeDetails detailsPage = new RecipeDetails(recipe);
-    //     Scene detailsScene = new Scene(detailsPage);
-    //     primaryStage.setScene(detailsScene);
-    // }
-
-    // TODO: Add methods for making requests through Model, and add button actions when adding the
-    // scenes
 }

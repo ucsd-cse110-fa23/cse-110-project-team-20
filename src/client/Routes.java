@@ -1,6 +1,11 @@
 package client;
 
+import client.components.AnimatedLoadingBar;
 import client.components.HomePage;
+import client.components.NewRecipeConfirmPage;
+import client.components.RecipeDetails;
+import client.components.RecordingPage;
+
 import java.util.List;
 import client.utils.transitions.javafx.JavaFXTransitioner;
 import javafx.scene.Scene;
@@ -24,8 +29,9 @@ public class Routes {
      * 
      * Display a list of recipes, provides button for creating new recipe.
      */
-    routes.register(HomePage.class, (List<Recipe> recipes) -> {
+    routes.register(HomePage.class, (List<Recipe> recipes, Runnable createButtonCallback) -> {
       HomePage homePage = new HomePage(recipes, controller);
+      homePage.setCreateButtonCallback(createButtonCallback);
 
       // Set the title of the app
       primaryStage.setTitle("PantryPal");
@@ -37,6 +43,58 @@ public class Routes {
       primaryStage.show();
     });
 
+    /**
+     * Recording Page
+     *
+     * Display recording page with given message and filename.
+     */
+    routes.register(RecordingPage.class, (
+      String message, String filename, Runnable buttonCallback) -> {
+      
+      RecordingPage mealTypePage = new RecordingPage(message, filename);
+
+      mealTypePage.setButtonCallback(buttonCallback);
+      primaryStage.setScene(new Scene(mealTypePage, WIDTH, HEIGHT));
+    });
+
+    /**
+     * Loading Page
+     * 
+     * Display loading screen.
+     */
+    routes.register(AnimatedLoadingBar.class, (String message) -> {
+      AnimatedLoadingBar loadingPage = new AnimatedLoadingBar();
+      loadingPage.setLoadingText(message);
+      primaryStage.setScene(new Scene(loadingPage, WIDTH, HEIGHT));
+    });
+
+    /**
+     * New Recipe Confirm Page
+     * 
+     * Prompt generated recipe with title. User can decide to save or discard
+     */
+    routes.register(NewRecipeConfirmPage.class, (Recipe recipe, Runnable saveCallback, Runnable discardCallback) -> {
+      NewRecipeConfirmPage newRecipeConfirmPage = new NewRecipeConfirmPage(recipe);
+
+      newRecipeConfirmPage.setCancelCallback(discardCallback);
+      newRecipeConfirmPage.setSaveCallback(saveCallback);
+
+      primaryStage.setScene(new Scene(newRecipeConfirmPage, WIDTH, HEIGHT));
+    });
+
+    /**
+     * Recipe detail page
+     * 
+     * Show expanded recipe information
+     */
+    routes.register(RecipeDetails.class, (Recipe recipe, Runnable cancelCallback) -> {
+      RecipeDetails recipeDetailsPage = new RecipeDetails();
+
+      recipeDetailsPage.displayRecipe(recipe);
+      recipeDetailsPage.setCancelCallback(cancelCallback);
+
+      primaryStage.setScene(new Scene(recipeDetailsPage, WIDTH, HEIGHT));
+    });
     return routes;
   }
 }
