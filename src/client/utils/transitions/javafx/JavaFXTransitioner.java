@@ -7,31 +7,31 @@ import client.utils.transitions.TransitionException;
 import javafx.application.Platform;
 
 public class JavaFXTransitioner implements ITransitioner {
-  private HashMap<String, TransitionWithParameter> transitions = new HashMap<>();
+  private HashMap<String, ITransitionWithParameter> transitions = new HashMap<>();
 
   private String key(Class<?> c, int count) {
     return String.format("%s@%s", c.toString(), count);
   }
 
-  public JavaFXTransitioner register(Class<?> c, TransitionWithParameter0 a) {
+  public JavaFXTransitioner register(Class<?> c, ITransitionWithParameter0 a) {
     transitions.put(key(c, 0), a);
     return this;
   }
 
-  public <T1> JavaFXTransitioner register(Class<?> c, TransitionWithParameter1<T1> t1) {
+  public <T1> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter1<T1> t1) {
     transitions.put(key(c, 1), t1);
     return this;
   }
 
-  public <T1, T2> JavaFXTransitioner register(Class<?> c, TransitionWithParameter2<T1, T2> t2) {
+  public <T1, T2> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter2<T1, T2> t2) {
     transitions.put(key(c, 2), t2);
     return this;
   }
 
   public void transitionTo(Class<?> c) {
-    TransitionWithParameter a = transitions.get(key(c, 0));
-    if (a instanceof TransitionWithParameter0) {
-      TransitionWithParameter0 runner = (TransitionWithParameter0) a;
+    ITransitionWithParameter a = transitions.get(key(c, 0));
+    if (a instanceof ITransitionWithParameter0) {
+      ITransitionWithParameter0 runner = (ITransitionWithParameter0) a;
       Platform.runLater(() -> runner.run());
       return;
     }
@@ -39,10 +39,10 @@ public class JavaFXTransitioner implements ITransitioner {
   }
 
   public <T1> void transitionTo(Class<?> c, T1 t1) {
-    TransitionWithParameter a = transitions.get(key(c, 1));
-    if (a instanceof TransitionWithParameter1) {
+    ITransitionWithParameter a = transitions.get(key(c, 1));
+    if (a instanceof ITransitionWithParameter1) {
       @SuppressWarnings("unchecked")
-      TransitionWithParameter1<T1> runner = (TransitionWithParameter1<T1>) a;
+      ITransitionWithParameter1<T1> runner = (ITransitionWithParameter1<T1>) a;
       Platform.runLater(() -> runner.run(t1));
       return;
     }
@@ -50,10 +50,10 @@ public class JavaFXTransitioner implements ITransitioner {
   }
 
   public <T1, T2> void transitionTo(Class<?> c, T1 t1, T2 t2) {
-    TransitionWithParameter a = transitions.get(key(c, 2));
-    if (a instanceof TransitionWithParameter2) {
+    ITransitionWithParameter a = transitions.get(key(c, 2));
+    if (a instanceof ITransitionWithParameter2) {
       @SuppressWarnings("unchecked")
-      TransitionWithParameter2<T1, T2> runner = (TransitionWithParameter2<T1, T2>) a;
+      ITransitionWithParameter2<T1, T2> runner = (ITransitionWithParameter2<T1, T2>) a;
       Platform.runLater(() -> runner.run(t1, t2));
       return;
     }
