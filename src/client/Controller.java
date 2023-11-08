@@ -3,9 +3,8 @@ package client;
 import client.components.AnimatedLoadingBar;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
-import client.components.RecipeDetails;
-import client.components.RecordingPage;
-import client.recipe.GenerateRecipe;
+import client.components.RecipeDetailsPage;
+import client.recipe.IGenerateRecipe;
 import client.recipe.RecipeRequestParameter;
 import java.io.File;
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class Controller {
     private HomePage homePage;
     private Scene newRecipeConfirm, details;
     private NewRecipeConfirmPage newRecipeConfirmPage;
-    private RecipeDetails detailsPage;
+    private RecipeDetailsPage newRecipeDetails;
 
     private AnimatedLoadingBar loadingPage;
     private static final int WIDTH = 500, HEIGHT = 500;
@@ -45,9 +44,9 @@ public class Controller {
 
     private boolean recording;
 
-    private GenerateRecipe generateRecipe;
+    private IGenerateRecipe generateRecipe;
 
-    public Controller(Stage primaryStage, GenerateRecipe generateRecipe)
+    public Controller(Stage primaryStage, IGenerateRecipe generateRecipe)
     {
         this.primaryStage = primaryStage;
         this.generateRecipe = generateRecipe;
@@ -133,6 +132,13 @@ public class Controller {
                     });
         }
     }
+// =======
+//     public void 
+//     openRecipeDetails(Recipe recipe) {
+//         RecipeDetailsPage detailsPage = new RecipeDetailsPage(recipe);
+//         Scene detailsScene = new Scene(detailsPage, WIDTH, HEIGHT);
+        
+//         detailsPage.setCancelCallback(() -> backToHomeScene());
 
     public void
     openRecipeDetails(Recipe recipe)
@@ -213,7 +219,7 @@ public class Controller {
 
     // public void
     // detailsButtonClicked(Recipe recipe) {
-    //     RecipeDetails detailsPage = new RecipeDetails(recipe);
+    //     RecipeDetailsPage detailsPage = new RecipeDetailsPage(recipe);
     //     Scene detailsScene = new Scene(detailsPage);
     //     primaryStage.setScene(detailsScene);
     // }
