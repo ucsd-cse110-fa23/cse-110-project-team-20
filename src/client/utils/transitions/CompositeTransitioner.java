@@ -34,4 +34,11 @@ public class CompositeTransitioner implements ITransitioner {
       transitioner.transitionTo(c, t1, t2);
     }
   }
+
+  @Override
+  public <T1, T2, T3> void transitionTo(Class<?> c, T1 t1, T2 t2, T3 t3) {
+    for (ITransitioner transitioner : transitioners) {
+      transitioner.transitionTo(c, t1, t2, t3);
+    }
+  }
 }

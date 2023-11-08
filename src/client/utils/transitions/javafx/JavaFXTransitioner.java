@@ -26,6 +26,7 @@ public class JavaFXTransitioner implements ITransitioner {
    */
   public JavaFXTransitioner register(Class<?> c, ITransitionWithParameter0 a) {
     transitions.put(key(c, 0), a);
+    System.out.println(key(c, 0));
     return this;
   }
 
@@ -40,6 +41,7 @@ public class JavaFXTransitioner implements ITransitioner {
    */
   public <T1> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter1<T1> t1) {
     transitions.put(key(c, 1), t1);
+    System.out.println(key(c, 1));
     return this;
   }
 
@@ -55,6 +57,24 @@ public class JavaFXTransitioner implements ITransitioner {
    */
   public <T1, T2> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter2<T1, T2> t2) {
     transitions.put(key(c, 2), t2);
+    System.out.println(key(c, 2));
+    return this;
+  }
+
+  /**
+   * Register a class with given runnerable. The transitioner will call the runnerable when
+   * transitionTo is called with appropriate class name.
+   *
+   * @param <T1>
+   * @param <T2>
+   * @param <T3>
+   * @param c
+   * @param t3
+   * @return
+   */
+  public <T1, T2, T3> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter3<T1, T2, T3> t3) {
+    transitions.put(key(c, 3), t3);
+    System.out.println(key(c, 3));
     return this;
   }
 
@@ -89,5 +109,15 @@ public class JavaFXTransitioner implements ITransitioner {
     }
     throw new TransitionException(String.format("%s is not registered", key(c, 2)));
   }
-}
 
+  public <T1, T2, T3> void transitionTo(Class<?> c, T1 t1, T2 t2, T3 t3) {
+    ITransitionWithParameter a = transitions.get(key(c, 3));
+    if (a instanceof ITransitionWithParameter3) {
+      @SuppressWarnings("unchecked")
+      ITransitionWithParameter3<T1, T2, T3> runner = (ITransitionWithParameter3<T1, T2, T3>) a;
+      Platform.runLater(() -> runner.run(t1, t2, t3));
+      return;
+    }
+    throw new TransitionException(String.format("%s is not registered", key(c, 3)));
+  }
+}
