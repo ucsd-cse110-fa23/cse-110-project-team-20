@@ -135,8 +135,8 @@ public class Controller {
     ingredientsRecordingCompleted()
     {
         this.audioRecorder.stopRecording();
-        this.requestTranscription();
         this.transitionToLoadingScene();
+        this.requestTranscription();
     }
 
     public void
