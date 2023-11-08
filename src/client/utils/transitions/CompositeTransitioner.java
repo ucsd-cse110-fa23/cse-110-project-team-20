@@ -2,6 +2,12 @@ package client.utils.transitions;
 
 import java.util.ArrayList;
 
+/**
+ * CompositeTransitioner
+ * 
+ * Register multiple transitioners and propagate the transitionTo calling to all
+ * registered tansitioners.
+ */
 public class CompositeTransitioner implements ITransitioner {
   private ArrayList<ITransitioner> transitioners = new ArrayList<>();
 

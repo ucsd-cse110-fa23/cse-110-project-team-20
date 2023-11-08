@@ -1,5 +1,10 @@
 package client.utils.transitions;
 
+/**
+ * PrintConsoleTransitioner
+ * 
+ * Print any requested transition on the console window.
+ */
 public class PrintConsoleTransitioner implements ITransitioner {
 
   private void info(String message) {

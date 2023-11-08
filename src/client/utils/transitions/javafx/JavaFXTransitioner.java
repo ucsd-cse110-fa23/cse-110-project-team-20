@@ -6,6 +6,9 @@ import client.utils.transitions.ITransitioner;
 import client.utils.transitions.TransitionException;
 import javafx.application.Platform;
 
+/**
+ * Transitioner for JavaFX
+ */
 public class JavaFXTransitioner implements ITransitioner {
   private HashMap<String, ITransitionWithParameter> transitions = new HashMap<>();
 
@@ -13,16 +16,43 @@ public class JavaFXTransitioner implements ITransitioner {
     return String.format("%s@%s", c.toString(), count);
   }
 
+  /**
+   * Register a class with given runnerable. The transitioner will call the runnerable when
+   * transitionTo is called with appropriate class name.
+   *
+   * @param c
+   * @param a
+   * @return
+   */
   public JavaFXTransitioner register(Class<?> c, ITransitionWithParameter0 a) {
     transitions.put(key(c, 0), a);
     return this;
   }
 
+  /**
+   * Register a class with given runnerable. The transitioner will call the runnerable when
+   * transitionTo is called with appropriate class name.
+   *
+   * @param <T1>
+   * @param c
+   * @param t1
+   * @return
+   */
   public <T1> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter1<T1> t1) {
     transitions.put(key(c, 1), t1);
     return this;
   }
 
+  /**
+   * Register a class with given runnerable. The transitioner will call the runnerable when
+   * transitionTo is called with appropriate class name.
+   *
+   * @param <T1>
+   * @param <T2>
+   * @param c
+   * @param t2
+   * @return
+   */
   public <T1, T2> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter2<T1, T2> t2) {
     transitions.put(key(c, 2), t2);
     return this;

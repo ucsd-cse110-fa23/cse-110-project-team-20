@@ -19,6 +19,7 @@ public interface ITransitioner {
 
   /**
    * Transition to given class name if it is registered with two parameters
+   *
    * @param <T1>
    * @param <T2>
    * @param c
