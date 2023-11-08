@@ -5,7 +5,7 @@ import client.Recipe;
 /**
  * RecipeGenerated event
  */
-public interface RecipeGenerated {
+public interface IRecipeGenerated {
     /**
      * onRecipeGenerated runs when the generator completes generating a recipe
      *
