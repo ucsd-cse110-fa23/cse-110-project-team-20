@@ -5,6 +5,7 @@ import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetails;
 import client.components.RecordingPage;
+import client.components.RecordingPageCallbacks;
 
 import java.util.List;
 import client.utils.transitions.javafx.JavaFXTransitioner;
@@ -49,11 +50,11 @@ public class Routes {
      * Display recording page with given message and filename.
      */
     routes.register(RecordingPage.class, (
-      String message, String filename, Runnable buttonCallback) -> {
+      String message, RecordingPageCallbacks callbacks) -> {
       
-      RecordingPage mealTypePage = new RecordingPage(message, filename);
+      RecordingPage mealTypePage = new RecordingPage(message);
 
-      mealTypePage.setButtonCallback(buttonCallback);
+      mealTypePage.setButtonCallbacks(callbacks);
       primaryStage.setScene(new Scene(mealTypePage, WIDTH, HEIGHT));
     });
 

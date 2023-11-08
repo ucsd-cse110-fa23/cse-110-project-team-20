@@ -1,11 +1,13 @@
 package client;
 
+import client.audio.IAudioRecorder;
 import client.components.AnimatedLoadingBar;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetails;
 import client.components.RecordingPage;
-import client.recipe.GenerateRecipe;
+import client.components.RecordingPageCallbacks;
+import client.recipe.IGenerateRecipe;
 import client.recipe.RecipeRequestParameter;
 import client.utils.transitions.ITransitioner;
 
@@ -19,13 +21,25 @@ public class Controller {
     // @TODO need to replace with model
     ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
-    private GenerateRecipe generateRecipe;
+    private IGenerateRecipe generateRecipe;
     private ITransitioner transitioner;
+    private IAudioRecorder audioRecorder;
 
-    public Controller(ITransitioner transitioner, GenerateRecipe generateRecipe)
-    {
+    /**
+     * Controller glues all functions together.
+     *
+     * @param transitioner
+     * @param generateRecipe
+     * @param audioRecorder
+     */
+    public Controller(
+        ITransitioner transitioner,
+        IGenerateRecipe generateRecipe,
+        IAudioRecorder audioRecorder) {
+
         this.transitioner = transitioner;
         this.generateRecipe = generateRecipe;
+        this.audioRecorder = audioRecorder;
     }
 
     public void
@@ -37,26 +51,30 @@ public class Controller {
     public void
     transitionToMealTypeScene()
     {
-        Runnable buttonCallback = () -> mealTypeRecordingCompleted();
+        RecordingPageCallbacks callbacks = new RecordingPageCallbacks(
+            () -> mealTypeRecordingStarted(),
+            () -> mealTypeRecordingCompleted()
+        );
 
         transitioner.transitionTo(
             RecordingPage.class,
             "What kind of meal do you want?\nLunch, Dinner, Snack etc.",
-            MEAL_TYPE_AUDIO,
-            buttonCallback
+            callbacks
         );
     }
 
     public void
     transitionToIngredientsScene()
     {
-        Runnable buttonCallback = () -> ingredientsRecordingCompleted();
+        RecordingPageCallbacks callbacks = new RecordingPageCallbacks(
+            () -> ingredientsRecordingStarted(),
+            () -> ingredientsRecordingCompleted()
+        );
 
         transitioner.transitionTo(
             RecordingPage.class,
             "What ingredients do you have?",
-            INGREDIENTS_AUDIO,
-            buttonCallback
+            callbacks
         );
     }
 
@@ -108,15 +126,29 @@ public class Controller {
     }
 
     public void
+    ingredientsRecordingStarted()
+    {
+        this.audioRecorder.startRecording(INGREDIENTS_AUDIO);
+    }
+
+    public void
     ingredientsRecordingCompleted()
     {
+        this.audioRecorder.stopRecording();
         this.requestTranscription();
         this.transitionToLoadingScene();
     }
 
     public void
+    mealTypeRecordingStarted()
+    {
+        this.audioRecorder.startRecording(MEAL_TYPE_AUDIO);
+    }
+
+    public void
     mealTypeRecordingCompleted()
     {
+        this.audioRecorder.stopRecording();
         this.transitionToIngredientsScene();
     }
 

@@ -1,6 +1,8 @@
 package client;
 
-import client.recipe.GenerateRecipe;
+import client.recipe.IGenerateRecipe;
+import client.audio.AudioRecorder;
+import client.audio.IAudioRecorder;
 import client.helpers.AppInspection;
 import client.recipe.LocalRecipeGenerator;
 import client.recipe.ServerRecipeGenerator;
@@ -23,7 +25,7 @@ public class PantryPalsApp extends Application {
     public void
     start(Stage primaryStage) throws Exception
     {
-        GenerateRecipe generateRecipe;
+        IGenerateRecipe generateRecipe;
 
         if (inspector != null) {
             generateRecipe = new LocalRecipeGenerator();
@@ -32,7 +34,8 @@ public class PantryPalsApp extends Application {
         }
 
         CompositeTransitioner transitioner = new CompositeTransitioner();
-        Controller controller = new Controller(transitioner, generateRecipe);
+        IAudioRecorder audioRecorder = new AudioRecorder();
+        Controller controller = new Controller(transitioner, generateRecipe, audioRecorder);
 
         transitioner
             .add(Routes.getRoutes(primaryStage, controller))

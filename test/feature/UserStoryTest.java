@@ -82,10 +82,10 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   private void WhenAMealTypeDinnerIsGiven(Controller controller, Runnable next) {
-    controller.mealTypeRecordingButtonClicked();
+    controller.mealTypeRecordingStarted();
     setTimeout(() -> {
       // saying "dinner"
-      controller.mealTypeRecordingButtonClicked();
+      controller.mealTypeRecordingCompleted();
       if (next != null) next.run();
     }, 500);
   }
@@ -119,19 +119,19 @@ public class UserStoryTest extends UserStoryTestBase {
 
   private void GivenTheUserIsOnTheIngredientsPromptWindow(Controller controller, Runnable next) {
     controller.createRecipeButtonClicked();
-    controller.mealTypeRecordingButtonClicked();
+    controller.mealTypeRecordingStarted();
     setTimeout(() -> {
       // saying "dinner"
-      controller.mealTypeRecordingButtonClicked();
+      controller.mealTypeRecordingCompleted();
       next.run();
     }, 300);
   }
 
   private void WhenTheQueryHasTheIngredients(Controller controller, Runnable next) {
-    controller.ingredientsRecordingButtonClicked();
+    controller.ingredientsRecordingStarted();
     setTimeout(() -> {
       // saying "“banana, flour, eggs”"
-      controller.ingredientsRecordingButtonClicked();
+      controller.ingredientsRecordingCompleted();
       if (next != null) next.run();
     }, 500);
   }
