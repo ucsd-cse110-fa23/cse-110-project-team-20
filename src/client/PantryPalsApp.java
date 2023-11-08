@@ -42,7 +42,6 @@ public class PantryPalsApp extends Application {
             .add(new PrintConsoleTransitioner());
 
         controller.start();
-        // call inside of start: transitioner.transitionTo(HomePage.class);
 
         // debug purposes
         handleInspect(primaryStage, controller);
