@@ -6,6 +6,7 @@ import client.Controller;
 import client.Recipe;
 import feature.mock.MockAudioRecorder;
 import feature.mock.MockGenerateRecipe;
+import feature.mock.MockRecipeModel;
 import feature.mock.MockViewTransitioner;
 
 abstract public class UserStoryTestBase {
@@ -13,6 +14,7 @@ abstract public class UserStoryTestBase {
   MockViewTransitioner viewTransitioner;
   MockGenerateRecipe generateRecipe;
   MockAudioRecorder audioRecorder;
+  MockRecipeModel recipeModel;
   Recipe recipeStub;
 
   @BeforeEach
@@ -20,6 +22,8 @@ abstract public class UserStoryTestBase {
     viewTransitioner = new MockViewTransitioner();
     generateRecipe = new MockGenerateRecipe();
     audioRecorder = new MockAudioRecorder();
+    recipeModel = new MockRecipeModel();
+
 
     recipeStub = new Recipe(
         "Banana Pancake",
@@ -28,7 +32,7 @@ abstract public class UserStoryTestBase {
         "dinner");
     generateRecipe.setMockRecipe(recipeStub);
 
-    controller = new Controller(viewTransitioner, generateRecipe, audioRecorder);
+    controller = new Controller(viewTransitioner, generateRecipe, audioRecorder, recipeModel);
     controller.start();
   }
 }

@@ -1,8 +1,9 @@
 package feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import client.Recipe;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecordingPage;
@@ -94,7 +95,6 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   @Test
-  @Disabled("Need to implement model")
   public void scenario_2_3_saveButtionIsClicked() {
     /**
      * Scenario 2.3: Save Button Is Clicked
@@ -102,13 +102,13 @@ public class UserStoryTest extends UserStoryTestBase {
      * When the “save” button is pressed
      * Then the recipe list of recipes window becomes active and the generated recipe is at the top
      */
-    GivenTheRecipeHasBeenGeneraated();
+    GivenTheRecipeHasBeenGenerated();
     WhenTheSaveButtonIsPressed();
     ThenTheRecipeListBecomesActive();
     ThenTheGeneratedRecipeIsAtTheTopOfTheList();
   }
 
-  private void GivenTheRecipeHasBeenGeneraated() {
+  private void GivenTheRecipeHasBeenGenerated() {
     GivenTheUserIsCurrentlyOnTheMealTypePromptWindow();
     WhenAMealTypeDinnerIsGiven();
     WhenTheQueryHasTheIngredients();
@@ -123,11 +123,11 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   private void ThenTheGeneratedRecipeIsAtTheTopOfTheList() {
-    // @TODO we can check when we mock model
+    Recipe firstRecipe = recipeModel.recipes.get(0);
+    assertEquals(recipeStub, firstRecipe);
   }
 
   @Test
-  @Disabled("Need to implement model")
   public void scenario_2_4_cancelButtionIsClicked() {
     /**
      * Scenario 2.4: Cancel Button Is Clicked
@@ -136,7 +136,7 @@ public class UserStoryTest extends UserStoryTestBase {
      * Then window exits, returning back to the list of her recipe(s) (the home page)
      * And the list of recipes is unchanged
      */
-    GivenTheRecipeHasBeenGeneraated();
+    GivenTheRecipeHasBeenGenerated();
     WhenTheCancelButtonIsPressed();
     ThenTheRecipeListBecomesActive();
     ThenTheListOfRecipesIsUnchanged();
@@ -147,6 +147,6 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   private void ThenTheListOfRecipesIsUnchanged() {
-    // @TODO we can check when we mock model
+    assertEquals(0, recipeModel.recipes.size());
   }
 }
