@@ -3,7 +3,7 @@ package client;
 import client.components.AnimatedLoadingBar;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
-import client.components.RecipeDetails;
+import client.components.RecipeDetailsPage;
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 
@@ -88,8 +88,8 @@ public class Routes {
      * 
      * Show expanded recipe information
      */
-    routes.register(RecipeDetails.class, (Recipe recipe, Runnable cancelCallback) -> {
-      RecipeDetails recipeDetailsPage = new RecipeDetails();
+    routes.register(RecipeDetailsPage.class, (Recipe recipe, Runnable cancelCallback) -> {
+      RecipeDetailsPage recipeDetailsPage = new RecipeDetailsPage();
 
       recipeDetailsPage.displayRecipe(recipe);
       recipeDetailsPage.setCancelCallback(cancelCallback);

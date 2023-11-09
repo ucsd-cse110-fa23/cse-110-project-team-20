@@ -4,7 +4,7 @@ import client.audio.IAudioRecorder;
 import client.components.AnimatedLoadingBar;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
-import client.components.RecipeDetails;
+import client.components.RecipeDetailsPage;
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 import client.recipe.IGenerateRecipe;
@@ -110,7 +110,7 @@ public class Controller {
     openRecipeDetails(Recipe recipe)
     {
         Runnable cancelCallback = () -> backToHomeScene();
-        transitioner.transitionTo(RecipeDetails.class, recipe, cancelCallback);
+        transitioner.transitionTo(RecipeDetailsPage.class, recipe, cancelCallback);
     }
 
     public void
