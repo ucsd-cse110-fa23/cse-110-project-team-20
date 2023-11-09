@@ -1,6 +1,7 @@
 package client;
 
 import client.components.AnimatedLoadingBar;
+import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
@@ -96,6 +97,20 @@ public class Routes {
 
       primaryStage.setScene(new Scene(recipeDetailsPage, WIDTH, HEIGHT));
     });
+
+    /**
+     * Error page
+     *
+     * Show any critical error message
+     */
+    routes.register(ErrorPage.class, (String message, Runnable retry) -> {
+      ErrorPage errorPage = new ErrorPage(message, retry);
+
+      primaryStage.setTitle("PantryPal");
+      primaryStage.setScene(new Scene(errorPage, WIDTH, HEIGHT));
+      primaryStage.show();
+    });
+
     return routes;
   }
 }

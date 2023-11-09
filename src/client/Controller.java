@@ -2,6 +2,7 @@ package client;
 
 import client.audio.IAudioRecorder;
 import client.components.AnimatedLoadingBar;
+import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
@@ -82,7 +83,19 @@ public class Controller {
     public void
     transitionToHomeScene()
     {
-        List<Recipe> recipes = recipeModel.getRecipes();
+        List<Recipe> recipes;
+        try {
+            recipes = recipeModel.getRecipes();
+        } catch (Exception e) {
+            Runnable retryButtonCallback = () -> transitionToHomeScene();
+            viewTransitioner.transitionTo(
+                ErrorPage.class,
+                "The app cannot reach the server. Check the server is up and running.",
+                retryButtonCallback);
+
+            return;
+        }
+
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
         viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback);
     }
