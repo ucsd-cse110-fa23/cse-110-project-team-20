@@ -8,22 +8,33 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import client.Recipe;
-import client.recipe.mock.MockHttpServer;
+import client.mock.MockHttpServer;
 
 public class ServerRecipeGeneratorTest {
+  MockHttpServer server = null;
+
+  @AfterEach
+  public void tearDownServer() {
+    if (server != null) {
+      server.stop();
+      server = null;
+    }
+  }
+
   @Test
   public void generateRecipeWithServer() throws InterruptedException, ExecutionException, IOException
   {
     String mockRecipeResponse = "{\"description\": \"This is AI generated recipe with tomato, garlic, cucumber, watermelon.\"}";
-    MockHttpServer server = new MockHttpServer("/recipe/generate", mockRecipeResponse);
+    server = new MockHttpServer("/recipe/generate", mockRecipeResponse);
 
     CompletableFuture<Recipe> future = new CompletableFuture<>();
-    ServerRecipeGenerator generator = new ServerRecipeGenerator();
+    ServerRecipeGenerator generator = new ServerRecipeGenerator("http://localhost:4100");
 
-    server.start();
+    server.start(4100);
 
     RecipeRequestParameter params = new RecipeRequestParameter(new File("test/resources/silence.mp3"), new File("test/resources/silence.mp3"));
 

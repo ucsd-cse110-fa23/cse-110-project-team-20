@@ -16,7 +16,16 @@ import client.Recipe;
 
 public class ServerRecipeModel implements IRecipeModel {
 
-  private static String URL = "http://localhost:8100/recipe";
+  private String path = "/recipe";
+  private String URL;
+
+  public ServerRecipeModel() {
+    this("http://localhost:8100");
+  }
+
+  public ServerRecipeModel(String baseUrl) {
+    URL = String.format("%s%s", baseUrl, path);
+  }
 
   @Override
   public List<Recipe> getRecipes() {
@@ -54,7 +63,7 @@ public class ServerRecipeModel implements IRecipeModel {
 
   @Override
   public void deleteRecipe(int id) {
-    performRequest(RequestMethod.DEELTE, id);
+    performRequest(RequestMethod.DELETE, id);
   }
 
   private JSONObject performRequest(RequestMethod method) {
@@ -87,7 +96,7 @@ public class ServerRecipeModel implements IRecipeModel {
       conn.setRequestMethod(method.getMethodName());
       conn.setDoOutput(true);
 
-      if (method.equals(RequestMethod.POST) || method.equals(RequestMethod.PUT)) {
+      if (method == RequestMethod.POST || method == RequestMethod.PUT) {
         OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
         out.write(body);
         out.flush();
@@ -124,7 +133,7 @@ enum RequestMethod {
   GET("GET"),
   POST("POST"),
   PUT("PUT"),
-  DEELTE("DELETE");
+  DELETE("DELETE");
 
   private String methodName;
 
