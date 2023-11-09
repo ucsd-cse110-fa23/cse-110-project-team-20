@@ -9,6 +9,8 @@ import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 
 import java.util.List;
+
+import client.utils.RunnableWithId;
 import client.utils.transitions.javafx.JavaFXViewTransitioner;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -31,9 +33,8 @@ public class Routes {
      * 
      * Display a list of recipes, provides button for creating new recipe.
      */
-    routes.register(HomePage.class, (List<Recipe> recipes, Runnable createButtonCallback) -> {
-      HomePage homePage = new HomePage(recipes, controller);
-      homePage.setCreateButtonCallback(createButtonCallback);
+    routes.register(HomePage.class, (List<Recipe> recipes, Runnable createButtonCallback, RunnableWithId openRecipeDetailButtonCallback) -> {
+      HomePage homePage = new HomePage(recipes, createButtonCallback, openRecipeDetailButtonCallback);
 
       // Set the title of the app
       primaryStage.setTitle("PantryPal");
