@@ -16,7 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import client.Recipe;
-import client.recipe.GenerateRecipeHelper;
 
 public class JSONRecipeRepository implements IRecipeRepository {
   String path;
@@ -127,7 +126,7 @@ public class JSONRecipeRepository implements IRecipeRepository {
 
     for (int i = 0; i < recipesArr.length(); i++) {
       JSONObject recipeJson = recipesArr.getJSONObject(i);
-      recipes.add(GenerateRecipeHelper.convertJsonResponseToRecipe(recipeJson.toString()));
+      recipes.add(Recipe.fromJson(recipeJson.toString()));
     }
 
     return recipes;

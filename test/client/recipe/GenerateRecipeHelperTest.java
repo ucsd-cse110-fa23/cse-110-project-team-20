@@ -9,7 +9,7 @@ import client.Recipe;
 public class GenerateRecipeHelperTest {
     @Test
     public void convertJsonResponseToRecipe() {
-        Recipe recipe = GenerateRecipeHelper.convertJsonResponseToRecipe("{\"title\": \"1\", \"meal_type\": \"2\", \"ingredients\": \"3\", \"description\": \"4\"}");
+        Recipe recipe = Recipe.fromJson("{\"title\": \"1\", \"meal_type\": \"2\", \"ingredients\": \"3\", \"description\": \"4\"}");
         assertEquals("1", recipe.getTitle());
         assertEquals("2", recipe.getMealType());
         assertEquals("3", recipe.getIngredients());

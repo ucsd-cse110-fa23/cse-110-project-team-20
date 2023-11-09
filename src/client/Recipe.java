@@ -1,5 +1,6 @@
 package client;
 
+import org.json.JSONObject;
 import org.json.JSONPropertyName;
 
 public class Recipe {
@@ -17,6 +18,17 @@ public class Recipe {
         this.description = description;
         this.ingredients = ingredients;
         this.mealType = mealType;
+    }
+
+    public static Recipe fromJson(String jsonResponse) {
+        JSONObject recipeJson = new JSONObject(jsonResponse.trim());
+
+        String title = recipeJson.has("title") ? recipeJson.getString("title") : null;
+        String mealType = recipeJson.has("meal_type") ? recipeJson.getString("meal_type") : null;
+        String ingredients = recipeJson.has("ingredients") ? recipeJson.getString("ingredients") : null;
+        String description = recipeJson.has("description") ? recipeJson.getString("description") : null;
+
+        return new Recipe(title, description, ingredients, mealType);
     }
 
     public String getTitle() {

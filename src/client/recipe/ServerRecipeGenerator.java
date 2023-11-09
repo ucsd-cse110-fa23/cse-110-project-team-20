@@ -25,7 +25,7 @@ public class ServerRecipeGenerator implements IGenerateRecipe {
     Thread t = new Thread(() -> {
       try {
         String recipeResponse = request(parameter);
-        Recipe recipe = GenerateRecipeHelper.convertJsonResponseToRecipe(recipeResponse);
+        Recipe recipe = Recipe.fromJson(recipeResponse);
         onRecipeGenerated.onRecipeGenerated(recipe);
       } catch (Exception e) {
         e.printStackTrace();

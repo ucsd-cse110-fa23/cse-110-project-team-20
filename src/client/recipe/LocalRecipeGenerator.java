@@ -37,7 +37,7 @@ public class LocalRecipeGenerator implements IGenerateRecipe {
       }
 
       String recipeResponse = String.format(RECIPE_FORMAT);
-      Recipe recipe = GenerateRecipeHelper.convertJsonResponseToRecipe(recipeResponse);
+      Recipe recipe = Recipe.fromJson(recipeResponse);
       onRecipeGenerated.onRecipeGenerated(recipe);
     });
     t.start();
