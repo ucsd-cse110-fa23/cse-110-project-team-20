@@ -20,7 +20,7 @@ public class IndexHttpHandlerTest {
     IndexHttpHandler handler = new IndexHttpHandler();
     IHttpRequest request = new MockHttpRequest();
 
-    String expected = "<html><body><h1>PantryPals Server</h1><p>The server is up and running.</p></body></html>";
+    String expected = "<html><body><h1>PantryPal Server</h1><p>The server is up and running.</p></body></html>";
     String response = handler.handleGet(request);
     assertEquals(expected, response);
   }

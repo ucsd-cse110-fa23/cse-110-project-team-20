@@ -9,7 +9,7 @@ import client.Recipe;
  * calling. It uses a thread
  * so that user interation is not interrupted during any generation.
  */
-public class LocalRecipeGenerator implements GenerateRecipe {
+public class LocalRecipeGenerator implements IRecipeGenerator {
 
   // based on DS5 #60 doc
   private static final String RECIPE_FORMAT = "{"
@@ -28,8 +28,8 @@ public class LocalRecipeGenerator implements GenerateRecipe {
   @Override
   public void requestGeneratingRecipe(
       RecipeRequestParameter parameter,
-      RecipeGenerated onRecipeGenerated,
-      RecipeGenerationFailed onRecipeGenerationFailed) {
+      IRecipeGenerated onRecipeGenerated,
+      IRecipeGenerationFailed onRecipeGenerationFailed) {
     Thread t = new Thread(() -> {
       if (alwaysFail) {
         onRecipeGenerationFailed.onRecipeGenerationFailed("AlwaysFail is on");
@@ -37,7 +37,7 @@ public class LocalRecipeGenerator implements GenerateRecipe {
       }
 
       String recipeResponse = String.format(RECIPE_FORMAT);
-      Recipe recipe = GenerateRecipeHelper.convertJsonResponseToRecipe(recipeResponse);
+      Recipe recipe = Recipe.fromJson(recipeResponse);
       onRecipeGenerated.onRecipeGenerated(recipe);
     });
     t.start();

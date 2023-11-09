@@ -1,6 +1,6 @@
 package client.recipe;
 
-public interface GenerateRecipe {
+public interface IRecipeGenerator {
 
   /**
    * Request generating recipe with RecipeRequestParameter. When the generator created a recipe, onRecipeGenerated
@@ -12,7 +12,7 @@ public interface GenerateRecipe {
    */
   public void requestGeneratingRecipe(
     RecipeRequestParameter parameter,
-    RecipeGenerated onRecipeGenerated,
-    RecipeGenerationFailed onRecipeGenerationFailed
+    IRecipeGenerated onRecipeGenerated,
+    IRecipeGenerationFailed onRecipeGenerationFailed
   );
 }

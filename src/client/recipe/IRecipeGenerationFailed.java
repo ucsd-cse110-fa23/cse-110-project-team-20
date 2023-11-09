@@ -1,6 +1,6 @@
 package client.recipe;
 
-public interface RecipeGenerationFailed {
+public interface IRecipeGenerationFailed {
   /**
    * onRecipeGenerationFailed runs when the generator fails generating a recipe
    *

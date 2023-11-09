@@ -1,36 +1,14 @@
 package feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
-
-import client.Controller;
-import client.Recipe;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecordingPage;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-@DisabledIfSystemProperty(
-  named = "user_story_test",
-  matches = "excluded",
-  disabledReason = "GitHub Actions cannot handle the UI interaction, so we need to do manually on local for this case"
-)
-@TestMethodOrder(OrderAnnotation.class)
 public class UserStoryTest extends UserStoryTestBase {
   @Test
-  @Order(12)
-  @Disabled("We will enable when it is more stable on home page")
   public void scenario_1_2_listDoesNotHaveRecipeThatTheUserWants() {
     /**
      * Scenario 1.2: The list does not have recipe that the user wants
@@ -38,30 +16,24 @@ public class UserStoryTest extends UserStoryTestBase {
      * When the college student click create new recipe button
      * Then the list should navigate to the meal type prompt page
      */
-    condition(() -> {
-      GivenThatTheUserIsOnTheListOfRecipesWindow(primaryStage);
-      WhenTheCollegeStudentClickCreateNewRecipeButton(controller);
-    });
-
-    ThenTheListShouldNavigateToTheMealTypePromptPage(primaryStage);
+    GivenThatTheUserIsOnTheListOfRecipesWindow();
+    WhenTheCollegeStudentClickCreateNewRecipeButton();
+    ThenTheListShouldNavigateToTheMealTypePromptPage();
   }
 
-  private void GivenThatTheUserIsOnTheListOfRecipesWindow(Stage primaryStage) {
+  private void GivenThatTheUserIsOnTheListOfRecipesWindow() {
     // the app is just launched so that the list of recipes showing
   }
 
-  private void WhenTheCollegeStudentClickCreateNewRecipeButton(Controller controller) {
-    setTimeout(() -> {
-      controller.createRecipeButtonClicked();
-    },100);
+  private void WhenTheCollegeStudentClickCreateNewRecipeButton() {
+    controller.createRecipeButtonClicked();
   }
 
-  private void ThenTheListShouldNavigateToTheMealTypePromptPage(Stage primaryStage) {
-    assertEquals(primaryStage.getScene().getRoot().getClass(), RecordingPage.class);
+  private void ThenTheListShouldNavigateToTheMealTypePromptPage() {
+    assertEquals(viewTransitioner.currentPageClass, RecordingPage.class);
   }
 
   @Test
-  @Order(21)
   public void scenario_2_1_mealTypeIsSelected() {
     /**
      * Scenario 2.1 Meal type is selected
@@ -69,37 +41,27 @@ public class UserStoryTest extends UserStoryTestBase {
      * When a meal type, such as “dinner”, is given
      * Then the recipe generation prompt window becomes active
      */
-    condition(() -> {
-      GivenTheUserIsCurrentlyOnTheMealTypePromptWindow(controller);
-      WhenAMealTypeDinnerIsGiven(controller, null);
-    }, 5000);
-
-    ThenTheRecipeGenerationPromptWindowBecomesActive(primaryStage);
+    GivenTheUserIsCurrentlyOnTheMealTypePromptWindow();
+    WhenAMealTypeDinnerIsGiven();
+    ThenTheRecipeGenerationPromptWindowBecomesActive();
   }
 
-  private void GivenTheUserIsCurrentlyOnTheMealTypePromptWindow(Controller controller) {
+  private void GivenTheUserIsCurrentlyOnTheMealTypePromptWindow() {
     controller.createRecipeButtonClicked();
   }
 
-  private void WhenAMealTypeDinnerIsGiven(Controller controller, Runnable next) {
-    controller.mealTypeRecordingButtonClicked();
-    setTimeout(() -> {
-      // saying "dinner"
-      controller.mealTypeRecordingButtonClicked();
-      if (next != null) next.run();
-    }, 500);
+  private void WhenAMealTypeDinnerIsGiven() {
+    controller.mealTypeRecordingStarted();
+    // suppose say dinner on mic
+    controller.mealTypeRecordingCompleted();
   }
 
-  private void ThenTheRecipeGenerationPromptWindowBecomesActive(Stage primaryStage) {
-    RecordingPage ingredientsRecordingPage = (RecordingPage) primaryStage.getScene().getRoot();
-    Label title = (Label) ingredientsRecordingPage.getChildren().get(0);
-
-    assertInstanceOf(RecordingPage.class, ingredientsRecordingPage);
-    assertEquals("What ingredients do you have?", title.getText());
+  private void ThenTheRecipeGenerationPromptWindowBecomesActive() {
+    assertEquals(viewTransitioner.currentPageClass, RecordingPage.class);
+    assertEquals(viewTransitioner.param1, "What ingredients do you have?");
   }
 
   @Test
-  @Order(22)
   public void scenario_2_2_recipeIsGenerated() {
     /**
      * Scenario 2.2: Recipe is generated
@@ -108,41 +70,31 @@ public class UserStoryTest extends UserStoryTestBase {
      * Then a window with the new recipe (in this case “Banana Pancake”) along with
      * a list of instructions and ingredients becomes active
      */
-    condition(() -> {
-      GivenTheUserIsOnTheIngredientsPromptWindow(controller, () -> {
-        WhenTheQueryHasTheIngredients(controller, null);
-      });
-    }, 5000);
-
-    ThenAWindowWithTheNewRecipeAlongWithAListOfInstructionsAndIngredientsBecomesActive(primaryStage);
+    GivenTheUserIsOnTheIngredientsPromptWindow();
+    WhenTheQueryHasTheIngredients();
+    ThenAWindowWithTheNewRecipeAlongWithAListOfInstructionsAndIngredientsBecomesActive();
   }
 
-  private void GivenTheUserIsOnTheIngredientsPromptWindow(Controller controller, Runnable next) {
+  private void GivenTheUserIsOnTheIngredientsPromptWindow() {
     controller.createRecipeButtonClicked();
-    controller.mealTypeRecordingButtonClicked();
-    setTimeout(() -> {
-      // saying "dinner"
-      controller.mealTypeRecordingButtonClicked();
-      next.run();
-    }, 300);
+    controller.mealTypeRecordingStarted();
+    // saying "dinner"
+    controller.mealTypeRecordingCompleted();
   }
 
-  private void WhenTheQueryHasTheIngredients(Controller controller, Runnable next) {
-    controller.ingredientsRecordingButtonClicked();
-    setTimeout(() -> {
-      // saying "“banana, flour, eggs”"
-      controller.ingredientsRecordingButtonClicked();
-      if (next != null) next.run();
-    }, 500);
+  private void WhenTheQueryHasTheIngredients() {
+    controller.ingredientsRecordingStarted();
+    // saying "“banana, flour, eggs”"
+    controller.ingredientsRecordingCompleted();
   }
 
-  private void ThenAWindowWithTheNewRecipeAlongWithAListOfInstructionsAndIngredientsBecomesActive(Stage primaryStage) {
-    Parent newRecipeConfirmPage = primaryStage.getScene().getRoot();
-    assertInstanceOf(NewRecipeConfirmPage.class, newRecipeConfirmPage);
+  private void ThenAWindowWithTheNewRecipeAlongWithAListOfInstructionsAndIngredientsBecomesActive() {
+    assertEquals(viewTransitioner.currentPageClass, NewRecipeConfirmPage.class);
+    assertEquals(viewTransitioner.param1, recipeStub.toString());
   }
 
   @Test
-  @Order(24)
+  @Disabled("Need to implement model")
   public void scenario_2_3_saveButtionIsClicked() {
     /**
      * Scenario 2.3: Save Button Is Clicked
@@ -150,47 +102,32 @@ public class UserStoryTest extends UserStoryTestBase {
      * When the “save” button is pressed
      * Then the recipe list of recipes window becomes active and the generated recipe is at the top
      */
-
-    condition(() -> {
-      GivenTheRecipeHasBeenGeneraated(controller, () -> {
-        WhenTheSaveButtonIsPressed(controller);
-      });
-    }, 5000);
-
-    ThenTheRecipeListBecomesActive(primaryStage);
-    ThenTheGeneratedRecipeIsAtTheTopOfTheList(primaryStage);
+    GivenTheRecipeHasBeenGeneraated();
+    WhenTheSaveButtonIsPressed();
+    ThenTheRecipeListBecomesActive();
+    ThenTheGeneratedRecipeIsAtTheTopOfTheList();
   }
 
-  private void GivenTheRecipeHasBeenGeneraated(Controller controller, Runnable next) {
-    GivenTheUserIsCurrentlyOnTheMealTypePromptWindow(controller);
-    WhenAMealTypeDinnerIsGiven(controller, () -> {
-      WhenTheQueryHasTheIngredients(controller, next);
-    });
+  private void GivenTheRecipeHasBeenGeneraated() {
+    GivenTheUserIsCurrentlyOnTheMealTypePromptWindow();
+    WhenAMealTypeDinnerIsGiven();
+    WhenTheQueryHasTheIngredients();
   }
 
-  private void WhenTheSaveButtonIsPressed(Controller controller) {
-    // assume the recipe is generated
-    Recipe recipe = new Recipe("Banana Pancake", "Some generated recipe for banana pancake.");
-    setTimeout(() -> {
-      controller.saveRecipeClicked(recipe);
-    }, 200);
+  private void WhenTheSaveButtonIsPressed() {
+    controller.saveRecipeClicked(recipeStub);
   }
 
-  private void ThenTheRecipeListBecomesActive(Stage primaryStage) {
-    assertEquals(primaryStage.getScene().getRoot().getClass(), HomePage.class);
+  private void ThenTheRecipeListBecomesActive() {
+    assertEquals(viewTransitioner.currentPageClass, HomePage.class);
   }
 
-  private void ThenTheGeneratedRecipeIsAtTheTopOfTheList(Stage primaryStage) {
-    HomePage homePage = (HomePage) primaryStage.getScene().getRoot();
-    ScrollPane scrollPane = (ScrollPane) homePage.getCenter();
-    Pane recipeList = (Pane) scrollPane.getContent();
-
-    // supposed to new one
-    assertEquals(1, recipeList.getChildren().size());
+  private void ThenTheGeneratedRecipeIsAtTheTopOfTheList() {
+    // @TODO we can check when we mock model
   }
 
   @Test
-  @Order(23)
+  @Disabled("Need to implement model")
   public void scenario_2_4_cancelButtionIsClicked() {
     /**
      * Scenario 2.4: Cancel Button Is Clicked
@@ -199,29 +136,17 @@ public class UserStoryTest extends UserStoryTestBase {
      * Then window exits, returning back to the list of her recipe(s) (the home page)
      * And the list of recipes is unchanged
      */
-
-    condition(() -> {
-      GivenTheRecipeHasBeenGeneraated(controller, () -> {
-        WhenTheCancelButtonIsPressed(controller);
-      });
-    }, 5000);
-
-    ThenTheRecipeListBecomesActive(primaryStage);
-    ThenTheListOfRecipesIsUnchanged(primaryStage);
+    GivenTheRecipeHasBeenGeneraated();
+    WhenTheCancelButtonIsPressed();
+    ThenTheRecipeListBecomesActive();
+    ThenTheListOfRecipesIsUnchanged();
   }
 
-  private void WhenTheCancelButtonIsPressed(Controller controller) {
-    setTimeout(() -> {
-      controller.discardGeneratedRecipeClicked();
-    }, 200);
+  private void WhenTheCancelButtonIsPressed() {
+    controller.discardGeneratedRecipeClicked();
   }
 
-  private void ThenTheListOfRecipesIsUnchanged(Stage primaryStage) {
-    HomePage homePage = (HomePage) primaryStage.getScene().getRoot();
-    ScrollPane scrollPane = (ScrollPane) homePage.getCenter();
-    Pane recipeList = (Pane) scrollPane.getContent();
-
-    assertEquals(0, recipeList.getChildren().size());
+  private void ThenTheListOfRecipesIsUnchanged() {
+    // @TODO we can check when we mock model
   }
-
 }

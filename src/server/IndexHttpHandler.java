@@ -9,7 +9,7 @@ public class IndexHttpHandler extends HttpHandlerBase {
     htmlBuilder
         .append("<html>")
         .append("<body>")
-        .append("<h1>PantryPals Server</h1>")
+        .append("<h1>PantryPal Server</h1>")
         .append("<p>The server is up and running.</p>")
         .append("</body>")
         .append("</html>");
