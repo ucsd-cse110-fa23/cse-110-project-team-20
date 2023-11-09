@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import client.Recipe;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
+import client.components.RecipeDetailsPage;
 import client.components.RecordingPage;
 
 public class UserStoryTest extends UserStoryTestBase {
@@ -148,5 +149,52 @@ public class UserStoryTest extends UserStoryTestBase {
 
   private void ThenTheListOfRecipesIsUnchanged() {
     assertEquals(0, recipeModel.recipes.size());
+  }
+
+  @Test
+  public void scenario_3_1_userViewsAnExistingRecipe() {
+    /**
+     * Scenario 3.1: User views an existing recipe
+     * Given the list of recipes is being viewed
+     * When “Chicken with broccoli” gets clicked
+     * Then expanded view for “Chicken with broccoli” shows
+     * When back button gets clicked
+     * Then expanded view for “Chicken with broccoli” disappears
+     *   And the list of recipes is visible again
+     */
+    GivenTheListOfRecipesIsBeingViewed();
+    WhenChickenWithBroccoliGetClicked();
+    ThenExpandedViewForChickenWithBroccoliShows();
+    WhenBackButtonGetsClicked();
+    ThenTheRecipeListBecomesActive();
+  }
+
+  public void GivenTheListOfRecipesIsBeingViewed() {
+    recipeModel.recipes.add(new Recipe("Chicken with carrot", "Chicken with carrot recipe instruction."));
+    recipeModel.recipes.add(new Recipe("Chicken with broccoli", "Chicken with broccoli recipe instruction."));
+    recipeModel.recipes.add(new Recipe("Chicken with chocolete", "Chicken with chocolete recipe instruction."));
+  }
+
+  public void WhenChickenWithBroccoliGetClicked() {
+    for(int i = 0; i < recipeModel.recipes.size(); i++) {
+      Recipe recipeInTheList = recipeModel.recipes.get(i);
+      if (recipeInTheList.getTitle() == "Chicken with broccoli") {
+        // @TODO replace to the new one when #88 is merged
+        controller.openRecipeDetails(recipeInTheList);
+        return;
+      }
+    }
+  }
+
+  public void ThenExpandedViewForChickenWithBroccoliShows() {
+    assertEquals(viewTransitioner.currentPageClass, RecipeDetailsPage.class);
+
+    Recipe recipe = (Recipe) viewTransitioner.rawParam1;
+    assertEquals("Chicken with broccoli", recipe.getTitle());
+  }
+
+  public void WhenBackButtonGetsClicked() {
+    Runnable supposeToCancelButton = (Runnable) viewTransitioner.rawParam2;
+    supposeToCancelButton.run();
   }
 }
