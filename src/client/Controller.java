@@ -1,7 +1,7 @@
 package client;
 
 import client.audio.IAudioRecorder;
-import client.components.AnimatedLoadingBar;
+import client.components.LoadingPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
@@ -122,7 +122,7 @@ public class Controller {
     public void
     transitionToLoadingScene()
     {
-        viewTransitioner.transitionTo(AnimatedLoadingBar.class, "Finding the perfect recipe...");
+        viewTransitioner.transitionTo(LoadingPage.class, "Finding the perfect recipe...");
     }
 
     public void
