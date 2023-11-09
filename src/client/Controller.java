@@ -7,7 +7,7 @@ import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
-import client.recipe.IGenerateRecipe;
+import client.recipe.IRecipeGenerator;
 import client.recipe.RecipeRequestParameter;
 import client.utils.transitions.IViewTransitioner;
 
@@ -21,7 +21,7 @@ public class Controller {
     // @TODO need to replace with model
     ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
-    private IGenerateRecipe generateRecipe;
+    private IRecipeGenerator recipeGenerator;
     private IViewTransitioner viewTransitioner;
     private IAudioRecorder audioRecorder;
 
@@ -29,16 +29,16 @@ public class Controller {
      * Controller glues all functions together.
      *
      * @param viewTransitioner
-     * @param generateRecipe
+     * @param recipeGenerator
      * @param audioRecorder
      */
     public Controller(
         IViewTransitioner viewTransitioner,
-        IGenerateRecipe generateRecipe,
+        IRecipeGenerator recipeGenerator,
         IAudioRecorder audioRecorder) {
 
         this.viewTransitioner = viewTransitioner;
-        this.generateRecipe = generateRecipe;
+        this.recipeGenerator = recipeGenerator;
         this.audioRecorder = audioRecorder;
     }
 
@@ -96,7 +96,7 @@ public class Controller {
             RecipeRequestParameter params =
                 new RecipeRequestParameter(mealTypeFile, ingredientsFile);
 
-            generateRecipe.requestGeneratingRecipe(params,
+            recipeGenerator.requestGeneratingRecipe(params,
                 (recipe) -> {
                     transitionToNewRecipeConfirmPage(recipe);
                 },

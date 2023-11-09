@@ -1,6 +1,6 @@
 package client.recipe;
 
-public interface IGenerateRecipe {
+public interface IRecipeGenerator {
 
   /**
    * Request generating recipe with RecipeRequestParameter. When the generator created a recipe, onRecipeGenerated

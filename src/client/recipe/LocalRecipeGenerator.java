@@ -9,7 +9,7 @@ import client.Recipe;
  * calling. It uses a thread
  * so that user interation is not interrupted during any generation.
  */
-public class LocalRecipeGenerator implements IGenerateRecipe {
+public class LocalRecipeGenerator implements IRecipeGenerator {
 
   // based on DS5 #60 doc
   private static final String RECIPE_FORMAT = "{"

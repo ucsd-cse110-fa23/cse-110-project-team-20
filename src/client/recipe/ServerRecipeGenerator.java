@@ -13,7 +13,7 @@ import java.net.URL;
 
 import client.Recipe;
 
-public class ServerRecipeGenerator implements IGenerateRecipe {
+public class ServerRecipeGenerator implements IRecipeGenerator {
   private static final String API_ENDPOINT = "http://localhost:8100/recipe/generate";
 
   @Override

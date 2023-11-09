@@ -1,12 +1,12 @@
 package feature.mock;
 
 import client.Recipe;
-import client.recipe.IGenerateRecipe;
+import client.recipe.IRecipeGenerator;
 import client.recipe.IRecipeGenerated;
 import client.recipe.IRecipeGenerationFailed;
 import client.recipe.RecipeRequestParameter;
 
-public class MockGenerateRecipe implements IGenerateRecipe {
+public class MockGenerateRecipe implements IRecipeGenerator {
   private Recipe recipe;
 
   public void setMockRecipe(Recipe recipe) {
