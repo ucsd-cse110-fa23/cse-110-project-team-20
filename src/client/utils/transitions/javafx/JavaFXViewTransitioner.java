@@ -2,15 +2,15 @@ package client.utils.transitions.javafx;
 
 import java.util.HashMap;
 
-import client.utils.transitions.ITransitioner;
-import client.utils.transitions.TransitionException;
+import client.utils.transitions.IViewTransitioner;
+import client.utils.transitions.ViewTransitionException;
 import javafx.application.Platform;
 
 /**
- * Transitioner for JavaFX
+ * ViewTransitioner for JavaFX
  */
-public class JavaFXTransitioner implements ITransitioner {
-  private HashMap<String, ITransitionWithParameter> transitions = new HashMap<>();
+public class JavaFXViewTransitioner implements IViewTransitioner {
+  private HashMap<String, IViewTransitionWithParameter> transitions = new HashMap<>();
 
   private String key(Class<?> c, int count) {
     return String.format("%s@%s", c.toString(), count);
@@ -24,7 +24,7 @@ public class JavaFXTransitioner implements ITransitioner {
    * @param a
    * @return
    */
-  public JavaFXTransitioner register(Class<?> c, ITransitionWithParameter0 a) {
+  public JavaFXViewTransitioner register(Class<?> c, IViewTransitionWithParameter0 a) {
     transitions.put(key(c, 0), a);
     System.out.println(key(c, 0));
     return this;
@@ -39,7 +39,7 @@ public class JavaFXTransitioner implements ITransitioner {
    * @param t1
    * @return
    */
-  public <T1> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter1<T1> t1) {
+  public <T1> JavaFXViewTransitioner register(Class<?> c, IViewTransitionWithParameter1<T1> t1) {
     transitions.put(key(c, 1), t1);
     System.out.println(key(c, 1));
     return this;
@@ -55,7 +55,7 @@ public class JavaFXTransitioner implements ITransitioner {
    * @param t2
    * @return
    */
-  public <T1, T2> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter2<T1, T2> t2) {
+  public <T1, T2> JavaFXViewTransitioner register(Class<?> c, IViewTransitionWithParameter2<T1, T2> t2) {
     transitions.put(key(c, 2), t2);
     System.out.println(key(c, 2));
     return this;
@@ -72,52 +72,52 @@ public class JavaFXTransitioner implements ITransitioner {
    * @param t3
    * @return
    */
-  public <T1, T2, T3> JavaFXTransitioner register(Class<?> c, ITransitionWithParameter3<T1, T2, T3> t3) {
+  public <T1, T2, T3> JavaFXViewTransitioner register(Class<?> c, IViewTransitionWithParameter3<T1, T2, T3> t3) {
     transitions.put(key(c, 3), t3);
     System.out.println(key(c, 3));
     return this;
   }
 
   public void transitionTo(Class<?> c) {
-    ITransitionWithParameter a = transitions.get(key(c, 0));
-    if (a instanceof ITransitionWithParameter0) {
-      ITransitionWithParameter0 runner = (ITransitionWithParameter0) a;
+    IViewTransitionWithParameter a = transitions.get(key(c, 0));
+    if (a instanceof IViewTransitionWithParameter0) {
+      IViewTransitionWithParameter0 runner = (IViewTransitionWithParameter0) a;
       Platform.runLater(() -> runner.run());
       return;
     }
-    throw new TransitionException(String.format("%s is not registered", key(c, 0)));
+    throw new ViewTransitionException(String.format("%s is not registered", key(c, 0)));
   }
 
   public <T1> void transitionTo(Class<?> c, T1 t1) {
-    ITransitionWithParameter a = transitions.get(key(c, 1));
-    if (a instanceof ITransitionWithParameter1) {
+    IViewTransitionWithParameter a = transitions.get(key(c, 1));
+    if (a instanceof IViewTransitionWithParameter1) {
       @SuppressWarnings("unchecked")
-      ITransitionWithParameter1<T1> runner = (ITransitionWithParameter1<T1>) a;
+      IViewTransitionWithParameter1<T1> runner = (IViewTransitionWithParameter1<T1>) a;
       Platform.runLater(() -> runner.run(t1));
       return;
     }
-    throw new TransitionException(String.format("%s is not registered", key(c, 1)));
+    throw new ViewTransitionException(String.format("%s is not registered", key(c, 1)));
   }
 
   public <T1, T2> void transitionTo(Class<?> c, T1 t1, T2 t2) {
-    ITransitionWithParameter a = transitions.get(key(c, 2));
-    if (a instanceof ITransitionWithParameter2) {
+    IViewTransitionWithParameter a = transitions.get(key(c, 2));
+    if (a instanceof IViewTransitionWithParameter2) {
       @SuppressWarnings("unchecked")
-      ITransitionWithParameter2<T1, T2> runner = (ITransitionWithParameter2<T1, T2>) a;
+      IViewTransitionWithParameter2<T1, T2> runner = (IViewTransitionWithParameter2<T1, T2>) a;
       Platform.runLater(() -> runner.run(t1, t2));
       return;
     }
-    throw new TransitionException(String.format("%s is not registered", key(c, 2)));
+    throw new ViewTransitionException(String.format("%s is not registered", key(c, 2)));
   }
 
   public <T1, T2, T3> void transitionTo(Class<?> c, T1 t1, T2 t2, T3 t3) {
-    ITransitionWithParameter a = transitions.get(key(c, 3));
-    if (a instanceof ITransitionWithParameter3) {
+    IViewTransitionWithParameter a = transitions.get(key(c, 3));
+    if (a instanceof IViewTransitionWithParameter3) {
       @SuppressWarnings("unchecked")
-      ITransitionWithParameter3<T1, T2, T3> runner = (ITransitionWithParameter3<T1, T2, T3>) a;
+      IViewTransitionWithParameter3<T1, T2, T3> runner = (IViewTransitionWithParameter3<T1, T2, T3>) a;
       Platform.runLater(() -> runner.run(t1, t2, t3));
       return;
     }
-    throw new TransitionException(String.format("%s is not registered", key(c, 3)));
+    throw new ViewTransitionException(String.format("%s is not registered", key(c, 3)));
   }
 }

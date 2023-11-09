@@ -1,11 +1,11 @@
 package client.utils.transitions;
 
 /**
- * PrintConsoleTransitioner
+ * PrintConsoleViewTransitioner
  * 
  * Print any requested transition on the console window.
  */
-public class PrintConsoleTransitioner implements ITransitioner {
+public class PrintConsoleViewTransitioner implements IViewTransitioner {
 
   private void info(String message) {
     System.out.println(String.format("[Transition] %s", message));

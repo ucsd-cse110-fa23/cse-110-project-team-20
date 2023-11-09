@@ -8,7 +8,7 @@ import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 
 import java.util.List;
-import client.utils.transitions.javafx.JavaFXTransitioner;
+import client.utils.transitions.javafx.JavaFXViewTransitioner;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -22,8 +22,8 @@ import javafx.stage.Stage;
 public class Routes {
   private static final int WIDTH = 500, HEIGHT = 500;
 
-  public static JavaFXTransitioner getRoutes(Stage primaryStage, Controller controller) {
-    JavaFXTransitioner routes = new JavaFXTransitioner();
+  public static JavaFXViewTransitioner getRoutes(Stage primaryStage, Controller controller) {
+    JavaFXViewTransitioner routes = new JavaFXViewTransitioner();
 
     /**
      * Home Page

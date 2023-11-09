@@ -1,6 +1,6 @@
 package client.utils.transitions;
 
-public interface ITransitioner {
+public interface IViewTransitioner {
   /**
    * Transition to given class name if it is registered
    *

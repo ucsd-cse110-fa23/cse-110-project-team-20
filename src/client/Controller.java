@@ -9,7 +9,7 @@ import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 import client.recipe.IGenerateRecipe;
 import client.recipe.RecipeRequestParameter;
-import client.utils.transitions.ITransitioner;
+import client.utils.transitions.IViewTransitioner;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,22 +22,22 @@ public class Controller {
     ArrayList<Recipe> recipes = new ArrayList<Recipe>();
 
     private IGenerateRecipe generateRecipe;
-    private ITransitioner transitioner;
+    private IViewTransitioner viewTransitioner;
     private IAudioRecorder audioRecorder;
 
     /**
      * Controller glues all functions together.
      *
-     * @param transitioner
+     * @param viewTransitioner
      * @param generateRecipe
      * @param audioRecorder
      */
     public Controller(
-        ITransitioner transitioner,
+        IViewTransitioner viewTransitioner,
         IGenerateRecipe generateRecipe,
         IAudioRecorder audioRecorder) {
 
-        this.transitioner = transitioner;
+        this.viewTransitioner = viewTransitioner;
         this.generateRecipe = generateRecipe;
         this.audioRecorder = audioRecorder;
     }
@@ -56,7 +56,7 @@ public class Controller {
             () -> mealTypeRecordingCompleted()
         );
 
-        transitioner.transitionTo(
+        viewTransitioner.transitionTo(
             RecordingPage.class,
             "What kind of meal do you want?\nLunch, Dinner, Snack etc.",
             callbacks
@@ -71,7 +71,7 @@ public class Controller {
             () -> ingredientsRecordingCompleted()
         );
 
-        transitioner.transitionTo(
+        viewTransitioner.transitionTo(
             RecordingPage.class,
             "What ingredients do you have?",
             callbacks
@@ -83,7 +83,7 @@ public class Controller {
     {
         // @TODO need to get recipes from the model
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
-        transitioner.transitionTo(HomePage.class, recipes, createButtonCallback);
+        viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback);
     }
 
     public void
@@ -110,7 +110,7 @@ public class Controller {
     openRecipeDetails(Recipe recipe)
     {
         Runnable cancelCallback = () -> backToHomeScene();
-        transitioner.transitionTo(RecipeDetailsPage.class, recipe, cancelCallback);
+        viewTransitioner.transitionTo(RecipeDetailsPage.class, recipe, cancelCallback);
     }
 
     public void
@@ -122,7 +122,7 @@ public class Controller {
     public void
     transitionToLoadingScene()
     {
-        transitioner.transitionTo(AnimatedLoadingBar.class, "Finding the perfect recipe...");
+        viewTransitioner.transitionTo(AnimatedLoadingBar.class, "Finding the perfect recipe...");
     }
 
     public void
@@ -163,7 +163,7 @@ public class Controller {
     {
         Runnable saveCallback = () -> saveRecipeClicked(recipe);
         Runnable discardCallback = () -> discardGeneratedRecipeClicked();
-        transitioner.transitionTo(NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback);
+        viewTransitioner.transitionTo(NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback);
     }
 
     public void

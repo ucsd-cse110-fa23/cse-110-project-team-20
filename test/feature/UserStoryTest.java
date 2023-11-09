@@ -30,7 +30,7 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   private void ThenTheListShouldNavigateToTheMealTypePromptPage() {
-    assertEquals(transitioner.currentPageClass, RecordingPage.class);
+    assertEquals(viewTransitioner.currentPageClass, RecordingPage.class);
   }
 
   @Test
@@ -57,8 +57,8 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   private void ThenTheRecipeGenerationPromptWindowBecomesActive() {
-    assertEquals(transitioner.currentPageClass, RecordingPage.class);
-    assertEquals(transitioner.param1, "What ingredients do you have?");
+    assertEquals(viewTransitioner.currentPageClass, RecordingPage.class);
+    assertEquals(viewTransitioner.param1, "What ingredients do you have?");
   }
 
   @Test
@@ -89,8 +89,8 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   private void ThenAWindowWithTheNewRecipeAlongWithAListOfInstructionsAndIngredientsBecomesActive() {
-    assertEquals(transitioner.currentPageClass, NewRecipeConfirmPage.class);
-    assertEquals(transitioner.param1, recipeStub.toString());
+    assertEquals(viewTransitioner.currentPageClass, NewRecipeConfirmPage.class);
+    assertEquals(viewTransitioner.param1, recipeStub.toString());
   }
 
   @Test
@@ -119,7 +119,7 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   private void ThenTheRecipeListBecomesActive() {
-    assertEquals(transitioner.currentPageClass, HomePage.class);
+    assertEquals(viewTransitioner.currentPageClass, HomePage.class);
   }
 
   private void ThenTheGeneratedRecipeIsAtTheTopOfTheList() {

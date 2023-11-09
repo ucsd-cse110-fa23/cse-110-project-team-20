@@ -1,11 +1,11 @@
 package feature.mock;
 
-import client.utils.transitions.ITransitioner;
+import client.utils.transitions.IViewTransitioner;
 
 /**
- * Mock transitioner
+ * Mock view transitioner
  */
-public class MockTransitioner implements ITransitioner {
+public class MockViewTransitioner implements IViewTransitioner {
   public Class<?> currentPageClass;
   public String param1;
   public String param2;
