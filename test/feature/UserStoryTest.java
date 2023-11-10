@@ -179,7 +179,6 @@ public class UserStoryTest extends UserStoryTestBase {
     for(int i = 0; i < recipeModel.recipes.size(); i++) {
       Recipe recipeInTheList = recipeModel.recipes.get(i);
       if (recipeInTheList.getTitle() == "Chicken with broccoli") {
-        // @TODO replace to the new one when #88 is merged
         controller.openRecipeDetailPage(i);
         return;
       }
