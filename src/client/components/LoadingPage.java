@@ -1,31 +1,20 @@
 package client.components;
-import java.io.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Duration;
-import javax.sound.sampled.*;
 
-public class AnimatedLoadingBar extends VBox {
+public class LoadingPage extends VBox {
     private ProgressIndicator loadingBar;
     private Label loadingText;
 
     String titleStyle = "-fx-font-size: 24px; -fx-font-weight: bold;";
     String indStyle = "-fx-fill: null; ";
-    public AnimatedLoadingBar()
+    public LoadingPage()
     {
         this.setPrefSize(370, 120);
         this.setSpacing(100);
