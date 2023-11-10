@@ -10,6 +10,9 @@ public class MockViewTransitioner implements IViewTransitioner {
   public String param1;
   public String param2;
   public String param3;
+  public Object rawParam1;
+  public Object rawParam2;
+  public Object rawParam3;
 
   @Override
   public void transitionTo(Class<?> c) {
@@ -17,6 +20,9 @@ public class MockViewTransitioner implements IViewTransitioner {
     param1 = null;
     param2 = null;
     param3 = null;
+    rawParam1 = null;
+    rawParam2 = null;
+    rawParam3 = null;
   }
 
   @Override
@@ -25,6 +31,9 @@ public class MockViewTransitioner implements IViewTransitioner {
     param1 = t1.toString();
     param2 = null;
     param3 = null;
+    rawParam1 = t1;
+    rawParam2 = null;
+    rawParam3 = null;
   }
 
   @Override
@@ -33,6 +42,9 @@ public class MockViewTransitioner implements IViewTransitioner {
     param1 = t1.toString();
     param2 = t2.toString();
     param3 = null;
+    rawParam1 = t1;
+    rawParam2 = t2;
+    rawParam3 = null;
   }
 
   @Override
@@ -41,6 +53,8 @@ public class MockViewTransitioner implements IViewTransitioner {
     param1 = t1.toString();
     param2 = t2.toString();
     param3 = t3.toString();
+    rawParam1 = t1;
+    rawParam2 = t2;
+    rawParam3 = t3;
   }
-  
 }
