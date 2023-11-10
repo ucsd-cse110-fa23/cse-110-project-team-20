@@ -2,28 +2,28 @@ package client;
 
 import client.audio.IAudioRecorder;
 import client.components.LoadingPage;
+import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
+import client.models.IRecipeModel;
 import client.recipe.IRecipeGenerator;
 import client.recipe.RecipeRequestParameter;
 import client.utils.transitions.IViewTransitioner;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
     private final String MEAL_TYPE_AUDIO = "meal_type.wav";
     private final String INGREDIENTS_AUDIO = "ingredients.wav";
 
-    // @TODO need to replace with model
-    ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-
     private IRecipeGenerator recipeGenerator;
     private IViewTransitioner viewTransitioner;
     private IAudioRecorder audioRecorder;
+    private IRecipeModel recipeModel;
 
     /**
      * Controller glues all functions together.
@@ -35,11 +35,13 @@ public class Controller {
     public Controller(
         IViewTransitioner viewTransitioner,
         IRecipeGenerator recipeGenerator,
-        IAudioRecorder audioRecorder) {
+        IAudioRecorder audioRecorder,
+        IRecipeModel recipeModel) {
 
         this.viewTransitioner = viewTransitioner;
         this.recipeGenerator = recipeGenerator;
         this.audioRecorder = audioRecorder;
+        this.recipeModel = recipeModel;
     }
 
     public void
@@ -81,7 +83,19 @@ public class Controller {
     public void
     transitionToHomeScene()
     {
-        // @TODO need to get recipes from the model
+        List<Recipe> recipes;
+        try {
+            recipes = recipeModel.getRecipes();
+        } catch (Exception e) {
+            Runnable retryButtonCallback = () -> transitionToHomeScene();
+            viewTransitioner.transitionTo(
+                ErrorPage.class,
+                "The app cannot reach the server. Check the server is up and running.",
+                retryButtonCallback);
+
+            return;
+        }
+
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
         viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback);
     }
@@ -175,8 +189,7 @@ public class Controller {
     public void
     saveRecipeClicked(Recipe recipe)
     {
-        // @TODO need to move into model
-        recipes.add(recipe);
+        recipeModel.createRecipe(recipe);
         this.transitionToHomeScene();
     }
 }

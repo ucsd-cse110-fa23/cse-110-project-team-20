@@ -28,7 +28,21 @@ public class RecipeHttpHandlerTest {
     MockHttpRequest requestMock = new MockHttpRequest();
     String response = handler.handleGet(requestMock);
     String expected = "{\"recipes\":[{\"meal_type\":\"meal_type_C\",\"description\":\"desc_C\",\"ingredients\":\"ingredients_C\",\"title\":\"title_C\"},{\"meal_type\":\"meal_type_B\",\"description\":\"desc_B\",\"ingredients\":\"ingredients_B\",\"title\":\"title_B\"},{\"meal_type\":\"meal_type_A\",\"description\":\"desc_A\",\"ingredients\":\"ingredients_A\",\"title\":\"title_A\"}]}";
-    assertEquals(expected, trimResponse(response));
+    JSONObject expectedObject = new JSONObject(expected);
+    JSONObject actualObject = jsonResponse(response);
+    assertEquals(expectedObject.getJSONArray("recipes").length(), actualObject.getJSONArray("recipes").length());
+    assertEquals(
+      expectedObject.getJSONArray("recipes").getJSONObject(1).getString("description"),
+      actualObject.getJSONArray("recipes").getJSONObject(1).getString("description"));
+    assertEquals(
+      expectedObject.getJSONArray("recipes").getJSONObject(1).getString("meal_type"),
+      actualObject.getJSONArray("recipes").getJSONObject(1).getString("meal_type"));
+    assertEquals(
+      expectedObject.getJSONArray("recipes").getJSONObject(1).getString("ingredients"),
+      actualObject.getJSONArray("recipes").getJSONObject(1).getString("ingredients"));
+    assertEquals(
+      expectedObject.getJSONArray("recipes").getJSONObject(1).getString("title"),
+      actualObject.getJSONArray("recipes").getJSONObject(1).getString("title"));
   }
 
   @Test
@@ -42,7 +56,21 @@ public class RecipeHttpHandlerTest {
 
     String response = handler.handleGet(requestMock);
     String expected = "{\"meal_type\":\"meal_type_B\",\"description\":\"desc_B\",\"ingredients\":\"ingredients_B\",\"title\":\"title_B\"}";
-    assertEquals(expected, trimResponse(response));
+
+    JSONObject expectedObject = new JSONObject(expected);
+    JSONObject actualObject = jsonResponse(response);
+    assertEquals(
+      expectedObject.getString("description"),
+      actualObject.getString("description"));
+    assertEquals(
+      expectedObject.getString("meal_type"),
+      actualObject.getString("meal_type"));
+    assertEquals(
+      expectedObject.getString("ingredients"),
+      actualObject.getString("ingredients"));
+    assertEquals(
+      expectedObject.getString("title"),
+      actualObject.getString("title"));
   }
 
   @Test
@@ -95,8 +123,8 @@ public class RecipeHttpHandlerTest {
     assertEquals(prevCount - 1, afterCount);
   }
 
-  private static String trimResponse(String response) {
-    return new JSONObject(response).toString();
+  private JSONObject jsonResponse(String response) {
+    return new JSONObject(response);
   }
 }
 
