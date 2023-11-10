@@ -3,27 +3,43 @@ package client.components;
 import client.Recipe;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class NewRecipeConfirmPage extends BorderPane {
     private Label header;
-    private Label body;
+    private TextArea body;
     private Footer footer;
 
     public NewRecipeConfirmPage(Recipe recipe)
     {
-        header = new Label(recipe.getTitle());
-        body = new Label(recipe.getDescription());
-        body.setWrapText(true);
-        footer = new Footer();
+        getStylesheets().add(getClass().getResource(
+            "style.css"
+        ).toExternalForm());
 
+        header = new Label(recipe.getTitle());
+        header.getStyleClass().add("recipe-title");
+
+        body = new TextArea(recipe.getDescription());
+        body.getStyleClass().add("recipe-description");
+
+        footer = new Footer();
+        footer.getStyleClass().add("recipe-actions");
+
+        body.setEditable(false);
+        body.setWrapText(true);
 
         this.setTop(header);
-        this.setCenter(new ScrollPane(body));
+        this.setCenter(body);
         this.setBottom(footer);
-        this.setPrefSize(500, 800);
     }
 
     public void setCancelCallback(Runnable r) 
@@ -45,17 +61,44 @@ class Footer extends HBox {
 
     public Footer()
     {
-        this.cancelButton = new Button("Discard");
-        this.saveButton = new Button("Save");
+        cancelButton = createButton("Discard", "cross-icon.png");
+        cancelButton.getStyleClass().addAll(
+            "action-button", "discard-button");
 
-        this.getChildren().addAll(cancelButton, saveButton);
+        saveButton = createButton("Save", "plus-icon.png");
+        saveButton.getStyleClass().addAll(
+            "action-button", "save-button");
+
+        Region spacer = new Region();
+        setHgrow(spacer, Priority.ALWAYS);
+
+        getChildren().addAll(cancelButton, spacer, saveButton);
     }
 
     public void setOnCancel(Runnable onCancel) {
-        this.cancelButton.setOnAction(e -> onCancel.run());
+        cancelButton.setOnAction(e -> onCancel.run());
     }
 
     public void setOnSave(Runnable onSave) {
-        this.saveButton.setOnAction(e-> onSave.run());
+        saveButton.setOnAction(e-> onSave.run());
+    }
+
+    // ref: https://jenkov.com/tutorials/javafx/button.html
+    private Button createButton(String buttonLabel, String resourceName) {
+        Button btn = new Button(buttonLabel);
+
+        try (InputStream imageStream = getClass().getResource(resourceName).openStream()) {
+            Image image = new Image(imageStream);
+            ImageView imageView = new ImageView(image);
+
+            imageView.setFitWidth(16);
+            imageView.setFitHeight(16);
+
+            btn = new Button(buttonLabel, imageView);
+            btn.setGraphicTextGap(10);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return btn;
     }
 }
