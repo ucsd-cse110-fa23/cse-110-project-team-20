@@ -1,6 +1,6 @@
 package client;
 
-import client.components.AnimatedLoadingBar;
+import client.components.LoadingPage;
 import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
@@ -64,8 +64,8 @@ public class Routes {
      * 
      * Display loading screen.
      */
-    routes.register(AnimatedLoadingBar.class, (String message) -> {
-      AnimatedLoadingBar loadingPage = new AnimatedLoadingBar();
+    routes.register(LoadingPage.class, (String message) -> {
+      LoadingPage loadingPage = new LoadingPage();
       loadingPage.setLoadingText(message);
       primaryStage.setScene(new Scene(loadingPage, WIDTH, HEIGHT));
     });
