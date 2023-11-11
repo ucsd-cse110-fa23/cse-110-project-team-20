@@ -95,3 +95,30 @@
   -fx-background-color: #F0F8FF;
   -fx-padding: 10px;
 }
+
+/**
+ * Recording Page
+ */
+.recording-page {
+  -fx-padding: 10px;
+  -fx-spacing: 100px;
+  -fx-alignment: center;
+}
+
+.recording-page .recording-title {
+  -fx-font-size: 24px;
+  -fx-font-weight: bold;
+  -fx-text-alignment: center;
+  -fx-alignment: center;
+  -fx-min-height: 80px;
+}
+
+.recording-page .recording-button {
+  -fx-font-size: 16px;
+  -fx-pref-width: 175px;
+  -fx-pref-height: 50px;
+}
+
+.recording-page .mic-image {
+  -fx-alignment: center;
+}
