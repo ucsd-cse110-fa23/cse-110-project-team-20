@@ -24,3 +24,74 @@
   -fx-font-weight: bold;
   -fx-min-width: 120px;
 }
+
+/**
+ * Home Page
+ */
+.homepage-header {
+  -fx-background-color: #E8DDB5;
+  -fx-font-family: Avantgarde;
+  -fx-text-fill: #ffffff;
+  -fx-font-size: 24px;
+  -fx-padding: 10px 20px;
+  -fx-alignment: center-left;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 1);
+  -fx-font-weight: bold;
+  -fx-border-color: #D2B48C;
+  -fx-border-width: 0 0 2 0;
+  -fx-border-radius: 0;
+}
+
+.homepage-header .app-name {
+  -fx-font: Lucida Calligraphy;
+  -fx-text-fill: #654321;
+  -fx-font-size: 30px;
+}
+
+.homepage-header .create-button {
+  -fx-font-size: 16px;
+  -fx-background-color: #97CFA3;
+  -fx-text-fill: #ffffff;
+  -fx-padding: 8px 12px;
+  -fx-border-radius: 5px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);
+  -fx-transition: background-color 0.3s;
+}
+
+.homepage-header .create-button:hover {
+  -fx-background-color: #6D9E78;
+}
+
+.recipe-box {
+  -fx-border-color: #B9BCCC;
+  -fx-border-width: 2px;
+  -fx-border-radius: 5px;
+  -fx-background-color: #EAEEF1;
+  -fx-padding: 10px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 1);
+  -fx-transition: -fx-background-color 0.3s;
+}
+
+.recipe-box:hover {
+  -fx-border-color: #B9BCCC;
+  -fx-border-width: 2px;
+  -fx-border-radius: 5px;
+  -fx-background-color: #dfe1ef;
+}
+
+.recipe-box .recipe-title {
+  -fx-font: Lucida Calligraphy;
+  -fx-border-radius: 5px;
+  -fx-text-fill: #654321;
+  -fx-font-size: 20px;
+}
+.recipe-box:hover .recipe-title {
+  -fx-text-fill: #82859B;
+}
+
+.recipe-list {
+  -fx-background-color: #F0F8FF;
+  -fx-padding: 10px;
+}
