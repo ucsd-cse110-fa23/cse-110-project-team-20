@@ -24,3 +24,55 @@
   -fx-font-weight: bold;
   -fx-min-width: 120px;
 }
+
+/**
+ * Home Page
+ */
+.homepage-header {
+  -fx-background-color: #3498db;
+  -fx-text-fill: #fff;
+  -fx-font-size: 36px;
+  -fx-padding: 10px 20px;
+  -fx-alignment: center-left;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 1);
+  -fx-font-weight: bold;
+  -fx-border-color: #2980b9;
+  -fx-border-width: 0 0 2 0;
+  -fx-border-radius: 0;
+}
+
+.homepage-header .app-name {
+  -fx-text-fill: #ffffff;
+}
+
+.homepage-header .create-button {
+  -fx-background-radius: 1.5em;
+  -fx-min-width: 1.5em; 
+  -fx-min-height: 1.5em; 
+  -fx-max-width: 1.5em; 
+  -fx-max-height: 1.5em; 
+  -fx-background-color: -fx-body-color;
+  -fx-background-insets: 0px; 
+  -fx-padding: 0px;
+}
+
+.recipe-box {
+  -fx-border-color: #aaaaaa;
+  -fx-border-width: 1px;
+  -fx-border-radius: 2px;
+  -fx-background-color: #ffffff;
+  -fx-padding: 10px;
+}
+
+.recipe-box:hover {
+  -fx-background-color: #f0f0f0;
+}
+
+.recipe-box .recipe-title {
+  -fx-font-size: 16px;
+}
+
+.recipe-list {
+  -fx-background-color: #F0F8FF;
+  -fx-padding: 10px;
+}
