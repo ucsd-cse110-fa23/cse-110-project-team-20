@@ -7,6 +7,7 @@ import client.Recipe;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
+import client.components.RecipeDetailsPageCallbacks;
 import client.components.RecordingPage;
 
 public class UserStoryTest extends UserStoryTestBase {
@@ -193,7 +194,7 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   public void WhenBackButtonGetsClicked() {
-    Runnable supposeToCancelButton = (Runnable) viewTransitioner.rawParam2;
-    supposeToCancelButton.run();
+    RecipeDetailsPageCallbacks supposeToCallbacks = (RecipeDetailsPageCallbacks) viewTransitioner.rawParam2;
+    supposeToCallbacks.getOnGoBackButtonClicked().run();
   }
 }
