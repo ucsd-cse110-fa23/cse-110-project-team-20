@@ -7,12 +7,16 @@ import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
 import client.components.RecipeDetailsPageCallbacks;
+
+import client.components.RecipeEditPage;
+import client.components.RecipeEditPageCallbacks;
+
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 import client.models.IRecipeModel;
 import client.recipe.IRecipeGenerator;
 import client.recipe.RecipeRequestParameter;
-import client.utils.RunnableWithId;
+import client.utils.runnables.RunnableWithId;
 import client.utils.transitions.IViewTransitioner;
 
 import java.io.File;
@@ -100,6 +104,7 @@ public class Controller {
 
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
 
+
         RunnableWithId openRecipeDetailButtonCallback = (int id) -> openRecipeDetailPage(id);
         viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback, openRecipeDetailButtonCallback);
     }
@@ -129,8 +134,11 @@ public class Controller {
     {
         Recipe recipe = recipeModel.getRecipe(id);
         Runnable cancelCallback = () -> backToHomeScene();
-        Runnable editCallback = () -> {};
+
+        //TODO: Added transition to edit
+        Runnable editCallback = () -> transitionToEditScene(id);;
         Runnable deleteCallback = () -> deleteRecipeClicked(id);
+
 
         RecipeDetailsPageCallbacks callbacks = new RecipeDetailsPageCallbacks(
             cancelCallback,
@@ -138,6 +146,17 @@ public class Controller {
             deleteCallback
         );
         viewTransitioner.transitionTo(RecipeDetailsPage.class, recipe, callbacks);
+    }
+
+    //TODO: Add in edit page
+    public void
+    transitionToEditScene(int id) {
+        //Add in elements
+        Recipe recipe = recipeModel.getRecipe(id);
+        Runnable cancelCallback = () -> backToHomeScene();
+        Runnable saveCallback = () -> updateRecipeClicked(id, recipe);;
+        RecipeEditPageCallbacks callbacks = new RecipeEditPageCallbacks(cancelCallback, saveCallback);
+        viewTransitioner.transitionTo(RecipeEditPage.class, recipe, callbacks);
     }
 
     public void
@@ -203,6 +222,13 @@ public class Controller {
     saveRecipeClicked(Recipe recipe)
     {
         recipeModel.createRecipe(recipe);
+        this.transitionToHomeScene();
+    }
+
+    //TODO: Added update functionality
+    public void 
+    updateRecipeClicked(int id, Recipe recipe) {
+        recipeModel.updateRecipe(id, recipe);
         this.transitionToHomeScene();
     }
 

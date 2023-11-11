@@ -6,12 +6,14 @@ import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
 import client.components.RecipeDetailsPageCallbacks;
+import client.components.RecipeEditPage;
+import client.components.RecipeEditPageCallbacks;
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 
 import java.util.List;
 
-import client.utils.RunnableWithId;
+import client.utils.runnables.RunnableWithId;
 import client.utils.transitions.javafx.JavaFXViewTransitioner;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -100,6 +102,18 @@ public class Routes {
       recipeDetailsPage.setDeleteCallback(callbacks.getOnDeleteButtonClicked());
 
       primaryStage.setScene(new Scene(recipeDetailsPage, WIDTH, HEIGHT));
+    });
+
+    // TODO: Add edit page
+
+    routes.register(RecipeEditPage.class, (Recipe recipe, RecipeEditPageCallbacks callbacks) -> {
+      RecipeEditPage recipeEditPage = new RecipeEditPage();
+
+      recipeEditPage.displayRecipe(recipe);
+      recipeEditPage.setCancelCallback(callbacks.getOnGoBackButtonClicked());
+      recipeEditPage.setSaveCallBack(callbacks.getOnSaveButtonClicked());
+
+      primaryStage.setScene(new Scene(recipeEditPage, WIDTH, HEIGHT));
     });
 
     /**

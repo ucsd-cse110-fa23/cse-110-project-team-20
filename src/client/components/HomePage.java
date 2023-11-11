@@ -1,7 +1,7 @@
 package client.components;
 
 import client.Recipe;
-import client.utils.RunnableWithId;
+import client.utils.runnables.RunnableWithId;
 
 import java.util.List;
 import javafx.geometry.Pos;
