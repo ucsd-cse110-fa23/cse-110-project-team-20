@@ -11,6 +11,7 @@ import client.components.RecordingPageCallbacks;
 import client.models.IRecipeModel;
 import client.recipe.IRecipeGenerator;
 import client.recipe.RecipeRequestParameter;
+import client.utils.RunnableWithId;
 import client.utils.transitions.IViewTransitioner;
 
 import java.io.File;
@@ -97,7 +98,9 @@ public class Controller {
         }
 
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
-        viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback);
+
+        RunnableWithId openRecipeDetailButtonCallback = (int id) -> openRecipeDetailPage(id);
+        viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback, openRecipeDetailButtonCallback);
     }
 
     public void
@@ -121,8 +124,9 @@ public class Controller {
     }
 
     public void
-    openRecipeDetails(Recipe recipe)
+    openRecipeDetailPage(int id)
     {
+        Recipe recipe = recipeModel.getRecipe(id);
         Runnable cancelCallback = () -> backToHomeScene();
         viewTransitioner.transitionTo(RecipeDetailsPage.class, recipe, cancelCallback);
     }
