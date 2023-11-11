@@ -54,6 +54,26 @@ jacocoTestReport {
         csv.required = true
         html.required = true
     }
+    // we are not going to test UI part so removed it from coverage check
+    // ref: https://www.baeldung.com/jacoco-report-exclude#2-gradle-configuration
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                // JavaFX pages and components
+                "client/components/*",
+
+                // JavaFX view transitioner related implementation
+                "client/utils/transitions/javafx/*",
+
+                // JavaFX view transitioner
+                "client/Routes.class",
+
+                // App startup code
+                "client/Main.class",
+                "client/PantryPalApp.class",
+            ])
+        }))
+    }
 }
 
 testlogger {
