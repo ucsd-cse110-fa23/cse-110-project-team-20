@@ -1,9 +1,12 @@
 package client.components;
 
 import client.Recipe;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
@@ -29,6 +32,18 @@ public class RecipeDetailsPage extends BorderPane {
     setCancelCallback(Runnable r)
     {
         this.footer.setOnCancel(r);
+    }
+
+    public void
+    setDeleteCallback(Runnable r)
+    {
+        this.footer.setOnDelete(r);
+    }
+
+    public void
+    setEditCallback(Runnable r)
+    {
+        this.footer.setOnEdit(r);
     }
 
     public void
@@ -72,7 +87,21 @@ class DetailsFooter extends HBox {
     public void
     setOnDelete(Runnable onDelete)
     {
-        this.deleteButton.setOnAction(e -> onDelete.run());
+        // delete event only triggers when user clicks YES button on the confirmation
+        // ref: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Alert.html
+        this.deleteButton.setOnAction(e -> {
+            Alert alert = new Alert(
+                AlertType.WARNING,
+                "Do you want to delete this recipe?",
+                ButtonType.CANCEL,
+                ButtonType.YES);
+
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.YES) {
+                onDelete.run();
+            }
+        });
     }
 
     public void
