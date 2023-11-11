@@ -64,6 +64,18 @@ class DetailsFooter extends HBox {
     }
 
     public void
+    setOnEdit(Runnable onEdit)
+    {
+        this.cancelButton.setOnAction(e -> onEdit.run());
+    }
+    
+    public void
+    setOnDelete(Runnable onDelete)
+    {
+        this.cancelButton.setOnAction(e -> onDelete.run());
+    }
+
+    public void
     setOnSave(Runnable onSave)
     {
         this.saveButton.setOnAction(e -> onSave.run());
