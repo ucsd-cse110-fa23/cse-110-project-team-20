@@ -1,45 +1,51 @@
 package client.components;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import java.io.IOException;
+import java.io.InputStream;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class RecordingPage extends VBox {
     private Button recodingButton;
     private Label title;
 
+    private ImageView micOnImage;
+    private ImageView micOffImage;
+
     private boolean recordingInProgress = false;
 
-    // Set a default style for buttons and fields - background color, font size,
-    // italics
-    String defaultButtonStyle =
-        "-fx-border-color: #000000; -fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px;";
-    String defaultLabelStyle =
-        "-fx-font: 13 arial; -fx-pref-width: 175px; -fx-pref-height: 50px; -fx-text-fill: red; visibility: hidden";
-
-    String titleStyle = "-fx-font-size: 24px; -fx-font-weight: bold;";
-
-    public RecordingPage(String message)
+    public
+    RecordingPage(String message)
     {
-        // Set properties for the flowpane
-        this.setPrefSize(370, 120);
-        this.setPadding(new Insets(5, 0, 5, 5));
-        this.setSpacing(100);
-        this.setAlignment(Pos.CENTER);
-        // this.setVgap(10);
-        // this.setHgap(10);
-        // this.setPrefWrapLength(170);
+        getStylesheets().add(getClass().getResource(
+            "style.css"
+        ).toExternalForm());
+        getStyleClass().add("recording-page");
 
         title = new Label(message);
-        title.setStyle(titleStyle);
+        title.getStyleClass().add("recording-title");
+
+        micOnImage = createImageView("mic-on-icon.png");
+        micOffImage = createImageView("mic-off-icon.png");
+        micOnImage.setVisible(false);
+
+        // ref: https://stackoverflow.com/questions/28558165
+        micOnImage.managedProperty().bind(micOnImage.visibleProperty());
+        micOffImage.managedProperty().bind(micOffImage.visibleProperty());
+
+        HBox micImageContainer = new HBox(micOnImage, micOffImage);
+        micImageContainer.getStyleClass().add("mic-image");
 
         // Add the buttons and text fields
-        recodingButton = new Button("Start recording");
-        recodingButton.setStyle(defaultButtonStyle);
+        recodingButton = new Button("Start Recording");
+        recodingButton.getStyleClass().add("recording-button");
 
-        this.getChildren().addAll(title, recodingButton);
+        this.getChildren().addAll(title, micImageContainer, recodingButton);
     }
 
     public void
@@ -58,15 +64,35 @@ public class RecordingPage extends VBox {
         });
     }
 
-    public void
+    private void
     startRecording()
     {
-        this.recodingButton.setText("Stop recording");
+        this.recodingButton.setText("Stop Recording");
+        micOnImage.setVisible(true);
+        micOffImage.setVisible(false);
     }
 
-    public void
+    private void
     stopRecording()
     {
         this.recodingButton.setText("Start Recording");
+        micOnImage.setVisible(false);
+        micOffImage.setVisible(true);
+    }
+
+    private ImageView
+    createImageView(String resourceName) {
+        ImageView imageView = new ImageView();
+
+        try (InputStream imageStream = getClass().getResource(resourceName).openStream()) {
+            Image image = new Image(imageStream);
+            imageView = new ImageView(image);
+            imageView.setFitWidth(92);
+            imageView.setFitHeight(92);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return imageView;
     }
 }
