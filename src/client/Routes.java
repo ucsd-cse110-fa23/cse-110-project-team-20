@@ -5,6 +5,7 @@ import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
+import client.components.RecipeDetailsPageCallbacks;
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 
@@ -90,11 +91,13 @@ public class Routes {
      * 
      * Show expanded recipe information
      */
-    routes.register(RecipeDetailsPage.class, (Recipe recipe, Runnable cancelCallback) -> {
+    routes.register(RecipeDetailsPage.class, (Recipe recipe, RecipeDetailsPageCallbacks callbacks) -> {
       RecipeDetailsPage recipeDetailsPage = new RecipeDetailsPage();
 
       recipeDetailsPage.displayRecipe(recipe);
-      recipeDetailsPage.setCancelCallback(cancelCallback);
+      recipeDetailsPage.setCancelCallback(callbacks.getOnGoBackButtonClicked());
+      recipeDetailsPage.setEditCallback(callbacks.getOnEditButtonClicked());
+      recipeDetailsPage.setDeleteCallback(callbacks.getOnDeleteButtonClicked());
 
       primaryStage.setScene(new Scene(recipeDetailsPage, WIDTH, HEIGHT));
     });

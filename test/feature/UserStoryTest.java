@@ -1,12 +1,15 @@
 package feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
 
 import client.Recipe;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
+import client.components.RecipeDetailsPageCallbacks;
 import client.components.RecordingPage;
 
 public class UserStoryTest extends UserStoryTestBase {
@@ -193,7 +196,73 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   public void WhenBackButtonGetsClicked() {
-    Runnable supposeToCancelButton = (Runnable) viewTransitioner.rawParam2;
-    supposeToCancelButton.run();
+    RecipeDetailsPageCallbacks supposeToCallbacks = (RecipeDetailsPageCallbacks) viewTransitioner.rawParam2;
+    supposeToCallbacks.getOnGoBackButtonClicked().run();
+  }
+
+  @Test
+  public void scenario_5_1_userDeletesARecipe() {
+    /**
+     * Scenario 5.1: User deletes a recipe
+     * Given the expanded view is currently active for “chicken with broccoli”
+     *    And there are 3 total recipes in the list
+     * When the delete button is pressed
+     * Then the “Confirm delete” pop-up shows
+     * When the second delete button is pressed
+     * Then the pop-up and expanded view close
+     *    And the “chicken with broccoli” recipe we were viewing is gone
+     *    And the list no longer contains the recipe, with all other recipes appropriately shifted
+     */
+    GivenThereAre3TotalRecipesInTheList();
+    GivenTheExpandedViewIsCurrentlyActiveForChickenWithBroccoli();
+    WhenTheDeleteButtonIsPressed();
+    // skip on confirm delete popup steps cause UI intraction cannot be tested in current setup
+    // (skip) Then the “Confirm delete” pop-up shows
+    // (skip) When the second delete button is pressed
+    ThenThePopupAndExpandedViewClose();
+    ThenTheChickenWithBroccoliRecipeWeWereViewingIsGone();
+    ThenTheListNoLongerContainsTheRecipeWithAllOtherRecipesAppropriatelyShifted();
+  }
+
+  public void GivenTheExpandedViewIsCurrentlyActiveForChickenWithBroccoli() {
+    for(int i = 0; i < recipeModel.recipes.size(); i++) {
+      Recipe recipeInTheList = recipeModel.recipes.get(i);
+      if (recipeInTheList.getTitle() == "Chicken with broccoli") {
+        controller.openRecipeDetailPage(i);
+        return;
+      }
+    }
+  }
+
+  public void GivenThereAre3TotalRecipesInTheList() {
+    recipeModel.recipes.add(new Recipe("Chicken with potato", "Chicken with potato recipe instruction."));
+    recipeModel.recipes.add(new Recipe("Chicken with broccoli", "Chicken with broccoli recipe instruction."));
+    recipeModel.recipes.add(new Recipe("Chicken with cabbage", "Chicken with cabbage recipe instruction."));
+  }
+
+  public void WhenTheDeleteButtonIsPressed() {
+    RecipeDetailsPageCallbacks supposeToCallbacks = (RecipeDetailsPageCallbacks) viewTransitioner.rawParam2;
+    supposeToCallbacks.getOnDeleteButtonClicked().run();
+  }
+
+  public void ThenThePopupAndExpandedViewClose() {
+    assertEquals(viewTransitioner.currentPageClass, HomePage.class);
+  }
+
+  public void ThenTheChickenWithBroccoliRecipeWeWereViewingIsGone() {
+    boolean passed = true;
+    for(int i = 0; i < recipeModel.recipes.size(); i++) {
+      Recipe recipeInTheList = recipeModel.recipes.get(i);
+      if (recipeInTheList.getTitle() == "Chicken with broccoli") {
+        passed = false;
+      }
+    }
+    assertTrue(passed);
+  }
+
+  public void ThenTheListNoLongerContainsTheRecipeWithAllOtherRecipesAppropriatelyShifted() {
+    assertEquals(2, recipeModel.recipes.size());
+    assertEquals(recipeModel.recipes.get(0).getTitle(), "Chicken with potato");
+    assertEquals(recipeModel.recipes.get(1).getTitle(), "Chicken with cabbage");
   }
 }

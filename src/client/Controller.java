@@ -6,6 +6,7 @@ import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
+import client.components.RecipeDetailsPageCallbacks;
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 import client.models.IRecipeModel;
@@ -128,7 +129,15 @@ public class Controller {
     {
         Recipe recipe = recipeModel.getRecipe(id);
         Runnable cancelCallback = () -> backToHomeScene();
-        viewTransitioner.transitionTo(RecipeDetailsPage.class, recipe, cancelCallback);
+        Runnable editCallback = () -> {};
+        Runnable deleteCallback = () -> deleteRecipeClicked(id);
+
+        RecipeDetailsPageCallbacks callbacks = new RecipeDetailsPageCallbacks(
+            cancelCallback,
+            editCallback,
+            deleteCallback
+        );
+        viewTransitioner.transitionTo(RecipeDetailsPage.class, recipe, callbacks);
     }
 
     public void
@@ -194,6 +203,13 @@ public class Controller {
     saveRecipeClicked(Recipe recipe)
     {
         recipeModel.createRecipe(recipe);
+        this.transitionToHomeScene();
+    }
+
+    public void
+    deleteRecipeClicked(int id)
+    {
+        recipeModel.deleteRecipe(id);
         this.transitionToHomeScene();
     }
 }
