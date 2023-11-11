@@ -16,11 +16,11 @@ public class PrintConsoleViewTransitioner implements IViewTransitioner {
   }
 
   private void info(String message, String param1, String param2) {
-    info(String.format("%s (%s)", message, param1, param2));
+    info(String.format("%s (%s, %s)", message, param1, param2));
   }
 
   private void info(String message, String param1, String param2, String param3) {
-    info(String.format("%s (%s)", message, param1, param2, param3));
+    info(String.format("%s (%s, %s, %s)", message, param1, param2, param3));
   }
 
   @Override
