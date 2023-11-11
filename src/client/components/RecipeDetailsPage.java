@@ -42,17 +42,37 @@ public class RecipeDetailsPage extends BorderPane {
 class DetailsFooter extends HBox {
     private Button saveButton;
     private Button cancelButton;
+    private Button editButton;
+    private Button deleteButton;
 
     public DetailsFooter()
     {
         this.cancelButton = new Button("Go Back");
         this.getChildren().addAll(cancelButton);
+
+        this.editButton = new Button("Edit Recipe");
+        this.getChildren().addAll(editButton);
+        
+        this.deleteButton = new Button("Delete Recipe");
+        this.getChildren().addAll(deleteButton);
     }
 
     public void
     setOnCancel(Runnable onCancel)
     {
         this.cancelButton.setOnAction(e -> onCancel.run());
+    }
+
+    public void
+    setOnEdit(Runnable onEdit)
+    {
+        this.cancelButton.setOnAction(e -> onEdit.run());
+    }
+    
+    public void
+    setOnDelete(Runnable onDelete)
+    {
+        this.cancelButton.setOnAction(e -> onDelete.run());
     }
 
     public void
