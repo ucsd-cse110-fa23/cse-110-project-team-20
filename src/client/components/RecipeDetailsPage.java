@@ -9,6 +9,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 
 
 /*
@@ -18,15 +20,30 @@ import javafx.scene.layout.HBox;
  * Contains a cancel, delete, and edit button, along with with their associated callbacks.
  */
 public class RecipeDetailsPage extends BorderPane {
-    private Label header;
+    private RecipeHeader header;
     private Label body;
     private DetailsFooter footer;
 
     public RecipeDetailsPage()
     {
-        header = new Label();
+        // get style sheet
+        getStylesheets().add(getClass().getResource(
+            "style.css"
+        ).toExternalForm());
+
+        // style header
+        header = new RecipeHeader();
+        header.getStyleClass().add("recipedetails-header");
+
+        // style body
         body = new Label();
         body.setWrapText(true);
+        body.getStyleClass().add("recipe-body");
+        
+
+
+
+        // style footer
         footer = new DetailsFooter();
 
         this.setTop(header);
@@ -56,10 +73,21 @@ public class RecipeDetailsPage extends BorderPane {
     public void
     displayRecipe(Recipe recipe)
     {
-        header.setText(recipe.getTitle());
-        body.setText(recipe.getDescription());
+        Label recipeTitle = new Label(recipe.getTitle());
+        recipeTitle.getStyleClass().add("recipe-title");
+        this.header.setLeft(recipeTitle);
+        header.setAlignment(recipeTitle, Pos.CENTER_LEFT);
+        this.body.setText(recipe.getDescription());
     }
 }
+
+// class so that header type matches across pages
+class RecipeHeader extends BorderPane {
+    public RecipeHeader() {
+        getStyleClass().add("recipedetails-header");
+    }
+}
+
 
 class DetailsFooter extends HBox {
     private Button saveButton;
@@ -70,13 +98,17 @@ class DetailsFooter extends HBox {
     public DetailsFooter()
     {
         this.cancelButton = new Button("Go Back");
-        this.getChildren().addAll(cancelButton);
-
+        this.cancelButton.getStyleClass().add("cancel-button");
+        
         this.editButton = new Button("Edit Recipe");
-        this.getChildren().addAll(editButton);
+        this.editButton.getStyleClass().add("edit-button");
         
         this.deleteButton = new Button("Delete Recipe");
-        this.getChildren().addAll(deleteButton);
+        this.deleteButton.getStyleClass().add("delete-button");
+
+        this.setSpacing(10); // Set the spacing between buttons
+        this.setPadding(new Insets(10, 10, 10, 10));
+        this.getChildren().addAll(cancelButton, editButton, deleteButton);
     }
 
     public void
