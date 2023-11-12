@@ -8,6 +8,12 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
+/*
+ * Loading page for transitions
+ *
+ * Primarily used during the transition between the user delivering their second input and the API
+ * generating the appropriate recipe
+ */
 public class LoadingPage extends VBox {
     private ProgressIndicator loadingBar;
     private Label loadingText;

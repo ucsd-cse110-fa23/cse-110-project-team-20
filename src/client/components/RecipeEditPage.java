@@ -15,6 +15,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 
+/*
+ * Recipe details editing
+ *
+ * Controls the format of the editing interface along with how edits interact both locally and on the HTTP server.
+ * Similar in format to the details page, except there is a save button and callback in lieu of delete and edit.
+ */
 public class RecipeEditPage extends BorderPane{
     private Label header;
     private TextArea body;

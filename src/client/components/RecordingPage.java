@@ -10,6 +10,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/*
+ * Recording page
+ *
+ * Handles formatting of the recording interface along with basic logic that changes interface based on user input (start/stopRecording)
+ * 
+ */
 public class RecordingPage extends VBox {
     private Button recodingButton;
     private Label title;

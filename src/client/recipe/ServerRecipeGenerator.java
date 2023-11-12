@@ -13,6 +13,12 @@ import java.net.URL;
 
 import client.Recipe;
 
+/*
+ * Server recipe generator
+ *
+ * Contains methods that parse the user's voice input into text (request())
+ * and sends that text to the API to generate an appropriate recipe (if mock data is disabled)
+ */
 public class ServerRecipeGenerator implements IRecipeGenerator {
   private String path = "/recipe/generate";
   private String API_ENDPOINT;

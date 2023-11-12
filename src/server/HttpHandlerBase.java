@@ -4,6 +4,12 @@ import com.sun.net.httpserver.*;
 import java.io.*;
 import server.request.*;
 
+/*
+ * HTTP handler base class
+ *
+ * Calls the appropriate methods for 4 of the base HTTP requests.
+ * 
+ */
 public abstract class HttpHandlerBase implements HttpHandler {
     public void
     handle(HttpExchange httpExchange) throws IOException

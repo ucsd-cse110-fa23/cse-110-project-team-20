@@ -1,7 +1,7 @@
 package server;
 
 import server.request.IHttpRequest;
-
+// Class for indicating the the server is running (in the console)
 public class IndexHttpHandler extends HttpHandlerBase {
   protected String handleGet(IHttpRequest request) throws UnsupportedMethodException {
     // ref: from lab 5

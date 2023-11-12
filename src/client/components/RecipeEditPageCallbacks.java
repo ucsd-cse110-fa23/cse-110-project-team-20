@@ -2,7 +2,12 @@ package client.components;
 
 import client.utils.runnables.RunnableWithRecipe;
 
-//TODO: Added Edit page callbacks
+/**
+ * RecipeEditPageCallbacks
+ *
+ * This callback class is to carry over edit details page callbacks
+ * as a single object.
+ */
 public class RecipeEditPageCallbacks {
     private Runnable onGoBackButtonClicked;
     private RunnableWithRecipe onSaveButtonClicked;

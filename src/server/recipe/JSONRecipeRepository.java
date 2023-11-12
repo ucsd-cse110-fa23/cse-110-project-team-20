@@ -17,6 +17,12 @@ import org.json.JSONObject;
 
 import client.Recipe;
 
+/*
+ * JSON recipe repository
+ *
+ * Handles how input from other parts of the application should be formatted in order to meet JSON specifications.
+ * Also converts from server-appropriate formatted data to one used by local methods
+ */
 public class JSONRecipeRepository implements IRecipeRepository {
   String path;
 
