@@ -52,6 +52,7 @@
   background-color: #E8DDB5;
   color: #ffffff;
   font-size: 24px;
+  font-family: Avantgarde;
   padding: 10px 20px;
   font-weight: bold;
   border-color: #D2B48C;
@@ -66,6 +67,7 @@
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
+  font: Lucida Calligraphy;
 }
 
 .homepage-header .create-button {
@@ -129,6 +131,7 @@
   border-radius: 5px;
   color: #654321;
   font-size: 20px;
+  font: Lucida Calligraphy;
 }
 .recipe-box:hover .recipe-title {
   -fx-text-fill: #82859B;
@@ -150,7 +153,6 @@
   -fx-spacing: 100px;
   -fx-alignment: center;
   padding: 10px;
-  spacing: 100px;
   align-items: center;
 }
 
@@ -205,6 +207,7 @@
   border-color: #D2B48C;
   border-width: 0 0 2 0;
   border-radius: 0;
+  font-weight: bold;
 }
 
 .recipe-title {
@@ -214,6 +217,7 @@
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
+  font: Lucida Calligraphy;
 }
 
 .recipe-body {
@@ -239,8 +243,6 @@
   border-color: #D2B48C;
   border-width: 0 0 2 0;
   border-radius: 0;
-  wrap-text: true;
-  pref-width: 495;
   align-items: top-left;
 }
 
@@ -351,7 +353,6 @@
   background-color: #dc3545;
   color: #fff;
   font-weight: bold;
-  pref-width: 80px;
 }
 
 .delete-alert .button:hover {
