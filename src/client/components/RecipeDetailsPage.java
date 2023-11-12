@@ -9,7 +9,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Region;
+import javafx.scene.control.DialogPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.paint.Color;
 
 /*
  * Recipe details
@@ -18,15 +24,30 @@ import javafx.scene.layout.HBox;
  * Contains a cancel, delete, and edit button, along with with their associated callbacks.
  */
 public class RecipeDetailsPage extends BorderPane {
-    private Label header;
+    private RecipeHeader header;
     private Label body;
     private DetailsFooter footer;
 
     public RecipeDetailsPage()
     {
-        header = new Label();
+        // get style sheet
+        getStylesheets().add(getClass().getResource(
+            "style.css"
+        ).toExternalForm());
+
+        // style header
+        header = new RecipeHeader();
+        header.getStyleClass().add("recipedetails-header");
+
+        // style body
         body = new Label();
         body.setWrapText(true);
+        body.getStyleClass().add("recipe-body");
+        
+
+
+
+        // style footer
         footer = new DetailsFooter();
 
         this.setTop(header);
@@ -56,10 +77,34 @@ public class RecipeDetailsPage extends BorderPane {
     public void
     displayRecipe(Recipe recipe)
     {
-        header.setText(recipe.getTitle());
-        body.setText(recipe.getDescription());
+        Label recipeTitle = new Label(recipe.getTitle());
+        recipeTitle.setWrapText(true);
+        recipeTitle.getStyleClass().add("recipe-title");
+        this.header.setCenter(recipeTitle);
+        this.body.setText(recipe.getDescription());
     }
 }
+
+// class so that header type matches across pages
+class RecipeHeader extends BorderPane {
+    // private Button cancelButton;
+
+    public RecipeHeader() {
+        getStyleClass().add("recipedetails-header");
+        // this.cancelButton = new Button("\u2190");
+        // this.cancelButton.getStyleClass().add("cancel-button");
+        // setLeft(cancelButton);
+        // setAlignment(cancelButton, Pos.TOP_LEFT);
+        // cancelButton.setMaxWidth(Region.USE_PREF_SIZE);
+
+    }
+    // public void
+    // setOnCancel(Runnable onCancel)
+    // {
+    //     this.cancelButton.setOnAction(e -> onCancel.run());
+    // }
+}
+
 
 class DetailsFooter extends HBox {
     private Button saveButton;
@@ -69,14 +114,18 @@ class DetailsFooter extends HBox {
 
     public DetailsFooter()
     {
-        this.cancelButton = new Button("Go Back");
-        this.getChildren().addAll(cancelButton);
-
+        this.cancelButton = new Button("\u2190");
+        this.cancelButton.getStyleClass().add("cancel-button");
+        
         this.editButton = new Button("Edit Recipe");
-        this.getChildren().addAll(editButton);
+        this.editButton.getStyleClass().add("edit-button");
         
         this.deleteButton = new Button("Delete Recipe");
-        this.getChildren().addAll(deleteButton);
+        this.deleteButton.getStyleClass().add("delete-button");
+
+        this.setSpacing(10); // Set the spacing between buttons
+        this.setPadding(new Insets(10, 10, 10, 10));
+        this.getChildren().addAll(cancelButton, editButton, deleteButton);
     }
 
     public void
@@ -97,12 +146,15 @@ class DetailsFooter extends HBox {
         // delete event only triggers when user clicks YES button on the confirmation
         // ref: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/Alert.html
         this.deleteButton.setOnAction(e -> {
-            Alert alert = new Alert(
-                AlertType.WARNING,
-                "Do you want to delete this recipe?",
-                ButtonType.CANCEL,
-                ButtonType.YES);
+            Alert alert = new Alert(AlertType.WARNING, "Do you want to delete this recipe?", ButtonType.CANCEL, ButtonType.YES);
+            
+            // Get the DialogPane
+            DialogPane dialogPane = alert.getDialogPane();
 
+            // Customize the appearance
+            dialogPane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
+            dialogPane.getStyleClass().add("delete-alert");
+            
             alert.showAndWait();
 
             if (alert.getResult() == ButtonType.YES) {
