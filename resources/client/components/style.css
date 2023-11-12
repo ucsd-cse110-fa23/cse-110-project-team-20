@@ -242,10 +242,40 @@
 }
 
 .delete-alert {
-  -fx-font-size: 14px;
+  -fx-font-size: 16px;
   -fx-font-weight: bold;
-  -fx-background-color: #f8d7da; /* Light red background color */
-  -fx-text-fill: #721c24; /* Dark red text color */
-  -fx-border-color: #f5c6cb; /* Border color */
+  -fx-background-color: #f8d7da;
+  -fx-text-fill: #721c24;
+  -fx-border-color: #f5c6cb;
   -fx-border-width: 2px;
+  -fx-padding: 20px;
+}
+
+.delete-alert .header-panel {
+  -fx-background-color: #dc3545;
+  -fx-text-fill: #fff;
+}
+
+.delete-alert .button {
+  -fx-background-color: #dc3545;
+  -fx-text-fill: #fff;
+  -fx-font-weight: bold;
+  -fx-pref-width: 80px;
+}
+
+.delete-alert .button:hover {
+  -fx-background-color: #c82333;
+}
+
+.delete-alert .button:default {
+  -fx-background-color: #dc3545;
+  -fx-text-fill: #fff;
+}
+
+.delete-alert .content {
+  -fx-padding: 10px 0;
+}
+
+.delete-alert .graphic {
+  -fx-fill: #dc3545;
 }
