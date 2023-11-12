@@ -1,9 +1,14 @@
 package client.components;
 
 import client.Recipe;
+import client.utils.runnables.RunnableWithId;
+import client.utils.runnables.RunnableWithRecipe;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+
+import javafx.scene.control.TextArea;
+
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -11,15 +16,15 @@ import javafx.scene.text.Text;
 
 
 public class RecipeEditPage extends BorderPane{
-    private TextField header;
-    private TextField body;
+    private Label header;
+    private TextArea body;
     private EditFooter footer;
 
     public RecipeEditPage()
     {
         /* Changed Labels to TextFields */
-        header = new TextField();
-        body = new TextField();
+        header = new Label();
+        body = new TextArea();
         // body.setWrapText(true);
         footer = new EditFooter();
 
@@ -37,16 +42,23 @@ public class RecipeEditPage extends BorderPane{
 
     /* Added Functions */
     public void
-    setSaveCallBack(Runnable r)
+    setSaveCallBack(RunnableWithRecipe r)
     {
-        this.footer.setOnSave(r);
+        this.footer.setOnSave(r, this.header, this.body);
     }
 
     public void
     displayRecipe(Recipe recipe)
     {
-        header.setText(recipe.getTitle() + " (Editing)");
+        header.setText(recipe.getTitle());
         body.setText(recipe.getDescription());
+    }
+
+    //TODO: added getter for new body
+    public String
+    getUpdatedBody()
+    {
+        return this.body.toString();
     }
 }
 
@@ -73,9 +85,10 @@ class EditFooter extends HBox {
         this.cancelButton.setOnAction(e -> onCancel.run());
     }
 
+    //TODO: Added 
     public void
-    setOnSave(Runnable onSave)
+    setOnSave(RunnableWithRecipe onSave, Label title, TextArea body)
     {
-        this.saveButton.setOnAction(e -> onSave.run());
+        this.saveButton.setOnAction(e -> onSave.run(new Recipe(title.getText(), body.getText())));
     }
 }

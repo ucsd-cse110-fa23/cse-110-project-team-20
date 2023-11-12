@@ -1,22 +1,24 @@
 package client.components;
 
+import client.utils.runnables.RunnableWithRecipe;
+
 //TODO: Added Edit page callbacks
 public class RecipeEditPageCallbacks {
     private Runnable onGoBackButtonClicked;
-    private Runnable onSaveButtonClicked;
+    private RunnableWithRecipe onSaveButtonClicked;
 
     public RecipeEditPageCallbacks(
         Runnable onGoBackButtonClicked,
-        Runnable onDeleteButtonClicked) {
+        RunnableWithRecipe onSaveButtonClicked) {
         this.onGoBackButtonClicked = onGoBackButtonClicked;
-        this.onSaveButtonClicked = onDeleteButtonClicked;
+        this.onSaveButtonClicked = onSaveButtonClicked;
     }
 
     public Runnable getOnGoBackButtonClicked() {
         return onGoBackButtonClicked;
     }
 
-    public Runnable getOnSaveButtonClicked() {
+    public RunnableWithRecipe getOnSaveButtonClicked() {
         return onSaveButtonClicked;
     }
 }

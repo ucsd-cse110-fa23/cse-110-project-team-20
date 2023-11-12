@@ -17,6 +17,7 @@ import client.models.IRecipeModel;
 import client.recipe.IRecipeGenerator;
 import client.recipe.RecipeRequestParameter;
 import client.utils.runnables.RunnableWithId;
+import client.utils.runnables.RunnableWithRecipe;
 import client.utils.transitions.IViewTransitioner;
 
 import java.io.File;
@@ -154,7 +155,7 @@ public class Controller {
         //Add in elements
         Recipe recipe = recipeModel.getRecipe(id);
         Runnable cancelCallback = () -> backToHomeScene();
-        Runnable saveCallback = () -> updateRecipeClicked(id, recipe);;
+        RunnableWithRecipe saveCallback = (Recipe recipe1) -> updateRecipeClicked(id, recipe1);;
         RecipeEditPageCallbacks callbacks = new RecipeEditPageCallbacks(cancelCallback, saveCallback);
         viewTransitioner.transitionTo(RecipeEditPage.class, recipe, callbacks);
     }
