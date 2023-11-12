@@ -240,3 +240,12 @@
 
   background-color: #D899A2;
 }
+
+.delete-alert {
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-background-color: #f8d7da; /* Light red background color */
+  -fx-text-fill: #721c24; /* Dark red text color */
+  -fx-border-color: #f5c6cb; /* Border color */
+  -fx-border-width: 2px;
+}
