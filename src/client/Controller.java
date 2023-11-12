@@ -137,7 +137,7 @@ public class Controller {
         Runnable cancelCallback = () -> backToHomeScene();
 
         //TODO: Added transition to edit
-        Runnable editCallback = () -> transitionToEditScene(id);;
+        Runnable editCallback = () -> transitionToEditScene(id);
         Runnable deleteCallback = () -> deleteRecipeClicked(id);
 
 
@@ -155,7 +155,7 @@ public class Controller {
         //Add in elements
         Recipe recipe = recipeModel.getRecipe(id);
         Runnable cancelCallback = () -> backToHomeScene();
-        RunnableWithRecipe saveCallback = (Recipe recipe1) -> updateRecipeClicked(id, recipe1);;
+        RunnableWithRecipe saveCallback = (Recipe recipe1) -> updateRecipeClicked(id, recipe1);
         RecipeEditPageCallbacks callbacks = new RecipeEditPageCallbacks(cancelCallback, saveCallback);
         viewTransitioner.transitionTo(RecipeEditPage.class, recipe, callbacks);
     }
@@ -230,7 +230,7 @@ public class Controller {
     public void 
     updateRecipeClicked(int id, Recipe recipe) {
         recipeModel.updateRecipe(id, recipe);
-        this.transitionToHomeScene();
+        this.transitionToEditScene(id);
     }
 
     public void
