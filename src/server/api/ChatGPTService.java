@@ -10,6 +10,12 @@ import java.net.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/*
+ * Chat GPT api service
+ *
+ * Defines the basic parameters used with the GPT api service such as the endpoint, model, and max allowable tokens.
+ * 
+ */
 public class ChatGPTService implements ITextGenerateService {
   private static final String API_ENDPOINT = "https://api.openai.com/v1/completions";
   private static final String MODEL = "text-davinci-003";

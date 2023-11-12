@@ -2,6 +2,7 @@ package client.recipe;
 
 import java.io.File;
 
+// Used to maintain the two user input types as an object
 public class RecipeRequestParameter {
     private File mealType;
     private File ingredients;

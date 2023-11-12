@@ -3,6 +3,7 @@ package client;
 import org.json.JSONObject;
 import org.json.JSONPropertyName;
 
+// Handles the json formatting of a recipe for HTTP server use
 public class Recipe {
     private String title;
     private String description;

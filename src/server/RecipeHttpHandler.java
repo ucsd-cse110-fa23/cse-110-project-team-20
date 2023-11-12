@@ -8,7 +8,12 @@ import org.json.JSONObject;
 import client.Recipe;
 import server.recipe.IRecipeRepository;
 import server.request.IHttpRequest;
-
+/*
+ * Recipe HTTP handler
+ *
+ * Handles HTTP requests between the application and the HTTP server
+ * 
+ */
 public class RecipeHttpHandler extends HttpHandlerBase {
   private IRecipeRepository recipeRepository;
 

@@ -10,6 +10,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
+
+/*
+ * Recipe details
+ *
+ * Handles the structure of the details page that is transitioned to once the user clicks on a recipe on the home page.
+ * Contains a cancel, delete, and edit button, along with with their associated callbacks.
+ */
 public class RecipeDetailsPage extends BorderPane {
     private Label header;
     private Label body;

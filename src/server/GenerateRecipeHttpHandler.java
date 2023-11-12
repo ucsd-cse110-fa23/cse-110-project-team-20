@@ -16,6 +16,7 @@ import server.request.IHttpRequest;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
+// Primarily for console and debugging purposes; displays the status and result of server interactions.
 public class GenerateRecipeHttpHandler extends HttpHandlerBase {
     private ITextGenerateService textGenerateService;
     private IVoiceToTextService voiceToTextService;

@@ -14,6 +14,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import client.Recipe;
 
+
+/*
+ * Server recipe model
+ *
+ * Describes how recipe data is saved on the server primarily by overriding IRecipeModel.
+ * Also contains methods that interact with the server via performRequest, all related to recipe data manipulation.
+ */
 public class ServerRecipeModel implements IRecipeModel {
 
   private String path = "/recipe";

@@ -12,6 +12,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/*
+ * Home Page
+ *
+ * Handles formatting of homepage and houses callbacks to recipe creation & details page.
+ * Also stores the list of recipes locally, synchronously updated with the HTTP server.
+ */
 public class HomePage extends BorderPane {
     private Header header;
     private RecipeList recipeList;

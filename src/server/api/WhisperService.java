@@ -4,6 +4,12 @@ import java.io.*;
 import java.net.*;
 import org.json.*;
 
+/*
+ * Whisper API service
+ *
+ * Defines the basic parameters used with the Whisper api service such as the endpoint and model
+ * 
+ */
 public class WhisperService implements IVoiceToTextService {
     private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/translations";
     private static final String MODEL = "whisper-1";
