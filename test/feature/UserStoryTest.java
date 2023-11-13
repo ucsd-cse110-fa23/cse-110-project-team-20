@@ -10,7 +10,25 @@ import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
 import client.components.RecipeDetailsPageCallbacks;
+import client.components.RecipeEditPage;
+import client.components.RecipeEditPageCallbacks;
 import client.components.RecordingPage;
+
+/**
+ * UserStory test
+ *
+ * Userstory performs on controller with mock interfaces. Some of BDD scenarios are skipped in this
+ * automated test due to UI dependency and duplications. These BDD scenarios are covered in manual
+ * testing.
+ *
+ * - Scenario 1.1: The user scrolls for a recipe (UI scrolling interaction)
+ * - Scenario 1.3: The user has initialized the application (JavaFX init steps)
+ * - Scenario 4.2: User interacts with the instructions (UI form interaction)
+ * - Scenario 4.5: User presses the cancel button (no cancel button)
+ * - Scenario 5.2: User cancels deletion (confirmation popup related)
+ * - Scenario 6.1: User records meal type (UI interaction, I/O interaction)
+ * - Scenario 6.2: User records ingredient list (UI interaction, I/O interaction)
+ */
 
 public class UserStoryTest extends UserStoryTestBase {
   @Test
@@ -27,7 +45,7 @@ public class UserStoryTest extends UserStoryTestBase {
   }
 
   private void GivenThatTheUserIsOnTheListOfRecipesWindow() {
-    // the app is just launched so that the list of recipes showing
+    controller.start();
   }
 
   private void WhenTheCollegeStudentClickCreateNewRecipeButton() {
@@ -107,7 +125,7 @@ public class UserStoryTest extends UserStoryTestBase {
      * Then the recipe list of recipes window becomes active and the generated recipe is at the top
      */
     GivenTheRecipeHasBeenGenerated();
-    WhenTheSaveButtonIsPressed();
+    WhenTheSaveButtonIsPressedOnNewRecipeConfirmPage();
     ThenTheRecipeListBecomesActive();
     ThenTheGeneratedRecipeIsAtTheTopOfTheList();
   }
@@ -118,7 +136,7 @@ public class UserStoryTest extends UserStoryTestBase {
     WhenTheQueryHasTheIngredients();
   }
 
-  private void WhenTheSaveButtonIsPressed() {
+  private void WhenTheSaveButtonIsPressedOnNewRecipeConfirmPage() {
     controller.saveRecipeClicked(recipeStub);
   }
 
@@ -236,7 +254,7 @@ public class UserStoryTest extends UserStoryTestBase {
 
   public void GivenThereAre3TotalRecipesInTheList() {
     recipeModel.recipes.add(new Recipe("Chicken with potato", "Chicken with potato recipe instruction."));
-    recipeModel.recipes.add(new Recipe("Chicken with broccoli", "Chicken with broccoli recipe instruction."));
+    recipeModel.recipes.add(new Recipe("Chicken with broccoli", "Chicken with broccoli recipe instruction. Boil for 50 mins."));
     recipeModel.recipes.add(new Recipe("Chicken with cabbage", "Chicken with cabbage recipe instruction."));
   }
 
@@ -265,4 +283,88 @@ public class UserStoryTest extends UserStoryTestBase {
     assertEquals(recipeModel.recipes.get(0).getTitle(), "Chicken with potato");
     assertEquals(recipeModel.recipes.get(1).getTitle(), "Chicken with cabbage");
   }
+
+  @Test
+  public void scenario_4_1_userPressesTheEditButton() {
+    /**
+     * Scenario 4.1: User presses the edit button
+     * Given the expanded view interface is currently active on “Chicken with broccoli”
+     * When the edit button is pressed
+     * Then the instructions editing interface should become active
+     */
+    // for default list
+    GivenThereAre3TotalRecipesInTheList();
+
+    GivenTheExpandedViewIsCurrentlyActiveForChickenWithBroccoli();
+    WhenTheEditButtonIsPressed();
+    ThenTheEditingPageShouldBecomeActive();
+  }
+
+  public void WhenTheEditButtonIsPressed() {
+    RecipeDetailsPageCallbacks supposeToCallbacks = (RecipeDetailsPageCallbacks) viewTransitioner.rawParam2;
+    supposeToCallbacks.getOnEditButtonClicked().run();
+  }
+
+  private void ThenTheEditingPageShouldBecomeActive() {
+    assertEquals(viewTransitioner.currentPageClass, RecipeEditPage.class);
+  }
+
+  @Test
+  public void scenario_4_3_userPressesTheSaveButton() {
+    // Scenario 4.3: User presses the save button
+    // Given the instructions editing interface is currently active
+    // When the save button is pressed
+    // Then the expanded view’s detailed instructions update to having “Fry for 30 mins” text
+
+    GivenTheRecipeEditPageIsCurrentlyActive();
+    WhenTheSaveButtonIsPressedAfterUpdatingFryFor30Mins();
+    ThenTheDetailPageShouldHaveFryFor30MinsText();
+  }
+
+  public void GivenTheRecipeEditPageIsCurrentlyActive() {
+    // do same setup as scenario 4.1
+    GivenThereAre3TotalRecipesInTheList();
+    GivenTheExpandedViewIsCurrentlyActiveForChickenWithBroccoli();
+    WhenTheEditButtonIsPressed();
+  }
+
+  public void WhenTheSaveButtonIsPressedAfterUpdatingFryFor30Mins() {
+    Recipe recipe = (Recipe) viewTransitioner.rawParam1;
+    RecipeEditPageCallbacks supposeToCallbacks = (RecipeEditPageCallbacks) viewTransitioner.rawParam2;
+
+    String newDescription = recipe.getDescription().replace("Boil for 50 mins", "Fry for 30 mins");
+    Recipe updatedRecipe = new Recipe(recipe.getTitle(), newDescription);
+    supposeToCallbacks.getOnSaveButtonClicked().run(updatedRecipe);
+  }
+
+  public void ThenTheDetailPageShouldHaveFryFor30MinsText() {
+    assertEquals(viewTransitioner.currentPageClass, RecipeDetailsPage.class);
+
+    Recipe recipe = (Recipe) viewTransitioner.rawParam1;
+    assertTrue(recipe.getDescription().contains("Fry for 30 mins"));
+  }
+
+  @Test
+  public void sceenario_4_4_userPressesTheBackButton() {
+    // Scenario 4.4: User presses the back button
+    // Given the instructions editing interface is currently active
+    // When the back button is pressed
+    // Then recipe details page should become active
+    // And And expanded view’s detailed instructions still have “Boil for 50 mins”
+    GivenTheRecipeEditPageIsCurrentlyActive();
+    WhenTheBackButtonIsPressedOnRecipeEditPage();
+    ThenExpandedViewForChickenWithBroccoliShows();
+    ThenExpandedViewDescriptionShouldHaveBoilFor50Mins();
+  }
+
+  public void WhenTheBackButtonIsPressedOnRecipeEditPage() {
+    RecipeEditPageCallbacks supposeToCallbacks = (RecipeEditPageCallbacks) viewTransitioner.rawParam2;
+    supposeToCallbacks.getOnGoBackButtonClicked().run();
+  }
+
+  public void ThenExpandedViewDescriptionShouldHaveBoilFor50Mins() {
+    Recipe recipe = (Recipe) viewTransitioner.rawParam1;
+    assertTrue(recipe.getDescription().contains("Boil for 50 mins"));
+  }
+
 }
