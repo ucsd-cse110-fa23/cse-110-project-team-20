@@ -89,8 +89,8 @@
 }
 
 .homepage-header .create-button:hover {
-  -fx-background-color: #6D9E78;
-  background-color: #6D9E78;
+  -fx-background-color: #6d9e78d5;
+  background-color: #6d9e78d5;
 }
 
 .recipe-box {
@@ -383,4 +383,57 @@
 .delete-alert .graphic {
   -fx-fill: #dc3545;
   fill: #dc3545;
+}
+
+
+/**
+* Recipe Edit Page
+*/
+
+.recipe-edit-footer .cancel-button {
+  -fx-font-size: 16px;
+  -fx-background-color: #EDAFB8;
+  -fx-text-fill: #333333;
+  -fx-padding: 8px 12px;
+  -fx-border-radius: 5px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 5, 0, 0, 1);
+  -fx-transition: -fx-background-color 0.3s;
+
+  /* Define the CSS3 properties for compatibility */
+  background-color: #EDAFB8;
+  color: #333333;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: hand;
+  transition: background-color 0.3s;
+  font-size: 16px;
+}
+
+.recipe-edit-footer .cancel-button:hover {
+  -fx-background-color: #D899A2;
+  background-color: #D899A2;
+}
+
+.recipe-edit-footer .save-button {
+  -fx-font-size: 16px;
+  -fx-background-color: #97CFA3;
+  -fx-text-fill: #333333;
+  -fx-padding: 8px 12px;
+  -fx-border-radius: 5px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 5, 0, 0, 1);
+  -fx-transition: background-color 0.3s;
+  background-color: #97CFA3;
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: hand;
+  transition: background-color 0.3s;
+  font-size: 16px;
+}
+
+.recipe-edit-footer .save-button:hover {
+  -fx-background-color: #6d9e78;
+  background-color: #6d9e78;
 }

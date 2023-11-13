@@ -3,6 +3,7 @@ package client.components;
 import client.Recipe;
 import client.utils.runnables.RunnableWithId;
 import client.utils.runnables.RunnableWithRecipe;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -33,6 +34,10 @@ public class RecipeEditPage extends BorderPane{
         body = new TextArea();
         // body.setWrapText(true);
         footer = new EditFooter();
+
+        getStylesheets().add(getClass().getResource(
+            "style.css"
+        ).toExternalForm());
 
         this.setTop(header);
         this.setCenter(new ScrollPane(body));
@@ -77,8 +82,15 @@ class EditFooter extends HBox {
      */
     public EditFooter()
     {
-        this.cancelButton = new Button("Go Back");
+        getStyleClass().add("recipe-edit-footer");
+        this.cancelButton = new Button("Cancel");
+        this.cancelButton.getStyleClass().add("cancel-button");
+
         this.saveButton = new Button("Save");
+        this.saveButton.getStyleClass().add("save-button");
+
+        this.setSpacing(10); // Set the spacing between buttons
+        this.setPadding(new Insets(10, 10, 10, 10));
         this.getChildren().addAll(cancelButton, saveButton);
     }
 
