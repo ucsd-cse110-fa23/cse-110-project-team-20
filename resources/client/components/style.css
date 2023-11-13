@@ -61,13 +61,13 @@
 }
 
 .homepage-header .app-name {
-  -fx-font: Lucida Calligraphy;
+  -fx-font-family: Lucida Calligraphy;
   -fx-text-fill: #654321;
   -fx-font-size: 30px;
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
-  font: Lucida Calligraphy;
+  font-family: Lucida Calligraphy;
 }
 
 .homepage-header .create-button {
@@ -123,7 +123,7 @@
 }
 
 .recipe-box .recipe-title {
-  -fx-font: Lucida Calligraphy;
+  -fx-font-family: Lucida Calligraphy;
   -fx-border-radius: 5px;
   -fx-text-fill: #654321;
   -fx-font-size: 20px;
@@ -131,7 +131,7 @@
   border-radius: 5px;
   color: #654321;
   font-size: 20px;
-  font: Lucida Calligraphy;
+  font-family: Lucida Calligraphy;
 }
 .recipe-box:hover .recipe-title {
   -fx-text-fill: #82859B;
@@ -211,13 +211,13 @@
 }
 
 .recipe-title {
-  -fx-font: Lucida Calligraphy;
+  -fx-font-family: Lucida Calligraphy;
   -fx-text-fill: #654321;
   -fx-font-size: 30px;
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
-  font: Lucida Calligraphy;
+  font-family: Lucida Calligraphy;
 }
 
 .recipe-body {
