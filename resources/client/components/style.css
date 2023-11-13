@@ -225,7 +225,7 @@
   -fx-text-fill: #654321;
   -fx-font-size: 12px;
   -fx-padding: 5px 10px; /* Adjusted padding */
-  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 1);
+  /* -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 1); */
   -fx-font-weight: bold;
   -fx-wrap-text: true;
   -fx-pref-width: 450;
@@ -251,7 +251,7 @@
 
 /* ref: https://forums.oracle.com/ords/apexds/post/css-styling-of-scrollpanes-broken-in-javafx-8-3855 */
 .recipe-scroll-pane > .viewport {
-  -fx-background-color: transparent;
+  -fx-background-color: #E8DDB5;
 }
 
 .cancel-button {
