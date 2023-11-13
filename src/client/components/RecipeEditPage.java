@@ -32,15 +32,18 @@ public class RecipeEditPage extends BorderPane{
         /* Changed Labels to TextFields */
         header = new RecipeEditHeader();
         body = new TextArea();
-        // body.setWrapText(true);
+        body.setWrapText(true);
         footer = new EditFooter();
 
         getStylesheets().add(getClass().getResource(
             "style.css"
         ).toExternalForm());
         
+        body.getStyleClass().add("recipe-edit-body");
+        // ScrollPane scrollpane = new ScrollPane(body);
+        // scrollpane.getStyleClass().add("recipe-edit-scroll-pane");
         this.setTop(header);
-        this.setCenter(new ScrollPane(body));
+        this.setCenter(body);
         this.setBottom(footer);
         this.setPrefSize(500, 800);
     }

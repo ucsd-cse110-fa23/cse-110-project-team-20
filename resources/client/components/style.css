@@ -228,7 +228,8 @@
   /* -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 1); */
   -fx-font-weight: bold;
   -fx-wrap-text: true;
-  -fx-pref-width: 450;
+  /* -fx-pref-width: 490;
+  -fx-pref-height: 400; */
   -fx-alignment: top-left; /* Adjusted alignment */
   background-color: #E8DDB5;
   font-family: Avantgarde;
@@ -460,4 +461,51 @@
   border-width: 0 0 2 0;
   border-radius: 0;
   font-weight: bold;
+}
+
+.recipe-edit-scroll-pane{
+  -fx-background-color: #E8DDB5;
+  -fx-border-color: #D2B48C;
+  -fx-border-width: 0 0 2 0;
+  -fx-border-radius: 0;
+  -fx-font-family: Avantgarde;
+  -fx-text-fill: #654321;
+  -fx-font-size: 12px;
+  -fx-padding: 5px 10px; /* Adjusted padding */
+  -fx-font-weight: bold;
+  -fx-wrap-text: true;
+  -fx-alignment: top-left; /* Adjusted alignment */
+  background-color: #E8DDB5;
+  font-family: Avantgarde;
+  color: #654321;
+  font-size: 12px;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-color: #D2B48C;
+  border-width: 0 0 2 0;
+  border-radius: 0;
+  align-items: top-left;
+}
+
+.recipe-edit-body {
+  -fx-font-family: Avantgarde;
+  -fx-text-fill: #654321;
+  -fx-font-size: 12px;
+  -fx-padding: 5px 10px; /* Adjusted padding */
+  /* -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 1); */
+  -fx-font-weight: bold;
+  -fx-wrap-text: true;
+  /* -fx-pref-width: 490;
+  -fx-pref-height: 400; */
+  -fx-alignment: top-left; /* Adjusted alignment */
+  background-color: #E8DDB5;
+  font-family: Avantgarde;
+  color: #654321;
+  font-size: 12px;
+  padding: 5px 10px;
+  font-weight: bold;
+  border-color: #D2B48C;
+  border-width: 0 0 2 0;
+  border-radius: 0;
+  align-items: top-left;
 }
