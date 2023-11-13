@@ -23,14 +23,14 @@ import javafx.scene.text.Text;
  * Similar in format to the details page, except there is a save button and callback in lieu of delete and edit.
  */
 public class RecipeEditPage extends BorderPane{
-    private Label header;
+    private RecipeEditHeader header;
     private TextArea body;
     private EditFooter footer;
 
     public RecipeEditPage()
     {
         /* Changed Labels to TextFields */
-        header = new Label();
+        header = new RecipeEditHeader();
         body = new TextArea();
         // body.setWrapText(true);
         footer = new EditFooter();
@@ -38,7 +38,7 @@ public class RecipeEditPage extends BorderPane{
         getStylesheets().add(getClass().getResource(
             "style.css"
         ).toExternalForm());
-
+        
         this.setTop(header);
         this.setCenter(new ScrollPane(body));
         this.setBottom(footer);
@@ -55,14 +55,17 @@ public class RecipeEditPage extends BorderPane{
     public void
     setSaveCallBack(RunnableWithRecipe r)
     {
-        this.footer.setOnSave(r, this.header, this.body);
+        this.footer.setOnSave(r, (Label) this.header.getCenter(), this.body);
     }
 
     public void
     displayRecipe(Recipe recipe)
     {
-        header.setText(recipe.getTitle());
-        body.setText(recipe.getDescription());
+        Label recipeTitle = new Label(recipe.getTitle());
+        recipeTitle.setWrapText(true);
+        recipeTitle.getStyleClass().add("recipe-title");
+        this.header.setCenter(recipeTitle);
+        this.body.setText(recipe.getDescription());
     }
 
     //TODO: added getter for new body
@@ -72,6 +75,16 @@ public class RecipeEditPage extends BorderPane{
         return this.body.toString();
     }
 }
+
+// class so that header type matches across pages
+class RecipeEditHeader extends BorderPane {
+    // private Button cancelButton;
+
+    public RecipeEditHeader() {
+        getStyleClass().add("recipe-edit-header");
+    }
+}
+
 
 class EditFooter extends HBox {
     private Button saveButton;
