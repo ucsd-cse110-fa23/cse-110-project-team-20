@@ -221,18 +221,14 @@
 }
 
 .recipe-body {
-  -fx-background-color: #E8DDB5;
   -fx-font-family: Avantgarde;
   -fx-text-fill: #654321;
   -fx-font-size: 12px;
   -fx-padding: 5px 10px; /* Adjusted padding */
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 1);
   -fx-font-weight: bold;
-  -fx-border-color: #D2B48C;
-  -fx-border-width: 0 0 2 0;
-  -fx-border-radius: 0;
   -fx-wrap-text: true;
-  -fx-pref-width: 495;
+  -fx-pref-width: 450;
   -fx-alignment: top-left; /* Adjusted alignment */
   background-color: #E8DDB5;
   font-family: Avantgarde;
@@ -244,6 +240,18 @@
   border-width: 0 0 2 0;
   border-radius: 0;
   align-items: top-left;
+}
+
+.recipe-scroll-pane {
+  -fx-background-color: #E8DDB5;
+  -fx-border-color: #D2B48C;
+  -fx-border-width: 0 0 2 0;
+  -fx-border-radius: 0;
+}
+
+/* ref: https://forums.oracle.com/ords/apexds/post/css-styling-of-scrollpanes-broken-in-javafx-8-3855 */
+.recipe-scroll-pane > .viewport {
+  -fx-background-color: transparent;
 }
 
 .cancel-button {

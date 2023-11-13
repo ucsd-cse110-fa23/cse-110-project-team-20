@@ -43,15 +43,15 @@ public class RecipeDetailsPage extends BorderPane {
         body = new Label();
         body.setWrapText(true);
         body.getStyleClass().add("recipe-body");
-        
 
-
+        ScrollPane scrollPane = new ScrollPane(body);
+        scrollPane.getStyleClass().add("recipe-scroll-pane");
 
         // style footer
         footer = new DetailsFooter();
 
         this.setTop(header);
-        this.setCenter(new ScrollPane(body));
+        this.setCenter(scrollPane);
         this.setBottom(footer);
         this.setPrefSize(500, 800);
     }
