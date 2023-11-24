@@ -31,6 +31,9 @@ dependencies {
     // https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
     implementation 'commons-fileupload:commons-fileupload:1.5'
 
+    // https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-sync
+    implementation 'org.mongodb:mongodb-driver-sync:4.11.1'
+
     // This provides the JUnit API.
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     // This provides the TestEngine to actually run the tests.
