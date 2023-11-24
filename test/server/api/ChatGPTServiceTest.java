@@ -10,6 +10,8 @@ import java.net.URISyntaxException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import server.ServerConfiguration;
+
 public class ChatGPTServiceTest {
   @Test
   public void instance() {
@@ -27,7 +29,7 @@ public class ChatGPTServiceTest {
   @Test
   @Disabled // due to limited ChatGPT credit, disabled for now
   public void generateRecipeWithChatGPT() throws TextGenerateServiceException, IOException, InterruptedException, URISyntaxException {
-    IOpenAIConfiguration config = new OpenAIConfiguration();
+    IOpenAIConfiguration config = new ServerConfiguration();
     ChatGPTService service = new ChatGPTService(config);
 
     RecipeQuery query = new RecipeQuery(

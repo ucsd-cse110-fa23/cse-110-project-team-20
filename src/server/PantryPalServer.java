@@ -3,15 +3,11 @@ package server;
 import com.sun.net.httpserver.*;
 
 import server.api.ChatGPTService;
-import server.api.IOpenAIConfiguration;
 import server.api.ITextGenerateService;
 import server.api.IVoiceToTextService;
 import server.api.LocalTextGenerateService;
 import server.api.LocalVoiceToTextService;
-import server.api.OpenAIConfiguration;
 import server.api.WhisperService;
-import server.mongodb.IMongoDBConfiguration;
-import server.mongodb.MongoDBConfiguration;
 import server.recipe.IRecipeRepository;
 import server.recipe.JSONRecipeRepository;
 
@@ -31,7 +27,7 @@ public class PantryPalServer {
         // create a server
         HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
 
-        IOpenAIConfiguration configuration = new OpenAIConfiguration();
+        ServerConfiguration configuration = new ServerConfiguration();
 
         ITextGenerateService textGenerateService;
         IVoiceToTextService voiceToTextService;
@@ -47,11 +43,9 @@ public class PantryPalServer {
             voiceToTextService = new WhisperService(configuration);
         }
 
-        IMongoDBConfiguration mongoDBConfiguration = new MongoDBConfiguration();
-
         IRecipeRepository recipeRepository;
 
-        if (mongoDBConfiguration.getConnectionString() == null || mongoDBConfiguration.getConnectionString().equals("")) {
+        if (configuration.getConnectionString() == null || configuration.getConnectionString().equals("")) {
             System.out.println("[db:INFO] Couldn't find mongodb connection string in app.properties file. The server will use database.json file as storage.");
             recipeRepository = new JSONRecipeRepository("database.json");
         } else {
