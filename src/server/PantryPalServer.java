@@ -3,12 +3,10 @@ package server;
 import com.sun.net.httpserver.*;
 
 import server.api.ChatGPTService;
-import server.api.IOpenAIConfiguration;
 import server.api.ITextGenerateService;
 import server.api.IVoiceToTextService;
 import server.api.LocalTextGenerateService;
 import server.api.LocalVoiceToTextService;
-import server.api.OpenAIConfiguration;
 import server.api.WhisperService;
 import server.recipe.IRecipeRepository;
 import server.recipe.JSONRecipeRepository;
@@ -29,23 +27,33 @@ public class PantryPalServer {
         // create a server
         HttpServer server = HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
 
-        IOpenAIConfiguration configuration = new OpenAIConfiguration();
+        ServerConfiguration configuration = new ServerConfiguration();
 
         ITextGenerateService textGenerateService;
         IVoiceToTextService voiceToTextService;
 
         if (configuration.apiKey() == null || configuration.apiKey().equals("")) {
             System.out.println(
-                    "Coudln't find API KEY in app.properties file. The server will be running with mock data.");
+                    "[api:INFO] Coudln't find API KEY in app.properties file. The server will be running with mock data.");
             textGenerateService = new LocalTextGenerateService();
             voiceToTextService = new LocalVoiceToTextService();
         } else {
-            System.out.println("Warnning: Server is running with actual API KEY. Be careful on spending credit.");
+            System.out.println("[api:INFO] The server is running with actual API KEY. Be careful on spending credit.");
             textGenerateService = new ChatGPTService(configuration);
             voiceToTextService = new WhisperService(configuration);
         }
 
-        IRecipeRepository recipeRepository = new JSONRecipeRepository("database.json");
+        IRecipeRepository recipeRepository;
+
+        if (configuration.getConnectionString() == null || configuration.getConnectionString().equals("")) {
+            System.out.println("[db:INFO] Couldn't find mongodb connection string in app.properties file. The server will use database.json file as storage.");
+            recipeRepository = new JSONRecipeRepository("database.json");
+        } else {
+            System.out.println("[db:INFO] The server is running with a mongodb instance.");
+
+            // @TODO need to add MongoDB version of IRecipeRepository and replace this line
+            recipeRepository = new JSONRecipeRepository("database.json");
+        }
 
         server.createContext("/", new IndexHttpHandler());
         server.createContext("/recipe", new RecipeHttpHandler(recipeRepository));
