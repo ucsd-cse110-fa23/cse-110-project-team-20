@@ -1,6 +1,7 @@
 package client;
 
 import client.components.LoadingPage;
+import client.components.LoginPage;
 import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
@@ -13,6 +14,7 @@ import client.components.RecordingPageCallbacks;
 
 import java.util.List;
 
+import client.utils.runnables.RunnableForLogin;
 import client.utils.runnables.RunnableWithId;
 import client.utils.transitions.javafx.JavaFXViewTransitioner;
 import javafx.scene.Scene;
@@ -32,6 +34,24 @@ public class Routes {
     JavaFXViewTransitioner routes = new JavaFXViewTransitioner();
 
     /**
+     * Login Page
+     * 
+     * Display username and password fields to accomodate login/creating account feature.
+     */
+    routes.register(LoginPage.class, (RunnableForLogin onLogin) -> {
+      LoginPage loginPage = new LoginPage(onLogin);
+
+      // Set the title of the app
+      primaryStage.setTitle("PantryPal");
+      // Create scene of mentioned size with the border pane
+      primaryStage.setScene(new Scene(loginPage, WIDTH, HEIGHT));
+      // Make window non-resizable
+      primaryStage.setResizable(false);
+      // show
+      primaryStage.show();
+    });
+
+    /**
      * Home Page
      * 
      * Display a list of recipes, provides button for creating new recipe.
@@ -39,14 +59,7 @@ public class Routes {
     routes.register(HomePage.class, (List<Recipe> recipes, Runnable createButtonCallback, RunnableWithId openRecipeDetailButtonCallback) -> {
       HomePage homePage = new HomePage(recipes, createButtonCallback, openRecipeDetailButtonCallback);
 
-      // Set the title of the app
-      primaryStage.setTitle("PantryPal");
-      // Create scene of mentioned size with the border pane
       primaryStage.setScene(new Scene(homePage, WIDTH, HEIGHT));
-      // Make window non-resizable
-      primaryStage.setResizable(false);
-      // show
-      primaryStage.show();
     });
 
     /**
