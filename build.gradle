@@ -38,6 +38,9 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     // This provides the TestEngine to actually run the tests.
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+
+    // https://mvnrepository.com/artifact/de.bwaldvogel/mongo-java-server
+    testImplementation 'de.bwaldvogel:mongo-java-server:1.44.0'
 }
 
 test {
