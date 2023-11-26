@@ -98,4 +98,14 @@ public class LoginPage extends BorderPane {
                 passwordField.getText(),
                 stayLoggedInCheckBox.isSelected());
     }
+
+    /**
+     * display any errors from the server
+     *
+     * @param error
+     */
+    public void onError(String error) {
+        Alert alert = new Alert(AlertType.WARNING, String.format("Error: %s", error));
+        alert.show();
+    }
 }
