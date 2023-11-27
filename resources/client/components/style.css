@@ -509,3 +509,63 @@
   border-radius: 0;
   align-items: top-left;
 }
+
+/* Login Page */
+
+.login-page {
+  -fx-alignment: center;
+  -fx-padding: 20px;
+}
+
+.login-page .login-form {
+  -fx-alignment: center-left;
+}
+
+.login-page .app-name {
+  -fx-font-family: Lucida Calligraphy;
+  -fx-text-fill: #654321;
+  -fx-font-size: 30px;
+  font-family: Lucida Calligraphy;
+  color: #654321;
+  font-size: 30px;
+  font: Lucida Calligraphy;
+}
+
+.login-page .login-button {
+  -fx-font-size: 18px;
+  -fx-background-color: #97CFA3;
+  -fx-text-fill: #3e3811;
+  -fx-text-alignment: center;
+  -fx-padding: 8px 52px;
+  -fx-border-radius: 5px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 5, 0, 0, 1);
+  -fx-transition: background-color 0.3s;
+}
+
+.login-page .login-button:hover {
+  -fx-background-color: #6d9e78d5;
+  background-color: #6d9e78d5;
+}
+
+.login-page .username-label,
+.login-page .password-label,
+.login-page .stay-logged-in-label {
+  -fx-font-size: 18px;
+  -fx-color: #654321;
+}
+
+.login-page .username-label,
+.login-page .password-label {
+  -fx-padding: 20px 0 10px 0;
+}
+
+.login-page .username-field,
+.login-page .password-field {
+  -fx-font-size: 20px;
+}
+
+.login-page .stay-logged-in-checkbox {
+  -fx-padding: 20px 0 20px 0;
+  -fx-font-size: 20px;
+}

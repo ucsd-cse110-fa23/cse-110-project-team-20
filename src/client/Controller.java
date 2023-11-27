@@ -2,6 +2,7 @@ package client;
 
 import client.audio.IAudioRecorder;
 import client.components.LoadingPage;
+import client.components.LoginPage;
 import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
@@ -16,6 +17,7 @@ import client.components.RecordingPageCallbacks;
 import client.models.IRecipeModel;
 import client.recipe.IRecipeGenerator;
 import client.recipe.RecipeRequestParameter;
+import client.utils.runnables.RunnableForLogin;
 import client.utils.runnables.RunnableWithId;
 import client.utils.runnables.RunnableWithRecipe;
 import client.utils.transitions.IViewTransitioner;
@@ -54,7 +56,26 @@ public class Controller {
     public void
     start()
     {
-        transitionToHomeScene();
+        transitionToLoginScene();
+    }
+
+    public void
+    transitionToLoginScene()
+    {
+        RunnableForLogin onLogin = (String username, String password, boolean stayLoggedIn) -> {
+            // @TODO communicate with server to check if the account is available to log in
+
+            // @TODO remove this debug line
+            System.out.println(String.format("login button is clicked: %s, %s%s",
+                username,
+                password,
+                stayLoggedIn ? ", stay logged in" : ""));
+
+            // @TODO adjust HomeScene transition with login process
+            transitionToHomeScene();
+        };
+
+        viewTransitioner.transitionTo(LoginPage.class, onLogin);
     }
 
     public void
