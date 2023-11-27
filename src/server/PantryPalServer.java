@@ -2,12 +2,15 @@ package server;
 
 import com.sun.net.httpserver.*;
 
+import server.account.IAccountService;
+import server.account.LocalAccountService;
 import server.api.ChatGPTService;
 import server.api.ITextGenerateService;
 import server.api.IVoiceToTextService;
 import server.api.LocalTextGenerateService;
 import server.api.LocalVoiceToTextService;
 import server.api.WhisperService;
+import server.mongodb.MongoDBAccountService;
 import server.recipe.IRecipeRepository;
 import server.recipe.JSONRecipeRepository;
 
@@ -44,20 +47,24 @@ public class PantryPalServer {
         }
 
         IRecipeRepository recipeRepository;
+        IAccountService accountService;
 
         if (configuration.getConnectionString() == null || configuration.getConnectionString().equals("")) {
             System.out.println("[db:INFO] Couldn't find mongodb connection string in app.properties file. The server will use database.json file as storage.");
             recipeRepository = new JSONRecipeRepository("database.json");
+            accountService = new LocalAccountService();
         } else {
             System.out.println("[db:INFO] The server is running with a mongodb instance.");
 
             // @TODO need to add MongoDB version of IRecipeRepository and replace this line
             recipeRepository = new JSONRecipeRepository("database.json");
+            accountService = new MongoDBAccountService(configuration);
         }
 
         server.createContext("/", new IndexHttpHandler());
         server.createContext("/recipe", new RecipeHttpHandler(recipeRepository));
         server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService));
+        server.createContext("/account/login-or-create", new AccountHttpHandler(accountService));
 
         server.setExecutor(threadPoolExecutor);
         server.start();

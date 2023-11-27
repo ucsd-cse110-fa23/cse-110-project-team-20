@@ -21,7 +21,7 @@ import static com.mongodb.client.model.Filters.eq;
 public class MongoDBAccountService implements IAccountService {
     private IMongoDBConfiguration config;
 
-    MongoDBAccountService(IMongoDBConfiguration config) {
+    public MongoDBAccountService(IMongoDBConfiguration config) {
         this.config = config;
     }
 
