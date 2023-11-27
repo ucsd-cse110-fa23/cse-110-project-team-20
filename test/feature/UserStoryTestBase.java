@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import client.Controller;
 import client.Recipe;
+import client.account.IAccountManager;
 import feature.mock.MockAudioRecorder;
 import feature.mock.MockGenerateRecipe;
 import feature.mock.MockRecipeModel;
@@ -24,6 +25,13 @@ abstract public class UserStoryTestBase {
     audioRecorder = new MockAudioRecorder();
     recipeModel = new MockRecipeModel();
 
+    // @TODO will be replaced as mock implementation when we do testing task for MS2-US1
+    IAccountManager mockAccountManager = new IAccountManager() {
+      @Override
+      public String loginOrCreateAccount(String username, String password) {
+        return "some mock token";
+      }
+    };
 
     recipeStub = new Recipe(
         "Banana Pancake",
@@ -32,7 +40,7 @@ abstract public class UserStoryTestBase {
         "dinner");
     generateRecipe.setMockRecipe(recipeStub);
 
-    controller = new Controller(viewTransitioner, generateRecipe, audioRecorder, recipeModel);
+    controller = new Controller(viewTransitioner, generateRecipe, audioRecorder, recipeModel, mockAccountManager);
     controller.start();
   }
 }

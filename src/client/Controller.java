@@ -1,8 +1,12 @@
 package client;
 
+import client.account.IAccountManager;
+import client.account.IncorrectPassword;
+import client.account.LoginFailed;
 import client.audio.IAudioRecorder;
 import client.components.LoadingPage;
 import client.components.LoginPage;
+import client.components.ErrorMessage;
 import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
@@ -33,6 +37,7 @@ public class Controller {
     private IViewTransitioner viewTransitioner;
     private IAudioRecorder audioRecorder;
     private IRecipeModel recipeModel;
+    private IAccountManager accountManager;
 
     /**
      * Controller glues all functions together.
@@ -40,17 +45,20 @@ public class Controller {
      * @param viewTransitioner
      * @param recipeGenerator
      * @param audioRecorder
+     * @param accountManager
      */
     public Controller(
         IViewTransitioner viewTransitioner,
         IRecipeGenerator recipeGenerator,
         IAudioRecorder audioRecorder,
-        IRecipeModel recipeModel) {
+        IRecipeModel recipeModel,
+        IAccountManager accountManager) {
 
         this.viewTransitioner = viewTransitioner;
         this.recipeGenerator = recipeGenerator;
         this.audioRecorder = audioRecorder;
         this.recipeModel = recipeModel;
+        this.accountManager = accountManager;
     }
 
     public void
@@ -63,7 +71,18 @@ public class Controller {
     transitionToLoginScene()
     {
         RunnableForLogin onLogin = (String username, String password, boolean stayLoggedIn) -> {
-            // @TODO communicate with server to check if the account is available to log in
+            try {
+                String token = accountManager.loginOrCreateAccount(username, password);
+                if (token != null) {
+                    // @TODO save token so that we can request anything after the login
+                }
+            } catch (IncorrectPassword e) {
+                viewTransitioner.transitionTo(ErrorMessage.class, e.getMessage());
+                return;
+            } catch (LoginFailed e) {
+                viewTransitioner.transitionTo(ErrorMessage.class, "Login Failed: " + e.getMessage());
+                return;
+            }
 
             // @TODO remove this debug line
             System.out.println(String.format("login button is clicked: %s, %s%s",
