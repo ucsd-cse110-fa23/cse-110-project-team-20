@@ -10,6 +10,22 @@ This document captures current status of PantryPal for further development.
 
 ![Server implementation diagram](./server.png)
 
+## Login Flow
+
+![Login implementation diagram](./login-flow.png)
+
+When client try to log in into the server with username and password, server checks the information with mongodb and then create a token for that specific account and returns to the client. Then, the client hold that token until the app is closed (for now).
+
+- The token is generated at `AccountHttpHandler` using username and password.
+- From the client side, you can find token is loaded into the account session. Check `Controller`.
+- Then we use the token when we request any info from the server ServerRecipeModel Check `ServerRecipeGenerator`.
+- Token generation is followed by [Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) which is simply `username:password` format with base64 encoding.
+
+`AccountContext` is for the server part. Since authenticator only checks the requested token is valid, we loaded user information into account context so that we can use it in repository.
+
+- mongodb basic authenticator saves username into account context for any http handler operation. Check `MongoDBBasicAuthenticator`.
+- we uses it in the repository implementation. Check `MongoDBRecipeRepository`.
+
 
 ## REST API Specification
 
