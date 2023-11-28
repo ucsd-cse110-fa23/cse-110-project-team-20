@@ -6,6 +6,8 @@ import client.Controller;
 import client.Recipe;
 import client.account.IAccountManager;
 import client.account.IAccountSession;
+import feature.mock.MockAccountManager;
+import feature.mock.MockAccountSession;
 import feature.mock.MockAudioRecorder;
 import feature.mock.MockGenerateRecipe;
 import feature.mock.MockRecipeModel;
@@ -18,6 +20,8 @@ abstract public class UserStoryTestBase {
   MockAudioRecorder audioRecorder;
   MockRecipeModel recipeModel;
   Recipe recipeStub;
+  IAccountManager accountManager;
+  IAccountSession accountSession;
 
   @BeforeEach
   public void setupController() {
@@ -25,23 +29,8 @@ abstract public class UserStoryTestBase {
     generateRecipe = new MockGenerateRecipe();
     audioRecorder = new MockAudioRecorder();
     recipeModel = new MockRecipeModel();
-
-    // @TODO will be replaced as mock implementation when we do testing task for MS2-US1
-    IAccountManager mockAccountManager = new IAccountManager() {
-      @Override
-      public String loginOrCreateAccount(String username, String password) {
-        return "some mock token";
-      }
-    };
-    IAccountSession mockAccountSession = new IAccountSession() {
-      @Override
-      public void setToken(String token) {
-      }
-      @Override
-      public String getToken() {
-        return "some token";
-      }
-    };
+    accountManager = new MockAccountManager();
+    accountSession = new MockAccountSession();
 
     recipeStub = new Recipe(
         "Banana Pancake",
@@ -50,7 +39,7 @@ abstract public class UserStoryTestBase {
         "dinner");
     generateRecipe.setMockRecipe(recipeStub);
 
-    controller = new Controller(viewTransitioner, generateRecipe, audioRecorder, recipeModel, mockAccountManager, mockAccountSession);
+    controller = new Controller(viewTransitioner, generateRecipe, audioRecorder, recipeModel, accountManager, accountSession);
     controller.start();
   }
 }
