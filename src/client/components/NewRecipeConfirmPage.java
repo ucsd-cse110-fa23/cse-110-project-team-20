@@ -66,6 +66,7 @@ public class NewRecipeConfirmPage extends BorderPane {
 class Footer extends HBox {
     private Button saveButton;
     private Button cancelButton;
+    private Button regenButton;
 
     public Footer()
     {
@@ -76,11 +77,15 @@ class Footer extends HBox {
         saveButton = createButton("Save", "plus-icon.png");
         saveButton.getStyleClass().addAll(
             "action-button", "save-button");
+            
+        regenButton = createButton("Regenerate Recipe", "regen-icon.png");
+        regenButton.getStyleClass().addAll(
+            "action-button", "save-button");
 
         Region spacer = new Region();
         setHgrow(spacer, Priority.ALWAYS);
 
-        getChildren().addAll(cancelButton, spacer, saveButton);
+        getChildren().addAll(cancelButton, saveButton, regenButton);
     }
 
     public void setOnCancel(Runnable onCancel) {
@@ -89,6 +94,10 @@ class Footer extends HBox {
 
     public void setOnSave(Runnable onSave) {
         saveButton.setOnAction(e-> onSave.run());
+    }
+
+    public void setOnRegen(Runnable onRegen){
+        regenButton.setOnAction(e-> onRegen.run());
     }
 
     // ref: https://jenkov.com/tutorials/javafx/button.html
