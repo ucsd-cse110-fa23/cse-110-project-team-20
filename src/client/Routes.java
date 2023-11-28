@@ -93,11 +93,14 @@ public class Routes {
      * 
      * Prompt generated recipe with title. User can decide to save or discard
      */
-    routes.register(NewRecipeConfirmPage.class, (Recipe recipe, Runnable saveCallback, Runnable discardCallback) -> {
+    routes.register(NewRecipeConfirmPage.class, (Recipe recipe, Runnable saveCallback, Runnable discardCallback, Runnable regenCallback) -> {
       NewRecipeConfirmPage newRecipeConfirmPage = new NewRecipeConfirmPage(recipe);
 
       newRecipeConfirmPage.setCancelCallback(discardCallback);
       newRecipeConfirmPage.setSaveCallback(saveCallback);
+
+      //TODO: Add setRegenCallback call here, Add new register 
+      newRecipeConfirmPage.setRegenCallback(regenCallback);
 
       primaryStage.setScene(new Scene(newRecipeConfirmPage, WIDTH, HEIGHT));
     });

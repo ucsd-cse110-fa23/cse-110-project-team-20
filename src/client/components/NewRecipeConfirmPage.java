@@ -50,6 +50,8 @@ public class NewRecipeConfirmPage extends BorderPane {
         this.setBottom(footer);
     }
 
+    /* The following set the runnable instance of there respective button (used in Routes) */
+    
     public void setCancelCallback(Runnable r) 
     {
         this.footer.setOnCancel(r);
@@ -60,7 +62,10 @@ public class NewRecipeConfirmPage extends BorderPane {
         this.footer.setOnSave(r);
     }
 
-
+    public void setRegenCallback(Runnable r)
+    {
+        this.footer.setOnRegen(r);
+    }
 }
 
 class Footer extends HBox {

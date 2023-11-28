@@ -78,6 +78,25 @@ public class JavaFXViewTransitioner implements IViewTransitioner {
     return this;
   }
 
+  // TODO: Added
+   /**
+   * Register a class with given runnerable. The transitioner will call the runnerable when
+   * transitionTo is called with appropriate class name.
+   *
+   * @param <T1>
+   * @param <T2>
+   * @param <T3>
+   * @param <T4>
+   * @param c
+   * @param t3
+   * @return
+   */
+  public <T1, T2, T3, T4> JavaFXViewTransitioner register(Class<?> c, IViewTransitionWithParameter4<T1, T2, T3, T4> t4) {
+    transitions.put(key(c, 4), t4);
+    System.out.println(key(c, 4));
+    return this;
+  }
+
   public void transitionTo(Class<?> c) {
     IViewTransitionWithParameter a = transitions.get(key(c, 0));
     if (a instanceof IViewTransitionWithParameter0) {
@@ -119,5 +138,18 @@ public class JavaFXViewTransitioner implements IViewTransitioner {
       return;
     }
     throw new ViewTransitionException(String.format("%s is not registered", key(c, 3)));
+  }
+
+  // TODO: Added
+
+  public <T1, T2, T3, T4> void transitionTo(Class<?> c, T1 t1, T2 t2, T3 t3, T4 t4) {
+    IViewTransitionWithParameter a = transitions.get(key(c, 4));
+    if (a instanceof IViewTransitionWithParameter4) {
+      @SuppressWarnings("unchecked")
+      IViewTransitionWithParameter4<T1, T2, T3, T4> runner = (IViewTransitionWithParameter4<T1, T2, T3, T4>) a;
+      Platform.runLater(() -> runner.run(t1, t2, t3, t4));
+      return;
+    }
+    throw new ViewTransitionException(String.format("%s is not registered", key(c, 4)));
   }
 }
