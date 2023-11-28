@@ -98,10 +98,18 @@ public class MongoDBRecipeRepository implements IRecipeRepository {
                     .skip(id)
                     .first();
 
-            recipeDoc.append("title", recipe.getTitle());
-            recipeDoc.append("description", recipe.getDescription());
-            recipeDoc.append("ingredients", recipe.getIngredients());
-            recipeDoc.append("meal_type", recipe.getMealType());
+            if (recipe.getTitle() != null) {
+                recipeDoc.append("title", recipe.getTitle());
+            }
+            if (recipe.getDescription() != null) {
+                recipeDoc.append("description", recipe.getDescription());
+            }
+            if (recipe.getIngredients() != null) {
+                recipeDoc.append("ingredients", recipe.getIngredients());
+            }
+            if (recipe.getMealType() != null) {
+                recipeDoc.append("meal_type", recipe.getMealType());
+            }
 
             recipeCollection.updateOne(eq("_id", recipeDoc.get("_id")), new Document("$set", recipeDoc));
         }
