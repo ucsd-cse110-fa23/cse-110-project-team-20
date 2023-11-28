@@ -2,6 +2,7 @@ package client;
 
 import client.components.LoadingPage;
 import client.components.LoginPage;
+import client.components.ErrorMessage;
 import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.NewRecipeConfirmPage;
@@ -140,6 +141,16 @@ public class Routes {
       primaryStage.setTitle("PantryPal");
       primaryStage.setScene(new Scene(errorPage, WIDTH, HEIGHT));
       primaryStage.show();
+    });
+
+    /**
+     * Error Message
+     * 
+     * Show any simple error message
+     */
+    routes.register(ErrorMessage.class, (String message) -> {
+      // error message will be appeared without assigning any stage
+      new ErrorMessage(message);
     });
 
     return routes;

@@ -1,6 +1,8 @@
 package client;
 
 import client.recipe.IRecipeGenerator;
+import client.account.IAccountManager;
+import client.account.ServerAccountManager;
 import client.audio.AudioRecorder;
 import client.audio.IAudioRecorder;
 import client.models.ServerRecipeModel;
@@ -29,8 +31,9 @@ public class PantryPalApp extends Application {
         IRecipeGenerator recipeGenerator = new ServerRecipeGenerator();
         IAudioRecorder audioRecorder = new AudioRecorder();
         IRecipeModel recipeModel = new ServerRecipeModel();
+        IAccountManager accountManager = new ServerAccountManager();
 
-        Controller controller = new Controller(transitioner, recipeGenerator, audioRecorder, recipeModel);
+        Controller controller = new Controller(transitioner, recipeGenerator, audioRecorder, recipeModel, accountManager);
 
         transitioner
             .add(Routes.getRoutes(primaryStage, controller))
