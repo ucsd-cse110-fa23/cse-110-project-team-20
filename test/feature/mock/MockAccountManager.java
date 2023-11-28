@@ -20,7 +20,7 @@ public class MockAccountManager implements IAccountManager {
         incorrectPassword = "Incorrect Password";
     }
 
-    public void expectToThrowsloginFailed(String message) {
+    public void expectToThrowsLoginFailed(String message) {
         loginFailed = message;
     }
 
