@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import client.account.IAccountManager;
+import client.account.IAccountSession;
 import feature.mock.MockAudioRecorder;
 import feature.mock.MockGenerateRecipe;
 import feature.mock.MockRecipeModel;
@@ -25,12 +26,22 @@ public class ControllerTest {
         return "some mock token";
       }
     };
+    IAccountSession mockSession = new IAccountSession() {
+      @Override
+      public void setToken(String token) {
+      }
+  
+      @Override
+      public String getToken() {
+        return "some token";
+      }
+    };
 
     recipeModel.recipes.add(new Recipe("Chicken with carrot", "Chicken with carrot recipe instruction."));
     recipeModel.recipes.add(new Recipe("Chicken with broccoli", "Chicken with broccoli recipe instruction."));
     recipeModel.recipes.add(new Recipe("Chicken with chocolete", "Chicken with chocolete recipe instruction."));
 
-    Controller controller = new Controller(viewTransitioner, generateRecipe, audioRecorder, recipeModel, mockAccountManager);
+    Controller controller = new Controller(viewTransitioner, generateRecipe, audioRecorder, recipeModel, mockAccountManager, mockSession);
 
     controller.deleteRecipeClicked(1);
 

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import client.Recipe;
+import client.account.IAccountSession;
 import client.mock.MockHttpServer;
 
 import java.io.IOException;
@@ -15,6 +16,16 @@ import java.util.List;
 
 public class ServerRecipeModelTest {
   private MockHttpServer server;
+  IAccountSession mockSession = new IAccountSession() {
+    @Override
+    public void setToken(String token) {
+    }
+
+    @Override
+    public String getToken() {
+      return "some token";
+    }
+  };
 
   @AfterEach
   public void tearDownServer() {
@@ -26,7 +37,7 @@ public class ServerRecipeModelTest {
 
   @Test
   public void instnace() {
-    ServerRecipeModel model = new ServerRecipeModel();
+    ServerRecipeModel model = new ServerRecipeModel(mockSession);
     assertInstanceOf(ServerRecipeModel.class, model);
   }
 
@@ -34,7 +45,7 @@ public class ServerRecipeModelTest {
   public void getRecipes() throws IOException {
     String mockedResponse = "{\"recipes\":[{\"meal_type\":\"meal_type_C\",\"description\":\"desc_C\",\"ingredients\":\"ingredients_C\",\"title\":\"title_C\"},{\"meal_type\":\"meal_type_B\",\"description\":\"desc_B\",\"ingredients\":\"ingredients_B\",\"title\":\"title_B\"},{\"meal_type\":\"meal_type_A\",\"description\":\"desc_A\",\"ingredients\":\"ingredients_A\",\"title\":\"title_A\"}]}";
     server = new MockHttpServer("/recipe", mockedResponse);
-    ServerRecipeModel model = new ServerRecipeModel("http://localhost:3100");
+    ServerRecipeModel model = new ServerRecipeModel(mockSession, "http://localhost:3100");
 
     server.start(3100);
 
@@ -47,7 +58,7 @@ public class ServerRecipeModelTest {
   public void getRecipe() throws IOException {
     String mockedResponse = "{\"meal_type\":\"meal_type_C\",\"description\":\"desc_C\",\"ingredients\":\"ingredients_C\",\"title\":\"title_C\"}";
     server = new MockHttpServer("/recipe", mockedResponse);
-    ServerRecipeModel model = new ServerRecipeModel("http://localhost:3101");
+    ServerRecipeModel model = new ServerRecipeModel(mockSession, "http://localhost:3101");
 
     server.start(3101);
 
@@ -59,7 +70,7 @@ public class ServerRecipeModelTest {
   @Test
   public void createRecipe() throws IOException {
     server = new MockHttpServer("/recipe", null);
-    ServerRecipeModel model = new ServerRecipeModel("http://localhost:3102");
+    ServerRecipeModel model = new ServerRecipeModel(mockSession, "http://localhost:3102");
 
     server.start(3102);
 
@@ -75,7 +86,7 @@ public class ServerRecipeModelTest {
   @Test
   public void updateRecipe() throws IOException {
     server = new MockHttpServer("/recipe", null);
-    ServerRecipeModel model = new ServerRecipeModel("http://localhost:3103");
+    ServerRecipeModel model = new ServerRecipeModel(mockSession, "http://localhost:3103");
 
     server.start(3103);
 
@@ -92,7 +103,7 @@ public class ServerRecipeModelTest {
   @Test
   public void deleteRecipe() throws IOException {
     server = new MockHttpServer("/recipe", null);
-    ServerRecipeModel model = new ServerRecipeModel("http://localhost:3104");
+    ServerRecipeModel model = new ServerRecipeModel(mockSession, "http://localhost:3104");
     server.start(3104);
 
     model.deleteRecipe(2);

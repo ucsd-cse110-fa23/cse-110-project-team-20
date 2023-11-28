@@ -2,14 +2,19 @@ package server;
 
 import com.sun.net.httpserver.*;
 
+import server.account.AccountContext;
+import server.account.IAccountContext;
 import server.account.IAccountService;
 import server.account.LocalAccountService;
+import server.account.LocalBasicAuthenticator;
 import server.api.ChatGPTService;
 import server.api.ITextGenerateService;
 import server.api.IVoiceToTextService;
 import server.api.LocalTextGenerateService;
 import server.api.LocalVoiceToTextService;
 import server.api.WhisperService;
+import server.mongodb.MongoDBBasicAuthenticator;
+import server.mongodb.MongoDBRecipeRepository;
 import server.mongodb.MongoDBAccountService;
 import server.recipe.IRecipeRepository;
 import server.recipe.JSONRecipeRepository;
@@ -32,6 +37,8 @@ public class PantryPalServer {
 
         ServerConfiguration configuration = new ServerConfiguration();
 
+        IAccountContext accountContext = new AccountContext();
+
         ITextGenerateService textGenerateService;
         IVoiceToTextService voiceToTextService;
 
@@ -48,22 +55,26 @@ public class PantryPalServer {
 
         IRecipeRepository recipeRepository;
         IAccountService accountService;
+        Authenticator authenticator;
 
         if (configuration.getConnectionString() == null || configuration.getConnectionString().equals("")) {
             System.out.println("[db:INFO] Couldn't find mongodb connection string in app.properties file. The server will use database.json file as storage.");
             recipeRepository = new JSONRecipeRepository("database.json");
             accountService = new LocalAccountService();
+            authenticator = new LocalBasicAuthenticator();
         } else {
             System.out.println("[db:INFO] The server is running with a mongodb instance.");
 
-            // @TODO need to add MongoDB version of IRecipeRepository and replace this line
-            recipeRepository = new JSONRecipeRepository("database.json");
+            recipeRepository = new MongoDBRecipeRepository(configuration, accountContext);
             accountService = new MongoDBAccountService(configuration);
+            authenticator = new MongoDBBasicAuthenticator(configuration, accountContext);
         }
 
         server.createContext("/", new IndexHttpHandler());
-        server.createContext("/recipe", new RecipeHttpHandler(recipeRepository));
-        server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService));
+        server.createContext("/recipe", new RecipeHttpHandler(recipeRepository))
+            .setAuthenticator(authenticator);
+        server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService))
+            .setAuthenticator(authenticator);
         server.createContext("/account/login-or-create", new AccountHttpHandler(accountService));
 
         server.setExecutor(threadPoolExecutor);

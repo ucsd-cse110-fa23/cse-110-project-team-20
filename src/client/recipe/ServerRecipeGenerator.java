@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import client.Recipe;
+import client.account.IAccountSession;
 
 /*
  * Server recipe generator
@@ -22,13 +23,15 @@ import client.Recipe;
 public class ServerRecipeGenerator implements IRecipeGenerator {
   private String path = "/recipe/generate";
   private String API_ENDPOINT;
+  private IAccountSession session;
 
-  public ServerRecipeGenerator() {
-    this("http://localhost:8100");
+  public ServerRecipeGenerator(IAccountSession session) {
+    this(session, "http://localhost:8100");
   }
 
-  public ServerRecipeGenerator(String baseUrl) {
+  public ServerRecipeGenerator(IAccountSession session, String baseUrl) {
     API_ENDPOINT = String.format("%s%s", baseUrl, path);
+    this.session = session;
   }
 
   @Override
@@ -69,6 +72,7 @@ public class ServerRecipeGenerator implements IRecipeGenerator {
     // Set up HTTP connection
     URL url = new URI(API_ENDPOINT).toURL();
     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    connection.setRequestProperty("Authorization", session.getToken());
     connection.setRequestMethod("POST");
     connection.setDoOutput(true);
 

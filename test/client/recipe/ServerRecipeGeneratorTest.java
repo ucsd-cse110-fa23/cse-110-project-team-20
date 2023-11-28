@@ -12,10 +12,21 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import client.Recipe;
+import client.account.IAccountSession;
 import client.mock.MockHttpServer;
 
 public class ServerRecipeGeneratorTest {
   MockHttpServer server = null;
+  IAccountSession mockSession = new IAccountSession() {
+    @Override
+    public void setToken(String token) {
+    }
+
+    @Override
+    public String getToken() {
+      return "some token";
+    }
+  };
 
   @AfterEach
   public void tearDownServer() {
@@ -32,7 +43,7 @@ public class ServerRecipeGeneratorTest {
     server = new MockHttpServer("/recipe/generate", mockRecipeResponse);
 
     CompletableFuture<Recipe> future = new CompletableFuture<>();
-    ServerRecipeGenerator generator = new ServerRecipeGenerator("http://localhost:4100");
+    ServerRecipeGenerator generator = new ServerRecipeGenerator(mockSession, "http://localhost:4100");
 
     server.start(4100);
 
@@ -62,7 +73,7 @@ public class ServerRecipeGeneratorTest {
   public void generateRecipeWithMissingIngredientsFile() throws InterruptedException, ExecutionException
   {
     CompletableFuture<String> future = new CompletableFuture<>();
-    ServerRecipeGenerator generator = new ServerRecipeGenerator();
+    ServerRecipeGenerator generator = new ServerRecipeGenerator(mockSession);
 
     RecipeRequestParameter params = new RecipeRequestParameter(new File("test/resources/silence.mp3"), new File("not-exist-flie.mp3"));
 
@@ -83,7 +94,7 @@ public class ServerRecipeGeneratorTest {
   public void generateRecipeWithMissingMealTypeFile() throws InterruptedException, ExecutionException
   {
     CompletableFuture<String> future = new CompletableFuture<>();
-    ServerRecipeGenerator generator = new ServerRecipeGenerator();
+    ServerRecipeGenerator generator = new ServerRecipeGenerator(mockSession);
 
     RecipeRequestParameter params = new RecipeRequestParameter(new File("not-exist-file.mp3"), new File("test/resources/silence.mp3"));
 
