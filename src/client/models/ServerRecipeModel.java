@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URI;
 import java.util.ArrayList;
 import client.Recipe;
+import client.account.IAccountSession;
 
 
 /*
@@ -25,13 +26,15 @@ public class ServerRecipeModel implements IRecipeModel {
 
   private String path = "/recipe";
   private String URL;
+  private IAccountSession session;
 
-  public ServerRecipeModel() {
-    this("http://localhost:8100");
+  public ServerRecipeModel(IAccountSession session) {
+    this(session, "http://localhost:8100");
   }
 
-  public ServerRecipeModel(String baseUrl) {
+  public ServerRecipeModel(IAccountSession session, String baseUrl) {
     URL = String.format("%s%s", baseUrl, path);
+    this.session = session;
   }
 
   @Override
@@ -100,6 +103,7 @@ public class ServerRecipeModel implements IRecipeModel {
 
       URL url = new URI(urlString).toURL();
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestProperty("Authorization", session.getToken());
       conn.setRequestMethod(method.getMethodName());
       conn.setDoOutput(true);
 

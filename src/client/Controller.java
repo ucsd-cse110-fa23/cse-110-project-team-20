@@ -1,6 +1,8 @@
 package client;
 
+import client.account.SimpleAccountSession;
 import client.account.IAccountManager;
+import client.account.IAccountSession;
 import client.account.IncorrectPassword;
 import client.account.LoginFailed;
 import client.audio.IAudioRecorder;
@@ -38,6 +40,7 @@ public class Controller {
     private IAudioRecorder audioRecorder;
     private IRecipeModel recipeModel;
     private IAccountManager accountManager;
+    private IAccountSession accountSession;
 
     /**
      * Controller glues all functions together.
@@ -46,19 +49,22 @@ public class Controller {
      * @param recipeGenerator
      * @param audioRecorder
      * @param accountManager
+     * @param accountSession
      */
     public Controller(
         IViewTransitioner viewTransitioner,
         IRecipeGenerator recipeGenerator,
         IAudioRecorder audioRecorder,
         IRecipeModel recipeModel,
-        IAccountManager accountManager) {
+        IAccountManager accountManager,
+        IAccountSession accountSession) {
 
         this.viewTransitioner = viewTransitioner;
         this.recipeGenerator = recipeGenerator;
         this.audioRecorder = audioRecorder;
         this.recipeModel = recipeModel;
         this.accountManager = accountManager;
+        this.accountSession = accountSession;
     }
 
     public void
@@ -74,7 +80,7 @@ public class Controller {
             try {
                 String token = accountManager.loginOrCreateAccount(username, password);
                 if (token != null) {
-                    // @TODO save token so that we can request anything after the login
+                    accountSession.setToken(token);
                 }
             } catch (IncorrectPassword e) {
                 viewTransitioner.transitionTo(ErrorMessage.class, e.getMessage());
@@ -90,7 +96,6 @@ public class Controller {
                 password,
                 stayLoggedIn ? ", stay logged in" : ""));
 
-            // @TODO adjust HomeScene transition with login process
             transitionToHomeScene();
         };
 

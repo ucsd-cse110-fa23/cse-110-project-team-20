@@ -2,7 +2,9 @@ package client;
 
 import client.recipe.IRecipeGenerator;
 import client.account.IAccountManager;
+import client.account.IAccountSession;
 import client.account.ServerAccountManager;
+import client.account.SimpleAccountSession;
 import client.audio.AudioRecorder;
 import client.audio.IAudioRecorder;
 import client.models.ServerRecipeModel;
@@ -28,12 +30,13 @@ public class PantryPalApp extends Application {
     {
         CompositeViewTransitioner transitioner = new CompositeViewTransitioner();
 
-        IRecipeGenerator recipeGenerator = new ServerRecipeGenerator();
+        IAccountSession accountSession = new SimpleAccountSession();
+        IRecipeGenerator recipeGenerator = new ServerRecipeGenerator(accountSession);
         IAudioRecorder audioRecorder = new AudioRecorder();
-        IRecipeModel recipeModel = new ServerRecipeModel();
+        IRecipeModel recipeModel = new ServerRecipeModel(accountSession);
         IAccountManager accountManager = new ServerAccountManager();
 
-        Controller controller = new Controller(transitioner, recipeGenerator, audioRecorder, recipeModel, accountManager);
+        Controller controller = new Controller(transitioner, recipeGenerator, audioRecorder, recipeModel, accountManager, accountSession);
 
         transitioner
             .add(Routes.getRoutes(primaryStage, controller))
