@@ -30,7 +30,7 @@ import client.components.RecordingPage;
  * - Scenario 6.2: User records ingredient list (UI interaction, I/O interaction)
  */
 
-public class UserStoryTest extends UserStoryTestBase {
+public class MS1UserStoryTest extends UserStoryTestBase {
   @Test
   public void scenario_1_2_listDoesNotHaveRecipeThatTheUserWants() {
     /**
