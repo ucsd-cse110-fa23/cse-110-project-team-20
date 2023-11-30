@@ -9,7 +9,7 @@ public class PrintConsoleViewTransitioner implements IViewTransitioner {
     private void
     info(String message, Object[] params)
     {
-        System.out.println(String.format("[Transition] %s", message) + params);
+        System.out.println(String.format("[Transition] %s (%d)", message, params.length));
     }
 
     @Override
