@@ -35,13 +35,21 @@ public class CachedRecipeModel implements IRecipeModel {
     return recipes;
   }
 
+  private void ensureLoadedOnce() {
+    if (! loadedOnce) {
+      getRecipes();
+    }
+  }
+
   @Override
   public Recipe getRecipe(int id) {
+    ensureLoadedOnce();
     return recipes.get(id);
   }
 
   @Override
   public void createRecipe(Recipe recipe) {
+    ensureLoadedOnce();
     new Thread(() -> {
       recipeModel.createRecipe(recipe);
     }).start();
@@ -51,6 +59,8 @@ public class CachedRecipeModel implements IRecipeModel {
 
   @Override
   public void updateRecipe(int id, Recipe recipe) {
+    ensureLoadedOnce();
+
     new Thread(() -> {
       recipeModel.updateRecipe(id, recipe);
     }).start();
@@ -67,6 +77,8 @@ public class CachedRecipeModel implements IRecipeModel {
 
   @Override
   public void deleteRecipe(int id) {
+    ensureLoadedOnce();
+
     new Thread(() -> {
       recipeModel.deleteRecipe(id);
     }).start();
