@@ -2,12 +2,11 @@ package feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
-
 import client.components.ErrorMessage;
 import client.components.HomePage;
 import client.utils.runnables.RunnableForLogin;
 import feature.mock.MockAccountManager;
+import org.junit.jupiter.api.Test;
 
 /**
  * MS2 UserStory test
@@ -22,15 +21,18 @@ import feature.mock.MockAccountManager;
 
 public class MS2UserStoryTest extends UserStoryTestBase {
     @Test
-    public void scenario_1_1_accountCreatedOrLoggedIn() {
+    public void
+    scenario_1_1_accountCreatedOrLoggedIn()
+    {
         // Scenario 1.1: Account created
         // Given the user is on the login page
         //   And the user has not created an account
-        //   And the user types in username “Hello” and password “World” combo -- handled in when stage
-        //   And account “Hello” doesn't exist
+        //   And the user types in username “Hello” and password “World” combo -- handled in when
+        //   stage And account “Hello” doesn't exist
         // When The user clicks “Log in or Create Account”
         // Then The user is directed to the home page
-        //   And An empty recipe list is shown -- assumed it is handled in home page already from MS1
+        //   And An empty recipe list is shown -- assumed it is handled in home page already from
+        //   MS1
         ((MockAccountManager) accountManager).setToken("expected token from the new account");
 
         GivenTheUserIsOnTheLoginPage();
@@ -39,25 +41,35 @@ public class MS2UserStoryTest extends UserStoryTestBase {
         ThenTheUserHasAValidToken();
     }
 
-    private void GivenTheUserIsOnTheLoginPage() {
+    private void
+    GivenTheUserIsOnTheLoginPage()
+    {
         controller.transitionToLoginScene();
     }
 
-    private void WhenTheUserClicksLoginOrCreateAccountButtonWith(String username, String password) {
-        RunnableForLogin runnable = (RunnableForLogin) viewTransitioner.rawParam1;
+    private void
+    WhenTheUserClicksLoginOrCreateAccountButtonWith(String username, String password)
+    {
+        RunnableForLogin runnable = (RunnableForLogin) viewTransitioner.params[0];
         runnable.run(username, password, false);
     }
 
-    private void ThenTheUserIsDirectedToTheHomePage() {
+    private void
+    ThenTheUserIsDirectedToTheHomePage()
+    {
         assertEquals(HomePage.class, viewTransitioner.currentPageClass);
     }
 
-    private void ThenTheUserHasAValidToken() {
+    private void
+    ThenTheUserHasAValidToken()
+    {
         assertEquals(accountSession.getToken(), "expected token from the new account");
     }
 
     @Test
-    public void scenario_1_3_loginWithInvalidCredentials() {
+    public void
+    scenario_1_3_loginWithInvalidCredentials()
+    {
         // Scenario 1.3: Login with invalid credentials
         // Given the user is on the login page
         //   And the user had created an account with the “Hello” username and “World” password
@@ -73,8 +85,10 @@ public class MS2UserStoryTest extends UserStoryTestBase {
         ThenTheUserShouldSeeIncorrectPasswordErrorMessage();
     }
 
-    private void ThenTheUserShouldSeeIncorrectPasswordErrorMessage() {
+    private void
+    ThenTheUserShouldSeeIncorrectPasswordErrorMessage()
+    {
         assertEquals(ErrorMessage.class, viewTransitioner.currentPageClass);
-        assertEquals("Incorrect Password", viewTransitioner.rawParam1);
+        assertEquals("Incorrect Password", viewTransitioner.params[0]);
     }
 }
