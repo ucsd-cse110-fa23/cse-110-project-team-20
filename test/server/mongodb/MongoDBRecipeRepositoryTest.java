@@ -3,20 +3,18 @@ package server.mongodb;
 import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.List;
+import client.Recipe;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import de.bwaldvogel.mongo.MongoServer;
+import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import java.util.Date;
-
+import java.util.List;
 import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-
-import client.Recipe;
-import de.bwaldvogel.mongo.MongoServer;
-import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import server.account.AccountContext;
 import server.account.IAccountContext;
 
@@ -29,18 +27,19 @@ public class MongoDBRecipeRepositoryTest {
     private IAccountContext accountContext;
 
     @BeforeEach
-    void setUp() {
+    void
+    setUp()
+    {
         server = new MongoServer(new MemoryBackend());
 
         String connectionString = server.bindAndGetConnectionString();
 
         client = MongoClients.create(connectionString);
-        collection = client.getDatabase("pantrypal")
-                .getCollection("recipes");
+        collection = client.getDatabase("pantrypal").getCollection("recipes");
 
         config = new IMongoDBConfiguration() {
-            @Override
-            public String getConnectionString() {
+            @Override public String getConnectionString()
+            {
                 return connectionString;
             }
         };
@@ -49,16 +48,21 @@ public class MongoDBRecipeRepositoryTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void
+    tearDown()
+    {
         client.close();
         server.shutdown();
     }
 
     @Test
-    public void createRecipe() {
+    public void
+    createRecipe()
+    {
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
-        repository.createRecipe(new Recipe("Tomato soup", "Some tomato soup description with steps"));
+        repository.createRecipe(
+            new Recipe("Tomato soup", "Some tomato soup description with steps"));
 
         Document actual = collection.find().first();
         assertEquals(1, collection.countDocuments());
@@ -68,30 +72,29 @@ public class MongoDBRecipeRepositoryTest {
     }
 
     @Test
-    public void readRecipes() {
-        collection
-                .insertOne(new Document()
-                        .append("username", "pantrypalguest")
-                        .append("title", "some title 1")
-                        .append("description", "some desc")
-                        .append("ingredients", "some ingredients")
-                        .append("meal_type", "some meal type"));
-        collection
-                .insertOne(new Document()
-                        .append("username", "some username")
-                        .append("title", "some title 0")
-                        .append("description", "some desc 0")
-                        .append("ingredients", "some ingredients 0")
-                        .append("meal_type", "some meal type 0")
-                        .append("created_at", new Date()));
-        collection
-                .insertOne(new Document()
-                        .append("username", "some username")
-                        .append("title", "some title 1")
-                        .append("description", "some desc 1")
-                        .append("ingredients", "some ingredients 1")
-                        .append("meal_type", "some meal type 1")
-                        .append("created_at", new Date()));
+    public void
+    readRecipes()
+    {
+        collection.insertOne(new Document()
+                                 .append("username", "pantrypalguest")
+                                 .append("title", "some title 1")
+                                 .append("description", "some desc")
+                                 .append("ingredients", "some ingredients")
+                                 .append("meal_type", "some meal type"));
+        collection.insertOne(new Document()
+                                 .append("username", "some username")
+                                 .append("title", "some title 0")
+                                 .append("description", "some desc 0")
+                                 .append("ingredients", "some ingredients 0")
+                                 .append("meal_type", "some meal type 0")
+                                 .append("created_at", new Date()));
+        collection.insertOne(new Document()
+                                 .append("username", "some username")
+                                 .append("title", "some title 1")
+                                 .append("description", "some desc 1")
+                                 .append("ingredients", "some ingredients 1")
+                                 .append("meal_type", "some meal type 1")
+                                 .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
@@ -110,30 +113,29 @@ public class MongoDBRecipeRepositoryTest {
     }
 
     @Test
-    public void readRecipe() {
-        collection
-                .insertOne(new Document()
-                        .append("username", "pantrypalguest")
-                        .append("title", "some title 1")
-                        .append("description", "some desc")
-                        .append("ingredients", "some ingredients")
-                        .append("meal_type", "some meal type"));
-        collection
-                .insertOne(new Document()
-                        .append("username", "some username")
-                        .append("title", "some title 0")
-                        .append("description", "some desc 0")
-                        .append("ingredients", "some ingredients 0")
-                        .append("meal_type", "some meal type 0")
-                        .append("created_at", new Date()));
-        collection
-                .insertOne(new Document()
-                        .append("username", "some username")
-                        .append("title", "some title 1")
-                        .append("description", "some desc 1")
-                        .append("ingredients", "some ingredients 1")
-                        .append("meal_type", "some meal type 1")
-                        .append("created_at", new Date()));
+    public void
+    readRecipe()
+    {
+        collection.insertOne(new Document()
+                                 .append("username", "pantrypalguest")
+                                 .append("title", "some title 2")
+                                 .append("description", "some desc")
+                                 .append("ingredients", "some ingredients")
+                                 .append("meal_type", "some meal type"));
+        collection.insertOne(new Document()
+                                 .append("username", "some username")
+                                 .append("title", "some title 0")
+                                 .append("description", "some desc 0")
+                                 .append("ingredients", "some ingredients 0")
+                                 .append("meal_type", "some meal type 0")
+                                 .append("created_at", new Date()));
+        collection.insertOne(new Document()
+                                 .append("username", "some username")
+                                 .append("title", "some title 3")
+                                 .append("description", "some desc 1")
+                                 .append("ingredients", "some ingredients 1")
+                                 .append("meal_type", "some meal type 1")
+                                 .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
@@ -146,30 +148,29 @@ public class MongoDBRecipeRepositoryTest {
     }
 
     @Test
-    public void deleteRecipe() {
-        collection
-                .insertOne(new Document()
-                        .append("username", "pantrypalguest")
-                        .append("title", "some title 1")
-                        .append("description", "some desc")
-                        .append("ingredients", "some ingredients")
-                        .append("meal_type", "some meal type"));
-        collection
-                .insertOne(new Document()
-                        .append("username", "some username")
-                        .append("title", "some title 0")
-                        .append("description", "some desc 0")
-                        .append("ingredients", "some ingredients 0")
-                        .append("meal_type", "some meal type 0")
-                        .append("created_at", new Date()));
-        collection
-                .insertOne(new Document()
-                        .append("username", "some username")
-                        .append("title", "some title 1")
-                        .append("description", "some desc 1")
-                        .append("ingredients", "some ingredients 1")
-                        .append("meal_type", "some meal type 1")
-                        .append("created_at", new Date()));
+    public void
+    deleteRecipe()
+    {
+        collection.insertOne(new Document()
+                                 .append("username", "pantrypalguest")
+                                 .append("title", "some title 1")
+                                 .append("description", "some desc")
+                                 .append("ingredients", "some ingredients")
+                                 .append("meal_type", "some meal type"));
+        collection.insertOne(new Document()
+                                 .append("username", "some username")
+                                 .append("title", "some title 0")
+                                 .append("description", "some desc 0")
+                                 .append("ingredients", "some ingredients 0")
+                                 .append("meal_type", "some meal type 0")
+                                 .append("created_at", new Date()));
+        collection.insertOne(new Document()
+                                 .append("username", "some username")
+                                 .append("title", "some title 1")
+                                 .append("description", "some desc 1")
+                                 .append("ingredients", "some ingredients 1")
+                                 .append("meal_type", "some meal type 1")
+                                 .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
@@ -180,30 +181,29 @@ public class MongoDBRecipeRepositoryTest {
     }
 
     @Test
-    public void updateRecipe() {
-        collection
-                .insertOne(new Document()
-                        .append("username", "pantrypalguest")
-                        .append("title", "some title 1")
-                        .append("description", "some desc")
-                        .append("ingredients", "some ingredients")
-                        .append("meal_type", "some meal type"));
-        collection
-                .insertOne(new Document()
-                        .append("username", "some username")
-                        .append("title", "some title 0")
-                        .append("description", "some desc 0")
-                        .append("ingredients", "some ingredients 0")
-                        .append("meal_type", "some meal type 0")
-                        .append("created_at", new Date()));
-        collection
-                .insertOne(new Document()
-                        .append("username", "some username")
-                        .append("title", "some title 1")
-                        .append("description", "some desc 1")
-                        .append("ingredients", "some ingredients 1")
-                        .append("meal_type", "some meal type 1")
-                        .append("created_at", new Date()));
+    public void
+    updateRecipe()
+    {
+        collection.insertOne(new Document()
+                                 .append("username", "pantrypalguest")
+                                 .append("title", "some title 1")
+                                 .append("description", "some desc")
+                                 .append("ingredients", "some ingredients")
+                                 .append("meal_type", "some meal type"));
+        collection.insertOne(new Document()
+                                 .append("username", "some username")
+                                 .append("title", "some title 0")
+                                 .append("description", "some desc 0")
+                                 .append("ingredients", "some ingredients 0")
+                                 .append("meal_type", "some meal type 0")
+                                 .append("created_at", new Date()));
+        collection.insertOne(new Document()
+                                 .append("username", "some username")
+                                 .append("title", "some title 1")
+                                 .append("description", "some desc 1")
+                                 .append("ingredients", "some ingredients 1")
+                                 .append("meal_type", "some meal type 1")
+                                 .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);

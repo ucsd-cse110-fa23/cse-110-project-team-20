@@ -96,7 +96,7 @@ public class MS1UserStoryTest extends UserStoryTestBase {
     ThenTheRecipeGenerationPromptWindowBecomesActive()
     {
         assertEquals(viewTransitioner.currentPageClass, RecordingPage.class);
-        assertEquals(viewTransitioner.params, "What ingredients do you have?");
+        assertEquals(viewTransitioner.params[0], "What ingredients do you have?");
     }
 
     @Test
@@ -136,7 +136,7 @@ public class MS1UserStoryTest extends UserStoryTestBase {
     ThenAWindowWithTheNewRecipeAlongWithAListOfInstructionsAndIngredientsBecomesActive()
     {
         assertEquals(viewTransitioner.currentPageClass, NewRecipeConfirmPage.class);
-        assertEquals(viewTransitioner.params, recipeStub.toString());
+        assertEquals(viewTransitioner.params[0].toString(), recipeStub.toString());
     }
 
     @Test
@@ -268,7 +268,7 @@ public class MS1UserStoryTest extends UserStoryTestBase {
     WhenBackButtonGetsClicked()
     {
         RecipeDetailsPageCallbacks supposeToCallbacks =
-            (RecipeDetailsPageCallbacks) viewTransitioner.params[0];
+            (RecipeDetailsPageCallbacks) viewTransitioner.params[1];
         supposeToCallbacks.getOnGoBackButtonClicked().run();
     }
 
@@ -326,7 +326,7 @@ public class MS1UserStoryTest extends UserStoryTestBase {
     WhenTheDeleteButtonIsPressed()
     {
         RecipeDetailsPageCallbacks supposeToCallbacks =
-            (RecipeDetailsPageCallbacks) viewTransitioner.params[0];
+            (RecipeDetailsPageCallbacks) viewTransitioner.params[1];
         supposeToCallbacks.getOnDeleteButtonClicked().run();
     }
 
@@ -379,7 +379,7 @@ public class MS1UserStoryTest extends UserStoryTestBase {
     WhenTheEditButtonIsPressed()
     {
         RecipeDetailsPageCallbacks supposeToCallbacks =
-            (RecipeDetailsPageCallbacks) viewTransitioner.params[0];
+            (RecipeDetailsPageCallbacks) viewTransitioner.params[1];
         supposeToCallbacks.getOnEditButtonClicked().run();
     }
 
@@ -417,7 +417,7 @@ public class MS1UserStoryTest extends UserStoryTestBase {
     {
         Recipe recipe = (Recipe) viewTransitioner.params[0];
         RecipeEditPageCallbacks supposeToCallbacks =
-            (RecipeEditPageCallbacks) viewTransitioner.params[0];
+            (RecipeEditPageCallbacks) viewTransitioner.params[1];
 
         String newDescription =
             recipe.getDescription().replace("Boil for 50 mins", "Fry for 30 mins");
@@ -453,7 +453,7 @@ public class MS1UserStoryTest extends UserStoryTestBase {
     WhenTheBackButtonIsPressedOnRecipeEditPage()
     {
         RecipeEditPageCallbacks supposeToCallbacks =
-            (RecipeEditPageCallbacks) viewTransitioner.params[0];
+            (RecipeEditPageCallbacks) viewTransitioner.params[1];
         supposeToCallbacks.getOnGoBackButtonClicked().run();
     }
 

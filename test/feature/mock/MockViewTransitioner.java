@@ -14,6 +14,6 @@ public class MockViewTransitioner implements IViewTransitioner {
     transitionTo(Class<?> c, Object[] params)
     {
         currentPageClass = c;
-        params = params;
+        this.params = params;
     }
 }
