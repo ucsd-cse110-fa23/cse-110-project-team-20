@@ -1,23 +1,21 @@
 package client;
 
-import client.account.SimpleAccountSession;
 import client.account.IAccountManager;
 import client.account.IAccountSession;
 import client.account.IncorrectPassword;
 import client.account.LoginFailed;
+import client.account.SimpleAccountSession;
 import client.audio.IAudioRecorder;
-import client.components.LoadingPage;
-import client.components.LoginPage;
 import client.components.ErrorMessage;
 import client.components.ErrorPage;
 import client.components.HomePage;
+import client.components.LoadingPage;
+import client.components.LoginPage;
 import client.components.NewRecipeConfirmPage;
 import client.components.RecipeDetailsPage;
 import client.components.RecipeDetailsPageCallbacks;
-
 import client.components.RecipeEditPage;
 import client.components.RecipeEditPageCallbacks;
-
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
 import client.models.IRecipeModel;
@@ -27,7 +25,6 @@ import client.utils.runnables.RunnableForLogin;
 import client.utils.runnables.RunnableWithId;
 import client.utils.runnables.RunnableWithRecipe;
 import client.utils.transitions.IViewTransitioner;
-
 import java.io.File;
 import java.util.List;
 
@@ -51,14 +48,10 @@ public class Controller {
      * @param accountManager
      * @param accountSession
      */
-    public Controller(
-        IViewTransitioner viewTransitioner,
-        IRecipeGenerator recipeGenerator,
-        IAudioRecorder audioRecorder,
-        IRecipeModel recipeModel,
-        IAccountManager accountManager,
-        IAccountSession accountSession) {
-
+    public Controller(IViewTransitioner viewTransitioner, IRecipeGenerator recipeGenerator,
+        IAudioRecorder audioRecorder, IRecipeModel recipeModel, IAccountManager accountManager,
+        IAccountSession accountSession)
+    {
         this.viewTransitioner = viewTransitioner;
         this.recipeGenerator = recipeGenerator;
         this.audioRecorder = audioRecorder;
@@ -76,7 +69,8 @@ public class Controller {
     public void
     transitionToLoginScene()
     {
-        RunnableForLogin onLogin = (String username, String password, boolean stayLoggedIn) -> {
+        RunnableForLogin onLogin = (String username, String password, boolean stayLoggedIn) ->
+        {
             try {
                 String token = accountManager.loginOrCreateAccount(username, password);
                 if (token != null) {
@@ -86,15 +80,14 @@ public class Controller {
                 viewTransitioner.transitionTo(ErrorMessage.class, e.getMessage());
                 return;
             } catch (LoginFailed e) {
-                viewTransitioner.transitionTo(ErrorMessage.class, "Login Failed: " + e.getMessage());
+                viewTransitioner.transitionTo(
+                    ErrorMessage.class, "Login Failed: " + e.getMessage());
                 return;
             }
 
             // @TODO remove this debug line
-            System.out.println(String.format("login button is clicked: %s, %s%s",
-                username,
-                password,
-                stayLoggedIn ? ", stay logged in" : ""));
+            System.out.println(String.format("login button is clicked: %s, %s%s", username,
+                password, stayLoggedIn ? ", stay logged in" : ""));
 
             transitionToHomeScene();
         };
@@ -106,30 +99,20 @@ public class Controller {
     transitionToMealTypeScene()
     {
         RecordingPageCallbacks callbacks = new RecordingPageCallbacks(
-            () -> mealTypeRecordingStarted(),
-            () -> mealTypeRecordingCompleted()
-        );
+            () -> mealTypeRecordingStarted(), () -> mealTypeRecordingCompleted());
 
-        viewTransitioner.transitionTo(
-            RecordingPage.class,
-            "What kind of meal do you want?\nLunch, Dinner, Snack etc.",
-            callbacks
-        );
+        viewTransitioner.transitionTo(RecordingPage.class,
+            "What kind of meal do you want?\nLunch, Dinner, Snack etc.", callbacks);
     }
 
     public void
     transitionToIngredientsScene()
     {
         RecordingPageCallbacks callbacks = new RecordingPageCallbacks(
-            () -> ingredientsRecordingStarted(),
-            () -> ingredientsRecordingCompleted()
-        );
+            () -> ingredientsRecordingStarted(), () -> ingredientsRecordingCompleted());
 
         viewTransitioner.transitionTo(
-            RecordingPage.class,
-            "What ingredients do you have?",
-            callbacks
-        );
+            RecordingPage.class, "What ingredients do you have?", callbacks);
     }
 
     public void
@@ -140,8 +123,7 @@ public class Controller {
             recipes = recipeModel.getRecipes();
         } catch (Exception e) {
             Runnable retryButtonCallback = () -> transitionToHomeScene();
-            viewTransitioner.transitionTo(
-                ErrorPage.class,
+            viewTransitioner.transitionTo(ErrorPage.class,
                 "The app cannot reach the server. Check the server is up and running.",
                 retryButtonCallback);
 
@@ -149,10 +131,11 @@ public class Controller {
         }
 
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
-
+        Runnable logoutButtonCallback = () -> logoutButtonClicked();
 
         RunnableWithId openRecipeDetailButtonCallback = (int id) -> openRecipeDetailPage(id);
-        viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback, openRecipeDetailButtonCallback);
+        viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback,
+            openRecipeDetailButtonCallback, logoutButtonCallback);
     }
 
     public void
@@ -166,12 +149,9 @@ public class Controller {
                 new RecipeRequestParameter(mealTypeFile, ingredientsFile);
 
             recipeGenerator.requestGeneratingRecipe(params,
-                (recipe) -> {
-                    transitionToNewRecipeConfirmPage(recipe);
-                },
-                (errorMessage) -> {
-                    transitionToHomeScene();
-                });
+                (recipe)
+                    -> { transitionToNewRecipeConfirmPage(recipe); },
+                (errorMessage) -> { transitionToHomeScene(); });
         }
     }
 
@@ -181,27 +161,25 @@ public class Controller {
         Recipe recipe = recipeModel.getRecipe(id);
         Runnable cancelCallback = () -> backToHomeScene();
 
-        //TODO: Added transition to edit
+        // TODO: Added transition to edit
         Runnable editCallback = () -> transitionToEditScene(id);
         Runnable deleteCallback = () -> deleteRecipeClicked(id);
 
-
-        RecipeDetailsPageCallbacks callbacks = new RecipeDetailsPageCallbacks(
-            cancelCallback,
-            editCallback,
-            deleteCallback
-        );
+        RecipeDetailsPageCallbacks callbacks =
+            new RecipeDetailsPageCallbacks(cancelCallback, editCallback, deleteCallback);
         viewTransitioner.transitionTo(RecipeDetailsPage.class, recipe, callbacks);
     }
 
-    //TODO: Add in edit page
+    // TODO: Add in edit page
     public void
-    transitionToEditScene(int id) {
-        //Add in elements
+    transitionToEditScene(int id)
+    {
+        // Add in elements
         Recipe recipe = recipeModel.getRecipe(id);
         Runnable cancelCallback = () -> openRecipeDetailPage(id);
         RunnableWithRecipe saveCallback = (Recipe recipe1) -> updateRecipeClicked(id, recipe1);
-        RecipeEditPageCallbacks callbacks = new RecipeEditPageCallbacks(cancelCallback, saveCallback);
+        RecipeEditPageCallbacks callbacks =
+            new RecipeEditPageCallbacks(cancelCallback, saveCallback);
         viewTransitioner.transitionTo(RecipeEditPage.class, recipe, callbacks);
     }
 
@@ -221,6 +199,12 @@ public class Controller {
     ingredientsRecordingStarted()
     {
         this.audioRecorder.startRecording(INGREDIENTS_AUDIO);
+    }
+
+    public void
+    logoutButtonClicked()
+    {
+        this.transitionToLoginScene();
     }
 
     public void
@@ -255,7 +239,8 @@ public class Controller {
     {
         Runnable saveCallback = () -> saveRecipeClicked(recipe);
         Runnable discardCallback = () -> discardGeneratedRecipeClicked();
-        viewTransitioner.transitionTo(NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback);
+        viewTransitioner.transitionTo(
+            NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback);
     }
 
     public void
@@ -271,9 +256,10 @@ public class Controller {
         this.transitionToHomeScene();
     }
 
-    //TODO: Added update functionality
-    public void 
-    updateRecipeClicked(int id, Recipe recipe) {
+    // TODO: Added update functionality
+    public void
+    updateRecipeClicked(int id, Recipe recipe)
+    {
         recipeModel.updateRecipe(id, recipe);
         openRecipeDetailPage(id);
     }
