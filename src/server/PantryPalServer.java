@@ -17,6 +17,7 @@ import server.mongodb.MongoDBBasicAuthenticator;
 import server.mongodb.MongoDBRecipeRepository;
 import server.mongodb.MongoDBAccountService;
 import server.recipe.IRecipeRepository;
+import server.recipe.ISharedRecipeRepository;
 import server.recipe.JSONRecipeRepository;
 
 import java.io.IOException;
@@ -54,18 +55,25 @@ public class PantryPalServer {
         }
 
         IRecipeRepository recipeRepository;
+        ISharedRecipeRepository sharedRecipeRepository;
         IAccountService accountService;
         Authenticator authenticator;
 
         if (configuration.getConnectionString() == null || configuration.getConnectionString().equals("")) {
             System.out.println("[db:INFO] Couldn't find mongodb connection string in app.properties file. The server will use database.json file as storage.");
-            recipeRepository = new JSONRecipeRepository("database.json");
+            JSONRecipeRepository jsonRepository = new JSONRecipeRepository("database.json");
+            recipeRepository = jsonRepository;
+            sharedRecipeRepository = jsonRepository;
+
             accountService = new LocalAccountService();
             authenticator = new LocalBasicAuthenticator();
         } else {
             System.out.println("[db:INFO] The server is running with a mongodb instance.");
 
-            recipeRepository = new MongoDBRecipeRepository(configuration, accountContext);
+            MongoDBRecipeRepository mongoRepository = new MongoDBRecipeRepository(configuration, accountContext);
+            recipeRepository = mongoRepository;
+            sharedRecipeRepository = mongoRepository;
+
             accountService = new MongoDBAccountService(configuration);
             authenticator = new MongoDBBasicAuthenticator(configuration, accountContext);
         }
@@ -75,7 +83,11 @@ public class PantryPalServer {
             .setAuthenticator(authenticator);
         server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService))
             .setAuthenticator(authenticator);
+        server.createContext("/recipe/share", new RecipeMarkAsShareHttpHandler(sharedRecipeRepository))
+            .setAuthenticator(authenticator);
         server.createContext("/account/login-or-create", new AccountHttpHandler(accountService));
+
+        server.createContext("/recipe/shared", new SharedRecipeHttpHandler(sharedRecipeRepository));
 
         server.setExecutor(threadPoolExecutor);
         server.start();
