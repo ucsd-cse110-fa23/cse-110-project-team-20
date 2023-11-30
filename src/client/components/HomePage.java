@@ -3,6 +3,7 @@ package client.components;
 import client.Recipe;
 import client.utils.runnables.RunnableWithId;
 import java.util.List;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -67,6 +68,7 @@ class Header extends BorderPane {
         setRight(createButton);
 
         setAlignment(appName, Pos.CENTER_LEFT);
+        setAlignment(logoutButton, Pos.CENTER_RIGHT);
     }
 
     public void
