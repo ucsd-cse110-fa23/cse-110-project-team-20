@@ -1,6 +1,7 @@
 package client.components;
 
 import client.utils.runnables.RunnableForLogin;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -22,6 +23,7 @@ public class LoginPage extends BorderPane {
     private TextField usernameField;
     private PasswordField passwordField;
     private CheckBox stayLoggedInCheckBox;
+    private Button button;
     private RunnableForLogin loginCallback;
 
     public LoginPage(RunnableForLogin loginCallback) {
@@ -36,7 +38,6 @@ public class LoginPage extends BorderPane {
         // App name label on top
         Label label = new Label("PantryPal");
         label.getStyleClass().add("app-name");
-
 
         // Login form: labels and fields for username, password, and stay logged in checkbox
         Label usernameLabel = new Label("Username:");
@@ -62,7 +63,7 @@ public class LoginPage extends BorderPane {
         box.getStyleClass().add("login-form");
 
         // button for login or create account
-        Button button = new Button("Log In\nor\nCreate Account");
+        button = new Button("Log In\nor\nCreate Account");
         button.getStyleClass().add("login-button");
         button.setOnAction(e -> {
             onLoginButtonClicked();
@@ -78,7 +79,8 @@ public class LoginPage extends BorderPane {
     }
 
     private void onLoginButtonClicked() {
-        // when the button is clicked, username and password fields will be checked if it is empty or not.
+        // when the button is clicked, username and password fields will be checked if
+        // it is empty or not.
         // then, call loginCallback when the form validation passes.
 
         if (usernameField.getText().isEmpty()) {
@@ -93,10 +95,28 @@ public class LoginPage extends BorderPane {
             return;
         }
 
-        loginCallback.run(
-                usernameField.getText(),
-                passwordField.getText(),
-                stayLoggedInCheckBox.isSelected());
+        new Thread(() -> {
+            loginCallback.run(
+                    usernameField.getText(),
+                    passwordField.getText(),
+                    stayLoggedInCheckBox.isSelected(),
+                    () -> onLoaded());
+        }).start();
+
+        setDisableOnForm(true);
+    }
+
+    private void setDisableOnForm(boolean value) {
+        Platform.runLater(() -> {
+            usernameField.setDisable(value);
+            passwordField.setDisable(value);
+            stayLoggedInCheckBox.setDisable(value);
+            button.setDisable(value);
+        });
+    }
+
+    private void onLoaded() {
+        setDisableOnForm(false);
     }
 
     /**
