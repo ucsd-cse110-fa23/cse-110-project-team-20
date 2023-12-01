@@ -62,9 +62,8 @@ public class Routes {
             List<Recipe> recipes = (List<Recipe>) params[0];
             Runnable createButtonCallback = (Runnable) params[1];
             RunnableWithId openRecipeDetailButtonCallback = (RunnableWithId) params[2];
-            Runnable logoutButtonCallback = (Runnable) params[3];
-            HomePage homePage = new HomePage(recipes, createButtonCallback,
-                openRecipeDetailButtonCallback, logoutButtonCallback);
+            HomePage homePage =
+                new HomePage(recipes, createButtonCallback, openRecipeDetailButtonCallback);
 
             primaryStage.setScene(new Scene(homePage, WIDTH, HEIGHT));
         });

@@ -131,11 +131,10 @@ public class Controller {
         }
 
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
-        Runnable logoutButtonCallback = () -> logoutButtonClicked();
 
         RunnableWithId openRecipeDetailButtonCallback = (int id) -> openRecipeDetailPage(id);
-        viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback,
-            openRecipeDetailButtonCallback, logoutButtonCallback);
+        viewTransitioner.transitionTo(
+            HomePage.class, recipes, createButtonCallback, openRecipeDetailButtonCallback);
     }
 
     public void
@@ -199,12 +198,6 @@ public class Controller {
     ingredientsRecordingStarted()
     {
         this.audioRecorder.startRecording(INGREDIENTS_AUDIO);
-    }
-
-    public void
-    logoutButtonClicked()
-    {
-        this.transitionToLoginScene();
     }
 
     public void
