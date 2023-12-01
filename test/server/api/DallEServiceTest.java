@@ -1,6 +1,6 @@
 package server.api;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
 
@@ -15,7 +15,7 @@ public class DallEServiceTest {
   public void imageGeneration() {
     // this will invoke actual image generation so it is disabled
     DallEService service = new DallEService(new ServerConfiguration());
-    File file = service.createImage(() -> "A monkey eating a banana");
-    assertTrue(file.exists());
+    String imageUrl = service.createImage(() -> "A monkey eating a banana");
+    assertFalse(imageUrl.isEmpty());
   }
 }

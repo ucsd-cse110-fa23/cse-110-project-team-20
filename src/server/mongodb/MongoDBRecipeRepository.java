@@ -1,7 +1,6 @@
 package server.mongodb;
 
 import org.bson.Document;
-import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.bson.conversions.Bson;
 
@@ -12,10 +11,6 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.FindIterable;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -91,17 +86,6 @@ public class MongoDBRecipeRepository implements IRecipeRepository, ISharedRecipe
             recipeDoc.append("_id", new ObjectId());
             recipeDoc.append("username", accountContext.getUsername());
             recipeDoc.append("created_at", new Date());
-
-            // @TODO store image on the server?
-            // try {
-            //     String filename = new File(recipe.getImageUrl().split("file=")[1]).getName();
-            //     File file = new File("build/tmp", filename).getCanonicalFile();
-            //     FileInputStream fis = new FileInputStream(file);
-            //     recipeDoc.append("image", new Binary(fis.readAllBytes()));
-            //     fis.close();
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
 
             recipeCollection.insertOne(recipeDoc);
         }

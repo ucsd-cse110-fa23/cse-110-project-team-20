@@ -27,7 +27,7 @@ public class DallEService implements ITextToImageService {
   }
 
   @Override
-  public File createImage(IRecipeQuery query) throws TextToImageServiceException {
+  public String createImage(IRecipeQuery query) throws TextToImageServiceException {
     JSONObject response;
     try {
       response = request(query.toQueryableString());
@@ -54,7 +54,7 @@ public class DallEService implements ITextToImageService {
       throw new TextToImageServiceException(e);
     }
 
-    return file;
+    return file.getName();
   }
 
   private JSONObject request(String prompt) throws IOException, InterruptedException {

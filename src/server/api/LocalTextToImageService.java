@@ -2,9 +2,7 @@ package server.api;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.util.Base64;
 
 /**
  * Local text to image service impl
@@ -13,17 +11,16 @@ import java.util.UUID;
  */
 public class LocalTextToImageService implements ITextToImageService {
   @Override
-  public File createImage(IRecipeQuery query) throws TextToImageServiceException {
+  public String createImage(IRecipeQuery query) throws TextToImageServiceException {
+    File file = new File("test/resources/tomato.jpg");
+    String result = null;
     try {
-      File file = new File("test/resources/tomato.jpg");
       FileInputStream in = new FileInputStream(file);
-      String path = "build/tmp/image-" + UUID.randomUUID().toString() + ".jpg";
-      Files.copy(in, Paths.get(path));
-      file = new File(path);
-      return file;
+      result = Base64.getEncoder().encodeToString(in.readAllBytes());
     } catch (Exception e) {
       e.printStackTrace();
       throw new TextToImageServiceException(e);
     }
+    return "data:image/jpg;base64," + result;
   }
 }

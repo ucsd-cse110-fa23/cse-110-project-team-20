@@ -19,7 +19,6 @@ import server.api.WhisperService;
 import server.mongodb.MongoDBBasicAuthenticator;
 import server.mongodb.MongoDBRecipeRepository;
 import server.mongodb.MongoDBAccountService;
-import server.recipe.IRecipeImageUrlConfiguration;
 import server.recipe.IRecipeRepository;
 import server.recipe.JSONRecipeRepository;
 
@@ -46,7 +45,6 @@ public class PantryPalServer {
         ITextGenerateService textGenerateService;
         IVoiceToTextService voiceToTextService;
         ITextToImageService textToImageService;
-        IRecipeImageUrlConfiguration imageUrlConfig = () -> "http://localhost:8100/recipe/image/?file=";
 
         if (configuration.apiKey() == null || configuration.apiKey().equals("")) {
             System.out.println(
@@ -81,9 +79,8 @@ public class PantryPalServer {
         server.createContext("/", new IndexHttpHandler());
         server.createContext("/recipe", new RecipeHttpHandler(recipeRepository))
             .setAuthenticator(authenticator);
-        server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService, imageUrlConfig))
+        server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService))
             .setAuthenticator(authenticator);
-        server.createContext("/recipe/image", new RecipeImageFileHttpHandler());
         server.createContext("/account/login-or-create", new AccountHttpHandler(accountService));
 
         server.setExecutor(threadPoolExecutor);
