@@ -2,8 +2,8 @@ package client.components;
 
 import client.Recipe;
 import client.utils.runnables.RunnableWithId;
-
 import java.util.List;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,10 +22,10 @@ public class HomePage extends BorderPane {
     private Header header;
     private RecipeList recipeList;
 
-    public HomePage(List<Recipe> recipes, Runnable createButtonCallback, RunnableWithId openRecipeDetailButtonCallback) {
-        getStylesheets().add(getClass().getResource(
-            "style.css"
-        ).toExternalForm());
+    public HomePage(List<Recipe> recipes, Runnable createButtonCallback,
+        RunnableWithId openRecipeDetailButtonCallback)
+    {
+        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         header = new Header();
         header.setCreateButtonCallback(createButtonCallback);
@@ -47,7 +47,8 @@ class Header extends BorderPane {
     private Label appName;
     private Button createButton;
 
-    public Header() {
+    public Header()
+    {
         createButton = new Button("\uff0b"); // unicode version of plus sign
         createButton.getStyleClass().add("create-button");
         createButton.setAlignment(Pos.CENTER);
@@ -62,13 +63,16 @@ class Header extends BorderPane {
         setAlignment(appName, Pos.CENTER_LEFT);
     }
 
-    public void setCreateButtonCallback(Runnable r) {
+    public void
+    setCreateButtonCallback(Runnable r)
+    {
         this.createButton.setOnAction(e -> r.run());
     }
 }
 
 class RecipeBox extends HBox {
-    public RecipeBox(Recipe recipe) {
+    public RecipeBox(Recipe recipe)
+    {
         VBox recipeDetails = new VBox(10);
 
         Label titleLabel = new Label(recipe.getTitle());
@@ -82,7 +86,8 @@ class RecipeBox extends HBox {
 }
 
 class RecipeList extends VBox {
-    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback) {
+    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback)
+    {
         this.setSpacing(10); // sets spacing between contacts
         this.setPrefSize(500, 460);
         getStyleClass().add("recipe-list");
