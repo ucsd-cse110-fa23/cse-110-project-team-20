@@ -76,12 +76,26 @@ public class ServerRecipeModel implements IRecipeModel {
     performRequest(RequestMethod.DELETE, id);
   }
 
+  @Override
+  public void shareRecipe(int id) {
+    performRequest("/share", RequestMethod.POST, id, null);
+  }
+
+  @Override
+  public void shareRecipe(int id, Runnable onComplete) {
+    shareRecipe(id);
+  }
+
   private JSONObject performRequest(RequestMethod method) {
     return performRequest(method, null, null);
   }
 
   private JSONObject performRequest(RequestMethod method, Integer id) {
     return performRequest(method, id, null);
+  }
+
+  private JSONObject performRequest(RequestMethod method, Integer id, String body) {
+    return performRequest("", method, id, body);
   }
 
   /**
@@ -92,8 +106,13 @@ public class ServerRecipeModel implements IRecipeModel {
    * @param body
    * @return
    */
-  private JSONObject performRequest(RequestMethod method, Integer id, String body) {
+  private JSONObject performRequest(String resourceUrl, RequestMethod method, Integer id, String body) {
     String urlString = URL;
+
+    if (resourceUrl != null) {
+      urlString += resourceUrl;
+    }
+
     String response = "{\"error\": \"Could not perform request\"}";
 
     try {
@@ -107,7 +126,7 @@ public class ServerRecipeModel implements IRecipeModel {
       conn.setRequestMethod(method.getMethodName());
       conn.setDoOutput(true);
 
-      if (method == RequestMethod.POST || method == RequestMethod.PUT) {
+      if ((method == RequestMethod.POST || method == RequestMethod.PUT) && body != null) {
         OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
         out.write(body);
         out.flush();

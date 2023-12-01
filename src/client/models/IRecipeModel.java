@@ -15,4 +15,7 @@ public interface IRecipeModel {
   public void createRecipe(Recipe recipe);
   public void updateRecipe(int id, Recipe recipe);
   public void deleteRecipe(int id);
+
+  public void shareRecipe(int id);
+  public void shareRecipe(int id, Runnable onComplete);
 }

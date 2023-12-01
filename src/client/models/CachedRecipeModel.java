@@ -85,4 +85,22 @@ public class CachedRecipeModel implements IRecipeModel {
 
     recipes.remove(id);
   }
+
+
+  @Override
+  public void shareRecipe(int id) {
+    shareRecipe(id, () -> {});
+  }
+
+  @Override
+  public void shareRecipe(int id, Runnable onComplete) {
+    new Thread(() -> {
+      recipeModel.shareRecipe(id);
+
+      loadedOnce = false;
+      ensureLoadedOnce();
+
+      onComplete.run();
+    }).start();
+  }
 }

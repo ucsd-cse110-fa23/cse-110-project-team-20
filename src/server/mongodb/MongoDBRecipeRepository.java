@@ -19,6 +19,7 @@ import java.util.UUID;
 import client.Recipe;
 import server.account.IAccountContext;
 import server.recipe.IRecipeRepository;
+import server.recipe.ISharedRecipeConfiguration;
 import server.recipe.ISharedRecipeRepository;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -32,11 +33,13 @@ import static com.mongodb.client.model.Sorts.descending;
  */
 public class MongoDBRecipeRepository implements IRecipeRepository, ISharedRecipeRepository {
     private IMongoDBConfiguration config;
+    private ISharedRecipeConfiguration sharedUrlConfig;
     private IAccountContext accountContext;
     private Bson defaultSorting = descending("created_at");
 
-    public MongoDBRecipeRepository(IMongoDBConfiguration config, IAccountContext accountContext) {
+    public MongoDBRecipeRepository(IMongoDBConfiguration config, ISharedRecipeConfiguration sharedUrlConfig, IAccountContext accountContext) {
         this.config = config;
+        this.sharedUrlConfig = sharedUrlConfig;
         this.accountContext = accountContext;
     }
 
@@ -56,6 +59,7 @@ public class MongoDBRecipeRepository implements IRecipeRepository, ISharedRecipe
                     .sort(defaultSorting);
 
             for (Document recipeDoc : recipeDocList) {
+                recipeDoc.put("shared_url", sharedUrlConfig.sharedUrlBase() + recipeDoc.getString("shared_url"));
                 Recipe recipe = Recipe.fromJson(recipeDoc.toJson());
                 recipeList.add(recipe);
             }
