@@ -23,7 +23,7 @@ import client.Recipe;
  * Handles how input from other parts of the application should be formatted in order to meet JSON specifications.
  * Also converts from server-appropriate formatted data to one used by local methods
  */
-public class JSONRecipeRepository implements IRecipeRepository {
+public class JSONRecipeRepository implements IRecipeRepository, ISharedRecipeRepository {
   String path;
 
   public JSONRecipeRepository(String jsonFilePath) {
@@ -138,4 +138,13 @@ public class JSONRecipeRepository implements IRecipeRepository {
     return recipes;
   }
 
+  @Override
+  public void markAsShared(int id) {
+    throw new UnsupportedOperationException("Unimplemented method 'markAsShared'");
+  }
+
+  @Override
+  public Recipe getRecipeBySharedUrl(String sharedUrl) {
+    throw new UnsupportedOperationException("Unimplemented method 'getRecipeBySharedUrl'");
+  }
 }

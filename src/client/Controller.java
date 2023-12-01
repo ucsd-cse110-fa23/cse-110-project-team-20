@@ -69,8 +69,7 @@ public class Controller {
     public void
     transitionToLoginScene()
     {
-        RunnableForLogin onLogin = (String username, String password, boolean stayLoggedIn) ->
-        {
+        RunnableForLogin onLogin = (String username, String password, boolean stayLoggedIn, Runnable onLoaded) -> {
             try {
                 String token = accountManager.loginOrCreateAccount(username, password);
                 if (token != null) {
@@ -78,10 +77,12 @@ public class Controller {
                 }
             } catch (IncorrectPassword e) {
                 viewTransitioner.transitionTo(ErrorMessage.class, e.getMessage());
+                onLoaded.run();
                 return;
             } catch (LoginFailed e) {
                 viewTransitioner.transitionTo(
                     ErrorMessage.class, "Login Failed: " + e.getMessage());
+                onLoaded.run();
                 return;
             }
 

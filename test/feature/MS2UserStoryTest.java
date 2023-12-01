@@ -51,7 +51,7 @@ public class MS2UserStoryTest extends UserStoryTestBase {
     WhenTheUserClicksLoginOrCreateAccountButtonWith(String username, String password)
     {
         RunnableForLogin runnable = (RunnableForLogin) viewTransitioner.params[0];
-        runnable.run(username, password, false);
+        runnable.run(username, password, false, () -> {});
     }
 
     private void

@@ -1,7 +1,10 @@
 package server.mongodb;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.exists;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import client.Recipe;
 import com.mongodb.client.MongoClient;
@@ -210,5 +213,91 @@ public class MongoDBRecipeRepositoryTest {
         repository.updateRecipe(1, new Recipe("Updated title", "Updated description"));
 
         assertEquals(1, collection.countDocuments(eq("title", "Updated title")));
+    }
+
+    @Test
+    public void markAsShared() {
+        collection
+                .insertOne(new Document()
+                        .append("username", "some username")
+                        .append("title", "some title 0")
+                        .append("description", "some desc 0")
+                        .append("ingredients", "some ingredients 0")
+                        .append("meal_type", "some meal type 0")
+                        .append("created_at", new Date()));
+
+        accountContext.setUsername("some username");
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        repository.markAsShared(0);
+
+        assertEquals(1, collection.countDocuments(exists("shared_url")));
+        assertNotNull(collection.find().first().getString("shared_url"));
+    }
+
+    @Test
+    public void getRecipeBySharedUrl() {
+        collection
+                .insertOne(new Document()
+                        .append("username", "pantrypalguest")
+                        .append("title", "some sahred recipe title")
+                        .append("description", "some desc")
+                        .append("ingredients", "some ingredients")
+                        .append("meal_type", "some meal type")
+                        .append("shared_url", "some-shared-url"));
+        collection
+                .insertOne(new Document()
+                        .append("username", "some username")
+                        .append("title", "some title 0")
+                        .append("description", "some desc 0")
+                        .append("ingredients", "some ingredients 0")
+                        .append("meal_type", "some meal type 0")
+                        .append("created_at", new Date()));
+        collection
+                .insertOne(new Document()
+                        .append("username", "some username")
+                        .append("title", "some title 1")
+                        .append("description", "some desc 1")
+                        .append("ingredients", "some ingredients 1")
+                        .append("meal_type", "some meal type 1")
+                        .append("created_at", new Date()));
+
+        accountContext.setUsername("some username");
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        Recipe recipe = repository.getRecipeBySharedUrl("some-shared-url");
+
+        assertEquals("some sahred recipe title", recipe.getTitle());
+    }
+
+    @Test
+    public void getRecipeBySharedUrlNonExist() {
+        collection
+                .insertOne(new Document()
+                        .append("username", "pantrypalguest")
+                        .append("title", "some title 1")
+                        .append("description", "some desc")
+                        .append("ingredients", "some ingredients")
+                        .append("meal_type", "some meal type"));
+        collection
+                .insertOne(new Document()
+                        .append("username", "some username")
+                        .append("title", "some title 0")
+                        .append("description", "some desc 0")
+                        .append("ingredients", "some ingredients 0")
+                        .append("meal_type", "some meal type 0")
+                        .append("created_at", new Date()));
+        collection
+                .insertOne(new Document()
+                        .append("username", "some username")
+                        .append("title", "some title 1")
+                        .append("description", "some desc 1")
+                        .append("ingredients", "some ingredients 1")
+                        .append("meal_type", "some meal type 1")
+                        .append("created_at", new Date()));
+
+        accountContext.setUsername("some username");
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        Recipe recipe = repository.getRecipeBySharedUrl("some-shared-url");
+
+        assertNull(recipe);
     }
 }
