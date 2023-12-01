@@ -8,6 +8,7 @@ import client.account.SimpleAccountSession;
 import client.audio.AudioRecorder;
 import client.audio.IAudioRecorder;
 import client.models.ServerRecipeModel;
+import client.models.CachedRecipeModel;
 import client.models.IRecipeModel;
 import client.recipe.ServerRecipeGenerator;
 import client.utils.transitions.CompositeViewTransitioner;
@@ -33,7 +34,7 @@ public class PantryPalApp extends Application {
         IAccountSession accountSession = new SimpleAccountSession();
         IRecipeGenerator recipeGenerator = new ServerRecipeGenerator(accountSession);
         IAudioRecorder audioRecorder = new AudioRecorder();
-        IRecipeModel recipeModel = new ServerRecipeModel(accountSession);
+        IRecipeModel recipeModel = new CachedRecipeModel(new ServerRecipeModel(accountSession));
         IAccountManager accountManager = new ServerAccountManager();
 
         Controller controller = new Controller(transitioner, recipeGenerator, audioRecorder, recipeModel, accountManager, accountSession);
