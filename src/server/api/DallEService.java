@@ -1,6 +1,7 @@
 package server.api;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -9,6 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.UUID;
 
 import org.json.JSONObject;
@@ -54,7 +56,16 @@ public class DallEService implements ITextToImageService {
       throw new TextToImageServiceException(e);
     }
 
-    return file.getName();
+    String result = "";
+
+    try {
+      FileInputStream in = new FileInputStream(file);
+      result = Base64.getEncoder().encodeToString(in.readAllBytes());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new TextToImageServiceException(e);
+    }
+    return "data:image/jpg;base64," + result;
   }
 
   private JSONObject request(String prompt) throws IOException, InterruptedException {

@@ -13,7 +13,7 @@ public class LocalTextToImageService implements ITextToImageService {
   @Override
   public String createImage(IRecipeQuery query) throws TextToImageServiceException {
     File file = new File("test/resources/tomato.jpg");
-    String result = null;
+    String result = "";
     try {
       FileInputStream in = new FileInputStream(file);
       result = Base64.getEncoder().encodeToString(in.readAllBytes());
