@@ -17,10 +17,12 @@ import org.junit.jupiter.api.Test;
 import com.sun.net.httpserver.Headers;
 
 import server.api.ITextGenerateService;
+import server.api.ITextToImageService;
 import server.api.IVoiceToTextService;
 import server.api.IRecipeQuery;
 import server.api.TextGenerateServiceException;
 import server.mock.MockHttpRequest;
+import server.recipe.IRecipeImageUrlConfiguration;
 
 public class GenerateRecipeHttpHandlerTest {
     @Test
@@ -39,7 +41,10 @@ public class GenerateRecipeHttpHandlerTest {
             }
         };
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService);
+        ITextToImageService textToImageService = (IRecipeQuery query) -> new File("test/resources/tomato.jpg");
+        IRecipeImageUrlConfiguration imageUrlConfig = () -> "http://localhost/recipe/image/?file=";
+
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService, imageUrlConfig);
         assertInstanceOf(GenerateRecipeHttpHandler.class, handler);
     }
 
@@ -81,8 +86,10 @@ public class GenerateRecipeHttpHandlerTest {
                 }
             }
         };
+        ITextToImageService textToImageService = (IRecipeQuery query) -> new File("test/resources/tomato.jpg");
+        IRecipeImageUrlConfiguration imageUrlConfig = () -> "http://localhost/recipe/image/?file=";
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService);
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService, imageUrlConfig);
         MockHttpRequest request = new MockHttpRequest();
 
         request.setHeaders(headers);
@@ -91,5 +98,6 @@ public class GenerateRecipeHttpHandlerTest {
         String response = handler.handlePost(request);
         JSONObject responseJson = new JSONObject(response);
         assertTrue(responseJson.getString("description").contains("Generated recipe based on:"));
+        assertTrue(responseJson.getString("image_url").contains("localhost/recipe/image/?file"));
     }
 }

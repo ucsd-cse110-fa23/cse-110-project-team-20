@@ -8,14 +8,18 @@ import server.account.IAccountService;
 import server.account.LocalAccountService;
 import server.account.LocalBasicAuthenticator;
 import server.api.ChatGPTService;
+import server.api.DallEService;
 import server.api.ITextGenerateService;
+import server.api.ITextToImageService;
 import server.api.IVoiceToTextService;
 import server.api.LocalTextGenerateService;
+import server.api.LocalTextToImageService;
 import server.api.LocalVoiceToTextService;
 import server.api.WhisperService;
 import server.mongodb.MongoDBBasicAuthenticator;
 import server.mongodb.MongoDBRecipeRepository;
 import server.mongodb.MongoDBAccountService;
+import server.recipe.IRecipeImageUrlConfiguration;
 import server.recipe.IRecipeRepository;
 import server.recipe.JSONRecipeRepository;
 
@@ -41,16 +45,20 @@ public class PantryPalServer {
 
         ITextGenerateService textGenerateService;
         IVoiceToTextService voiceToTextService;
+        ITextToImageService textToImageService;
+        IRecipeImageUrlConfiguration imageUrlConfig = () -> "http://localhost:8100/recipe/image/?file=";
 
         if (configuration.apiKey() == null || configuration.apiKey().equals("")) {
             System.out.println(
                     "[api:INFO] Coudln't find API KEY in app.properties file. The server will be running with mock data.");
             textGenerateService = new LocalTextGenerateService();
             voiceToTextService = new LocalVoiceToTextService();
+            textToImageService = new LocalTextToImageService();
         } else {
             System.out.println("[api:INFO] The server is running with actual API KEY. Be careful on spending credit.");
             textGenerateService = new ChatGPTService(configuration);
             voiceToTextService = new WhisperService(configuration);
+            textToImageService = new DallEService(configuration);
         }
 
         IRecipeRepository recipeRepository;
@@ -73,8 +81,9 @@ public class PantryPalServer {
         server.createContext("/", new IndexHttpHandler());
         server.createContext("/recipe", new RecipeHttpHandler(recipeRepository))
             .setAuthenticator(authenticator);
-        server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService))
+        server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService, imageUrlConfig))
             .setAuthenticator(authenticator);
+        server.createContext("/recipe/image", new RecipeImageFileHttpHandler());
         server.createContext("/account/login-or-create", new AccountHttpHandler(accountService));
 
         server.setExecutor(threadPoolExecutor);

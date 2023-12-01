@@ -73,7 +73,7 @@ public class CachedRecipeModelTest {
 
     server.start(3102);
 
-    Recipe recipe = new Recipe("title_test", "desc_test", "ingredients_test", "meal_type_test");
+    Recipe recipe = new Recipe("title_test", "desc_test", "ingredients_test", "meal_type_test", "image_url_test");
     model.createRecipe(recipe);
 
     Recipe actual = model.getRecipe(0);
@@ -88,7 +88,7 @@ public class CachedRecipeModelTest {
 
     server.start(3103);
 
-    Recipe recipe = new Recipe("title_test_update", "desc_test_update", "ingredients_test_update", "meal_type_test_update");
+    Recipe recipe = new Recipe("title_test_update", "desc_test_update", "ingredients_test_update", "meal_type_test_update", "image_url_update");
     model.updateRecipe(2, recipe);
 
     Recipe actual = model.getRecipe(2);
