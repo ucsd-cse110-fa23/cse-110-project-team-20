@@ -79,6 +79,15 @@ public class ServerAccountManager implements IAccountManager {
             e.printStackTrace();
         }
 
-        return new JSONObject(response.toString().trim());
+        JSONObject responseJson;
+
+        try {
+            responseJson = new JSONObject(response.toString().trim());
+        } catch (Exception e) {
+            responseJson = new JSONObject();
+            responseJson.put("error", response.toString());
+        }
+
+        return responseJson;
     }
 }
