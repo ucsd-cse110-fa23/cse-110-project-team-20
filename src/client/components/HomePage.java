@@ -23,12 +23,13 @@ public class HomePage extends BorderPane {
     private RecipeList recipeList;
 
     public HomePage(List<Recipe> recipes, Runnable createButtonCallback,
-        RunnableWithId openRecipeDetailButtonCallback)
+        RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback)
     {
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         header = new Header();
         header.setCreateButtonCallback(createButtonCallback);
+        header.setLogoutButtonCallback(logoutButtonCallback);
 
         recipeList = new RecipeList(recipes, openRecipeDetailButtonCallback);
 
@@ -46,6 +47,7 @@ public class HomePage extends BorderPane {
 class Header extends BorderPane {
     private Label appName;
     private Button createButton;
+    private Button logoutButton;
 
     public Header()
     {
@@ -56,17 +58,29 @@ class Header extends BorderPane {
         appName = new Label("PantryPal");
         appName.getStyleClass().add("app-name");
 
+        logoutButton = new Button("Log out");
+        logoutButton.getStyleClass().add("logout-button");
+        logoutButton.setAlignment(Pos.CENTER);
+
         getStyleClass().add("homepage-header");
         setLeft(appName);
+        setCenter(logoutButton);
         setRight(createButton);
 
         setAlignment(appName, Pos.CENTER_LEFT);
+        setAlignment(logoutButton, Pos.CENTER_RIGHT);
     }
 
     public void
     setCreateButtonCallback(Runnable r)
     {
         this.createButton.setOnAction(e -> r.run());
+    }
+
+    public void
+    setLogoutButtonCallback(Runnable r)
+    {
+        this.logoutButton.setOnAction(e -> r.run());
     }
 }
 
