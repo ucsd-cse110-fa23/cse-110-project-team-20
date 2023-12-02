@@ -2,6 +2,7 @@ package client.account;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 
@@ -59,5 +60,18 @@ public class ServerAccountManagerTest {
       assertThrows(LoginFailed.class, () -> {
         manager.loginOrCreateAccount("some username", "some password");
       });
+    }
+
+    @Test
+    public void loginFailedFromServerIssue() throws IOException {
+        server = new MockHttpServer("/account/login-or-create", "Some Database Error: connection refused");
+        ServerAccountManager manager = new ServerAccountManager("http://localhost:5104");
+
+        server.start(5104);
+    
+        LoginFailed thrown = assertThrows(LoginFailed.class, () -> {
+          manager.loginOrCreateAccount("some username", "some password");
+        });
+        assertTrue(thrown.getMessage().contains("Some Database Error: connection refused"));
     }
 }
