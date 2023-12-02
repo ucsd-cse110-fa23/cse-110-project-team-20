@@ -63,7 +63,8 @@ public class JSONRecipeRepository implements IRecipeRepository, ISharedRecipeRep
         Optional.ofNullable(recipe.getTitle()).orElse(""),
         Optional.ofNullable(recipe.getDescription()).orElse(""),
         Optional.ofNullable(recipe.getIngredients()).orElse(""),
-        Optional.ofNullable(recipe.getMealType()).orElse(""));
+        Optional.ofNullable(recipe.getMealType()).orElse(""),
+        Optional.ofNullable(recipe.getImageUrl()).orElse(""));
     recipes.add(0, newRecipe);
     commit(recipes);
   }
@@ -77,7 +78,8 @@ public class JSONRecipeRepository implements IRecipeRepository, ISharedRecipeRep
         Optional.ofNullable(recipe.getTitle()).orElse(""),
         Optional.ofNullable(recipe.getDescription()).orElse(""),
         Optional.ofNullable(originalRecipe.getIngredients()).orElse(""),
-        Optional.ofNullable(originalRecipe.getMealType()).orElse(""));
+        Optional.ofNullable(originalRecipe.getMealType()).orElse(""),
+        Optional.ofNullable(recipe.getImageUrl()).orElse(""));
 
     recipes.set(id, newRecipe);
     commit(recipes);

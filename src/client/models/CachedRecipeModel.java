@@ -70,7 +70,8 @@ public class CachedRecipeModel implements IRecipeModel {
       recipe.getTitle(),
       recipe.getDescription(),
       originalRecipe.getIngredients(),
-      originalRecipe.getMealType());
+      originalRecipe.getMealType(),
+      originalRecipe.getImageUrl());
 
     recipes.set(id, updatedRecipe);
   }

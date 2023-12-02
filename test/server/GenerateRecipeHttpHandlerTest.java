@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import com.sun.net.httpserver.Headers;
 
 import server.api.ITextGenerateService;
+import server.api.ITextToImageService;
 import server.api.IVoiceToTextService;
 import server.api.IRecipeQuery;
 import server.api.TextGenerateServiceException;
@@ -39,7 +40,9 @@ public class GenerateRecipeHttpHandlerTest {
             }
         };
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService);
+        ITextToImageService textToImageService = (IRecipeQuery query) -> "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII";
+
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService);
         assertInstanceOf(GenerateRecipeHttpHandler.class, handler);
     }
 
@@ -81,8 +84,9 @@ public class GenerateRecipeHttpHandlerTest {
                 }
             }
         };
+        ITextToImageService textToImageService = (IRecipeQuery query) -> "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII";
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService);
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService);
         MockHttpRequest request = new MockHttpRequest();
 
         request.setHeaders(headers);
@@ -91,5 +95,6 @@ public class GenerateRecipeHttpHandlerTest {
         String response = handler.handlePost(request);
         JSONObject responseJson = new JSONObject(response);
         assertTrue(responseJson.getString("description").contains("Generated recipe based on:"));
+        assertTrue(responseJson.getString("image_url").contains("data:image/png;base64,"));
     }
 }
