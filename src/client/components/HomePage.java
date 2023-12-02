@@ -11,6 +11,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 /*
  * Home Page
@@ -23,8 +28,7 @@ public class HomePage extends BorderPane {
     private RecipeList recipeList;
 
     public HomePage(List<Recipe> recipes, Runnable createButtonCallback,
-        RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback)
-    {
+            RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback) {
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         header = new Header();
@@ -49,8 +53,7 @@ class Header extends BorderPane {
     private Button createButton;
     private Button logoutButton;
 
-    public Header()
-    {
+    public Header() {
         createButton = new Button("\uff0b"); // unicode version of plus sign
         createButton.getStyleClass().add("create-button");
         createButton.setAlignment(Pos.CENTER);
@@ -71,22 +74,17 @@ class Header extends BorderPane {
         setAlignment(logoutButton, Pos.CENTER_RIGHT);
     }
 
-    public void
-    setCreateButtonCallback(Runnable r)
-    {
+    public void setCreateButtonCallback(Runnable r) {
         this.createButton.setOnAction(e -> r.run());
     }
 
-    public void
-    setLogoutButtonCallback(Runnable r)
-    {
+    public void setLogoutButtonCallback(Runnable r) {
         this.logoutButton.setOnAction(e -> r.run());
     }
 }
 
 class RecipeBox extends HBox {
-    public RecipeBox(Recipe recipe)
-    {
+    public RecipeBox(Recipe recipe) {
         VBox recipeDetails = new VBox(10);
 
         Label titleLabel = new Label(recipe.getTitle());
@@ -95,13 +93,47 @@ class RecipeBox extends HBox {
         recipeDetails.getChildren().addAll(titleLabel);
         this.getChildren().add(recipeDetails);
 
+        String mealType = getMealType(recipe);
+
+        Label mealTypeLabel = new Label(mealType);
+        mealTypeLabel.getStyleClass().addAll("meal-type-label", "bubble-label");
+        mealTypeLabel.setStyle("-fx-background-color: #" + getColorHexCode(mealType) + ";");
+
+        HBox.setHgrow(recipeDetails, Priority.ALWAYS);
+        this.getChildren().add(mealTypeLabel);
+
         getStyleClass().add("recipe-box");
     }
+
+    private String getMealType(Recipe r) {
+        switch (r.getMealType().toLowerCase()) {
+            case "breakfast":
+                return "Breakfast";
+            case "lunch":
+                return "Lunch";
+            case "dinner":
+                return "Dinner";
+            default:
+                return "Unknown";
+        }
+    }
+
+    private String getColorHexCode(String mealType) {
+    switch (mealType.toLowerCase()) {
+        case "breakfast":
+            return "FAEDCB"; 
+        case "lunch":
+            return "C9E4DE"; 
+        case "dinner":
+            return "DBCDF0"; 
+        default:
+            return "808080"; 
+    }
+}
 }
 
 class RecipeList extends VBox {
-    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback)
-    {
+    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback) {
         this.setSpacing(10); // sets spacing between contacts
         this.setPrefSize(500, 460);
         getStyleClass().add("recipe-list");
