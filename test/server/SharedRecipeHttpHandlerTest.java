@@ -44,7 +44,7 @@ public class SharedRecipeHttpHandlerTest {
 
     MockSharedRecipeRepository repository = new MockSharedRecipeRepository();
     // setup test recipe on repository
-    Recipe recipe = new Recipe("some title", "some desc", "some ingredients", "some meal type");
+    Recipe recipe = new Recipe("some title", "some desc", "some ingredients", "some meal type", "some image url");
     repository.setRecipe(recipe, "some-test-url");
 
     SharedRecipeHttpHandler handler = new SharedRecipeHttpHandler(repository);
