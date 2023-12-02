@@ -11,6 +11,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 
 /*
  * Home Page
@@ -21,15 +24,17 @@ import javafx.scene.layout.VBox;
 public class HomePage extends BorderPane {
     private Header header;
     private RecipeList recipeList;
+    private HBox optionsBar;
 
     public HomePage(List<Recipe> recipes, Runnable createButtonCallback,
-        RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback)
-    {
+            RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback) {
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         header = new Header();
         header.setCreateButtonCallback(createButtonCallback);
         header.setLogoutButtonCallback(logoutButtonCallback);
+
+        optionsBar = new OptionsBar();
 
         recipeList = new RecipeList(recipes, openRecipeDetailButtonCallback);
 
@@ -38,19 +43,50 @@ public class HomePage extends BorderPane {
         scrollPane.setFitToWidth(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        this.setTop(header);
+        // Create a VBox to hold header and optionsBar
+        VBox topContainer = new VBox();
+        topContainer.getChildren().addAll(header, optionsBar);
+
+        // Set the VBox as the top of the BorderPane
+        this.setTop(topContainer);
         this.setCenter(scrollPane);
         this.setPrefSize(500, 800);
     }
 }
+
+class OptionsBar extends HBox {
+    private ComboBox<String> filterComboBox;
+    private Runnable r;
+
+    public OptionsBar() {
+        ObservableList<String> filterOptions = FXCollections.observableArrayList("Filter: None", "Breakfast", "Lunch", "Dinner");
+
+        filterComboBox = new ComboBox<>(filterOptions);
+        filterComboBox.setPromptText("Filter by meal type");
+        filterComboBox.getStyleClass().add("filter-combo-box");
+        this.getStyleClass().add("options-bar");
+
+        filterComboBox.setOnAction(event -> {
+            if (r != null) {
+                r.run();
+            }
+        });
+
+        this.getChildren().addAll(filterComboBox);
+    }
+
+    public void setSelectionCallback(Runnable r) {
+        this.r = r;
+    }
+}
+
 
 class Header extends BorderPane {
     private Label appName;
     private Button createButton;
     private Button logoutButton;
 
-    public Header()
-    {
+    public Header() {
         createButton = new Button("\uff0b"); // unicode version of plus sign
         createButton.getStyleClass().add("create-button");
         createButton.setAlignment(Pos.CENTER);
@@ -71,22 +107,17 @@ class Header extends BorderPane {
         setAlignment(logoutButton, Pos.CENTER_RIGHT);
     }
 
-    public void
-    setCreateButtonCallback(Runnable r)
-    {
+    public void setCreateButtonCallback(Runnable r) {
         this.createButton.setOnAction(e -> r.run());
     }
 
-    public void
-    setLogoutButtonCallback(Runnable r)
-    {
+    public void setLogoutButtonCallback(Runnable r) {
         this.logoutButton.setOnAction(e -> r.run());
     }
 }
 
 class RecipeBox extends HBox {
-    public RecipeBox(Recipe recipe)
-    {
+    public RecipeBox(Recipe recipe) {
         VBox recipeDetails = new VBox(10);
 
         Label titleLabel = new Label(recipe.getTitle());
@@ -100,8 +131,7 @@ class RecipeBox extends HBox {
 }
 
 class RecipeList extends VBox {
-    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback)
-    {
+    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback) {
         this.setSpacing(10); // sets spacing between contacts
         this.setPrefSize(500, 460);
         getStyleClass().add("recipe-list");
