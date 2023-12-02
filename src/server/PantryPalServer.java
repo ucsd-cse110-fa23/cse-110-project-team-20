@@ -19,13 +19,16 @@ import server.api.WhisperService;
 import server.mongodb.MongoDBBasicAuthenticator;
 import server.mongodb.MongoDBRecipeRepository;
 import server.mongodb.MongoDBAccountService;
+import server.recipe.IMealTypeSanitizer;
 import server.recipe.IRecipeRepository;
 import server.recipe.ISharedRecipeConfiguration;
 import server.recipe.ISharedRecipeRepository;
 import server.recipe.JSONRecipeRepository;
+import server.recipe.DistanceBasedMealTypeSanitizer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 public class PantryPalServer {
@@ -47,6 +50,7 @@ public class PantryPalServer {
         ITextGenerateService textGenerateService;
         IVoiceToTextService voiceToTextService;
         ITextToImageService textToImageService;
+        IMealTypeSanitizer mealTypeSanitizer = new DistanceBasedMealTypeSanitizer(Arrays.asList("breakfast", "lunch", "dinner"));
 
         if (configuration.apiKey() == null || configuration.apiKey().equals("")) {
             System.out.println(
@@ -89,7 +93,7 @@ public class PantryPalServer {
         server.createContext("/", new IndexHttpHandler());
         server.createContext("/recipe", new RecipeHttpHandler(recipeRepository))
             .setAuthenticator(authenticator);
-        server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService))
+        server.createContext("/recipe/generate", new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService, mealTypeSanitizer))
             .setAuthenticator(authenticator);
         server.createContext("/recipe/share", new RecipeMarkAsShareHttpHandler(sharedRecipeRepository))
             .setAuthenticator(authenticator);

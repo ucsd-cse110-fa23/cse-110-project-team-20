@@ -13,6 +13,7 @@ import server.api.ITextToImageService;
 import server.api.IVoiceToTextService;
 import server.api.RecipeImageQuery;
 import server.api.RecipeQuery;
+import server.recipe.IMealTypeSanitizer;
 import server.request.FileRequestHelper;
 import server.request.IHttpRequest;
 import java.io.BufferedWriter;
@@ -23,16 +24,19 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
     private ITextGenerateService textGenerateService;
     private IVoiceToTextService voiceToTextService;
     private ITextToImageService textToImageService;
+    private IMealTypeSanitizer mealTypeSanitizer;
 
     public GenerateRecipeHttpHandler(
         ITextGenerateService textGenerateService,
         IVoiceToTextService voiceToTextService,
-        ITextToImageService textToImageService
+        ITextToImageService textToImageService,
+        IMealTypeSanitizer mealTypeSanitizer
         )
     {
         this.textGenerateService = textGenerateService;
         this.voiceToTextService = voiceToTextService;
         this.textToImageService = textToImageService;
+        this.mealTypeSanitizer = mealTypeSanitizer;
     }
 
     @Override
@@ -62,6 +66,9 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
 
         String ingredients = future1.join();
         String mealType = future2.join();
+
+        // sanitize the given meal type to appropriate one
+        mealType = mealTypeSanitizer.apply(mealType);
 
         info(String.format("Recieved: \"%s\", \"%s\" from voice to text service", ingredients, mealType));
 
