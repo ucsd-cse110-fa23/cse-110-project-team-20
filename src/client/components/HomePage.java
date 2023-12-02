@@ -11,6 +11,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -126,8 +131,43 @@ class RecipeBox extends HBox {
         recipeDetails.getChildren().addAll(titleLabel);
         this.getChildren().add(recipeDetails);
 
+        String mealType = getMealType(recipe);
+
+        Label mealTypeLabel = new Label(mealType);
+        mealTypeLabel.getStyleClass().addAll("meal-type-label", "bubble-label");
+        mealTypeLabel.setStyle("-fx-background-color: #" + getColorHexCode(mealType) + ";");
+
+        HBox.setHgrow(recipeDetails, Priority.ALWAYS);
+        this.getChildren().add(mealTypeLabel);
+
         getStyleClass().add("recipe-box");
     }
+
+    private String getMealType(Recipe r) {
+        switch (r.getMealType().toLowerCase()) {
+            case "breakfast":
+                return "Breakfast";
+            case "lunch":
+                return "Lunch";
+            case "dinner":
+                return "Dinner";
+            default:
+                return "Unknown";
+        }
+    }
+
+    private String getColorHexCode(String mealType) {
+    switch (mealType.toLowerCase()) {
+        case "breakfast":
+            return "FAEDCB"; 
+        case "lunch":
+            return "C9E4DE"; 
+        case "dinner":
+            return "DBCDF0"; 
+        default:
+            return "808080"; 
+    }
+}
 }
 
 class RecipeList extends VBox {
