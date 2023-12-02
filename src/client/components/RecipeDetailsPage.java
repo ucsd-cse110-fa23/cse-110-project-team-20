@@ -9,9 +9,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.geometry.Pos;
 import javafx.geometry.Insets;
-import javafx.scene.layout.Region;
 import javafx.scene.control.DialogPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -75,6 +73,12 @@ public class RecipeDetailsPage extends BorderPane {
     }
 
     public void
+    setShareCallback(Runnable r)
+    {
+        this.footer.setOnShare(r);
+    }
+
+    public void
     displayRecipe(Recipe recipe)
     {
         Label recipeTitle = new Label(recipe.getTitle());
@@ -111,6 +115,7 @@ class DetailsFooter extends HBox {
     private Button cancelButton;
     private Button editButton;
     private Button deleteButton;
+    private Button shareButton;
 
     public DetailsFooter()
     {
@@ -123,9 +128,12 @@ class DetailsFooter extends HBox {
         this.deleteButton = new Button("Delete Recipe");
         this.deleteButton.getStyleClass().add("delete-button");
 
+        this.shareButton = new Button("Share Recipe");
+        this.shareButton.getStyleClass().add("share-button");
+
         this.setSpacing(10); // Set the spacing between buttons
         this.setPadding(new Insets(10, 10, 10, 10));
-        this.getChildren().addAll(cancelButton, editButton, deleteButton);
+        this.getChildren().addAll(cancelButton, editButton, deleteButton, shareButton);
     }
 
     public void
@@ -167,5 +175,11 @@ class DetailsFooter extends HBox {
     setOnSave(Runnable onSave)
     {
         this.saveButton.setOnAction(e -> onSave.run());
+    }
+
+    public void
+    setOnShare(Runnable onShare)
+    {
+        this.shareButton.setOnAction(e -> onShare.run());
     }
 }

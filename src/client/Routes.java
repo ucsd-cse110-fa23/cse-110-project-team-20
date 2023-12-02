@@ -12,6 +12,7 @@ import client.components.RecipeEditPage;
 import client.components.RecipeEditPageCallbacks;
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
+import client.components.SharedRecipeModal;
 import client.utils.runnables.RunnableForLogin;
 import client.utils.runnables.RunnableWithId;
 import client.utils.transitions.javafx.JavaFXViewTransitioner;
@@ -126,6 +127,7 @@ public class Routes {
             recipeDetailsPage.setCancelCallback(callbacks.getOnGoBackButtonClicked());
             recipeDetailsPage.setEditCallback(callbacks.getOnEditButtonClicked());
             recipeDetailsPage.setDeleteCallback(callbacks.getOnDeleteButtonClicked());
+            recipeDetailsPage.setShareCallback(callbacks.getOnShareButtonClicked());
 
             primaryStage.setScene(new Scene(recipeDetailsPage, WIDTH, HEIGHT));
         });
@@ -170,6 +172,16 @@ public class Routes {
             new ErrorMessage(message);
         });
 
-        return routes;
-    }
+        /**
+         * Share URL Modal
+         * 
+         * show share URL of recipe.
+         */
+        routes.register(SharedRecipeModal.class, (Object[] params) -> {
+            String sharedUrl = (String) params[0];
+            new SharedRecipeModal(sharedUrl);
+        });
+
+    return routes;
+  }
 }

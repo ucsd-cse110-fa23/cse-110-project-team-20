@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.account.AccountContext;
 import server.account.IAccountContext;
+import server.recipe.ISharedRecipeConfiguration;
 
 public class MongoDBRecipeRepositoryTest {
     private MongoCollection<Document> collection;
@@ -27,6 +28,7 @@ public class MongoDBRecipeRepositoryTest {
     private MongoServer server;
 
     private IMongoDBConfiguration config;
+    private ISharedRecipeConfiguration shareConfig;
     private IAccountContext accountContext;
 
     @BeforeEach
@@ -46,6 +48,7 @@ public class MongoDBRecipeRepositoryTest {
                 return connectionString;
             }
         };
+        shareConfig = () -> "http://localhost/recipe/shared?id=";
 
         accountContext = new AccountContext();
     }
@@ -63,7 +66,8 @@ public class MongoDBRecipeRepositoryTest {
     createRecipe()
     {
         accountContext.setUsername("some username");
-        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
         repository.createRecipe(
             new Recipe("Tomato soup", "Some tomato soup description with steps"));
 
@@ -100,7 +104,7 @@ public class MongoDBRecipeRepositoryTest {
                                  .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
-        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
         List<Recipe> recipes = repository.getRecipes();
 
         assertEquals(2, recipes.size());
@@ -141,7 +145,7 @@ public class MongoDBRecipeRepositoryTest {
                                  .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
-        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
         Recipe recipe = repository.getRecipe(1);
 
         assertEquals("some title 0", recipe.getTitle());
@@ -176,7 +180,7 @@ public class MongoDBRecipeRepositoryTest {
                                  .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
-        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
         repository.deleteRecipe(0);
         repository.deleteRecipe(0);
 
@@ -209,7 +213,7 @@ public class MongoDBRecipeRepositoryTest {
                                  .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
-        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
         repository.updateRecipe(1, new Recipe("Updated title", "Updated description"));
 
         assertEquals(1, collection.countDocuments(eq("title", "Updated title")));
@@ -227,7 +231,7 @@ public class MongoDBRecipeRepositoryTest {
                         .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
-        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
         repository.markAsShared(0);
 
         assertEquals(1, collection.countDocuments(exists("shared_url")));
@@ -262,7 +266,7 @@ public class MongoDBRecipeRepositoryTest {
                         .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
-        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
         Recipe recipe = repository.getRecipeBySharedUrl("some-shared-url");
 
         assertEquals("some sahred recipe title", recipe.getTitle());
@@ -295,7 +299,7 @@ public class MongoDBRecipeRepositoryTest {
                         .append("created_at", new Date()));
 
         accountContext.setUsername("some username");
-        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, accountContext);
+        MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
         Recipe recipe = repository.getRecipeBySharedUrl("some-shared-url");
 
         assertNull(recipe);

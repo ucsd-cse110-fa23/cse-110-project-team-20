@@ -18,6 +18,7 @@ import client.components.RecipeEditPage;
 import client.components.RecipeEditPageCallbacks;
 import client.components.RecordingPage;
 import client.components.RecordingPageCallbacks;
+import client.components.SharedRecipeModal;
 import client.models.IRecipeModel;
 import client.recipe.IRecipeGenerator;
 import client.recipe.RecipeRequestParameter;
@@ -165,9 +166,14 @@ public class Controller {
         // TODO: Added transition to edit
         Runnable editCallback = () -> transitionToEditScene(id);
         Runnable deleteCallback = () -> deleteRecipeClicked(id);
+        Runnable shareCallback = () -> shareRecipeClicked(id);
 
-        RecipeDetailsPageCallbacks callbacks =
-            new RecipeDetailsPageCallbacks(cancelCallback, editCallback, deleteCallback);
+        RecipeDetailsPageCallbacks callbacks = new RecipeDetailsPageCallbacks(
+            cancelCallback,
+            editCallback,
+            deleteCallback,
+            shareCallback
+        );
         viewTransitioner.transitionTo(RecipeDetailsPage.class, recipe, callbacks);
     }
 
@@ -270,5 +276,18 @@ public class Controller {
     {
         recipeModel.deleteRecipe(id);
         this.transitionToHomeScene();
+    }
+
+    public void
+    shareRecipeClicked(int id)
+    {
+        Recipe recipe = recipeModel.getRecipe(id);
+        if (recipe.getSharedUrl() == null) {
+            recipeModel.shareRecipe(id, () -> {
+                shareRecipeClicked(id);
+            });
+        } else {
+            viewTransitioner.transitionTo(SharedRecipeModal.class, recipe.getSharedUrl());
+        }
     }
 }

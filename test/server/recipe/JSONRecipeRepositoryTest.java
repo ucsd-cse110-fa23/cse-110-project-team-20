@@ -81,7 +81,7 @@ public class JSONRecipeRepositoryTest {
   public void createRecipe() {
     IRecipeRepository repo = new JSONRecipeRepository(dbPath);
     int prevCount = repo.getRecipes().size();
-    repo.createRecipe(new Recipe("new title", "new description", "new ingredients", "new meal type"));
+    repo.createRecipe(new Recipe("new title", "new description", "new ingredients", "new meal type", "new image url"));
     Recipe recipe = repo.getRecipe(0);
     int afterCount = repo.getRecipes().size();
 

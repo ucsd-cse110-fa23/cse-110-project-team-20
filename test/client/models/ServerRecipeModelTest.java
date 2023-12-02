@@ -74,13 +74,14 @@ public class ServerRecipeModelTest {
 
     server.start(3102);
 
-    Recipe recipe = new Recipe("title_test", "desc_test", "ingredients_test", "meal_type_test");
+    Recipe recipe = new Recipe("title_test", "desc_test", "ingredients_test", "meal_type_test", "image_url_test");
     model.createRecipe(recipe);
 
     assertTrue(server.getLastHttpRequestBodyAsString().contains("title_test"));
     assertTrue(server.getLastHttpRequestBodyAsString().contains("desc_test"));
     assertTrue(server.getLastHttpRequestBodyAsString().contains("ingredients_test"));
     assertTrue(server.getLastHttpRequestBodyAsString().contains("meal_type_test"));
+    assertTrue(server.getLastHttpRequestBodyAsString().contains("image_url_test"));
   }
 
   @Test
@@ -90,7 +91,7 @@ public class ServerRecipeModelTest {
 
     server.start(3103);
 
-    Recipe recipe = new Recipe("title_test_update", "desc_test_update", "ingredients_test_update", "meal_type_test_update");
+    Recipe recipe = new Recipe("title_test_update", "desc_test_update", "ingredients_test_update", "meal_type_test_update", "image_url_update");
     model.updateRecipe(3, recipe);
 
     assertEquals("3", server.getLastHttpRequestQuery("id"));
@@ -98,6 +99,7 @@ public class ServerRecipeModelTest {
     assertTrue(server.getLastHttpRequestBodyAsString().contains("desc_test_update"));
     assertTrue(server.getLastHttpRequestBodyAsString().contains("ingredients_test_update"));
     assertTrue(server.getLastHttpRequestBodyAsString().contains("meal_type_test_update"));
+    assertTrue(server.getLastHttpRequestBodyAsString().contains("image_url_update"));
   }
 
   @Test
@@ -107,6 +109,17 @@ public class ServerRecipeModelTest {
     server.start(3104);
 
     model.deleteRecipe(2);
+
+    assertEquals("2", server.getLastHttpRequestQuery("id"));
+  }
+
+  @Test
+  public void shareRecipe() throws IOException {
+    server = new MockHttpServer("/recipe/share", null);
+    ServerRecipeModel model = new ServerRecipeModel(mockSession, "http://localhost:3105");
+    server.start(3105);
+
+    model.shareRecipe(2);
 
     assertEquals("2", server.getLastHttpRequestQuery("id"));
   }

@@ -9,7 +9,9 @@ import org.json.JSONObject;
 
 import client.Recipe;
 import server.api.ITextGenerateService;
+import server.api.ITextToImageService;
 import server.api.IVoiceToTextService;
+import server.api.RecipeImageQuery;
 import server.api.RecipeQuery;
 import server.request.FileRequestHelper;
 import server.request.IHttpRequest;
@@ -20,11 +22,17 @@ import java.io.FileWriter;
 public class GenerateRecipeHttpHandler extends HttpHandlerBase {
     private ITextGenerateService textGenerateService;
     private IVoiceToTextService voiceToTextService;
+    private ITextToImageService textToImageService;
 
-    public GenerateRecipeHttpHandler(ITextGenerateService textGenerateService, IVoiceToTextService voiceToTextService)
+    public GenerateRecipeHttpHandler(
+        ITextGenerateService textGenerateService,
+        IVoiceToTextService voiceToTextService,
+        ITextToImageService textToImageService
+        )
     {
         this.textGenerateService = textGenerateService;
         this.voiceToTextService = voiceToTextService;
+        this.textToImageService = textToImageService;
     }
 
     @Override
@@ -80,9 +88,16 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
 
         info("  - title: " + title);
         info("  - description: " + description);
-        Recipe recipe = new Recipe(title, description, ingredients, mealType);
+
+        RecipeImageQuery imageQuery = new RecipeImageQuery(title);
+        info("Generating image: " + imageQuery.toQueryableString());
+
+        String imageUrl = textToImageService.createImage(imageQuery);
+
+        Recipe recipe = new Recipe(title, description, ingredients, mealType, imageUrl);
         String response = new JSONObject(recipe).toString(2);
 
+        info("Image created: " + imageUrl.substring(0, 60) + "...");
         // write(response, "created.txt");
         return response;
     }

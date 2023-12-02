@@ -94,7 +94,8 @@ public class RecipeHttpHandler extends HttpHandlerBase {
       requestObj.has("title") ? requestObj.getString("title") : null,
       requestObj.has("description") ? requestObj.getString("description") : null,
       requestObj.has("ingredients") ? requestObj.getString("ingredients") : null,
-      requestObj.has("meal_type") ? requestObj.getString("meal_type") : null
+      requestObj.has("meal_type") ? requestObj.getString("meal_type") : null,
+      requestObj.has("image_url") ? requestObj.getString("image_url") : null
     );
     return newRecipe;
   }

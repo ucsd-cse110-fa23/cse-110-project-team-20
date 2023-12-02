@@ -16,6 +16,9 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 
 /*
  * Home Page
@@ -26,6 +29,7 @@ import javafx.scene.paint.Color;
 public class HomePage extends BorderPane {
     private Header header;
     private RecipeList recipeList;
+    private HBox optionsBar;
 
     public HomePage(List<Recipe> recipes, Runnable createButtonCallback,
             RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback) {
@@ -35,6 +39,8 @@ public class HomePage extends BorderPane {
         header.setCreateButtonCallback(createButtonCallback);
         header.setLogoutButtonCallback(logoutButtonCallback);
 
+        optionsBar = new OptionsBar();
+
         recipeList = new RecipeList(recipes, openRecipeDetailButtonCallback);
 
         ScrollPane scrollPane = new ScrollPane(recipeList);
@@ -42,11 +48,43 @@ public class HomePage extends BorderPane {
         scrollPane.setFitToWidth(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        this.setTop(header);
+        // Create a VBox to hold header and optionsBar
+        VBox topContainer = new VBox();
+        topContainer.getChildren().addAll(header, optionsBar);
+
+        // Set the VBox as the top of the BorderPane
+        this.setTop(topContainer);
         this.setCenter(scrollPane);
         this.setPrefSize(500, 800);
     }
 }
+
+class OptionsBar extends HBox {
+    private ComboBox<String> filterComboBox;
+    private Runnable r;
+
+    public OptionsBar() {
+        ObservableList<String> filterOptions = FXCollections.observableArrayList("Filter: None", "Breakfast", "Lunch", "Dinner");
+
+        filterComboBox = new ComboBox<>(filterOptions);
+        filterComboBox.setPromptText("Filter by meal type");
+        filterComboBox.getStyleClass().add("filter-combo-box");
+        this.getStyleClass().add("options-bar");
+
+        filterComboBox.setOnAction(event -> {
+            if (r != null) {
+                r.run();
+            }
+        });
+
+        this.getChildren().addAll(filterComboBox);
+    }
+
+    public void setSelectionCallback(Runnable r) {
+        this.r = r;
+    }
+}
+
 
 class Header extends BorderPane {
     private Label appName;

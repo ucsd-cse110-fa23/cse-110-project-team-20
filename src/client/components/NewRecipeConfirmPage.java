@@ -27,11 +27,8 @@ public class NewRecipeConfirmPage extends BorderPane {
     private TextArea body;
     private Footer footer;
 
-    public NewRecipeConfirmPage(Recipe recipe)
-    {
-        getStylesheets().add(getClass().getResource(
-            "style.css"
-        ).toExternalForm());
+    public NewRecipeConfirmPage(Recipe recipe) {
+        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         header = new Label(recipe.getTitle());
         header.getStyleClass().add("recipe-title");
@@ -50,37 +47,34 @@ public class NewRecipeConfirmPage extends BorderPane {
         this.setBottom(footer);
     }
 
-    public void setCancelCallback(Runnable r) 
-    {
+    public void setCancelCallback(Runnable r) {
         this.footer.setOnCancel(r);
     }
 
-    public void setSaveCallback(Runnable r)
-    {
+    public void setSaveCallback(Runnable r) {
         this.footer.setOnSave(r);
     }
 
-
 }
+
 
 class Footer extends HBox {
     private Button saveButton;
     private Button cancelButton;
     private Button regenButton;
 
-    public Footer()
-    {
+    public Footer() {
         cancelButton = createButton("Discard", "cross-icon.png");
         cancelButton.getStyleClass().addAll(
-            "action-button", "discard-button");
+                "action-button", "discard-button");
 
         saveButton = createButton("Save", "plus-icon.png");
         saveButton.getStyleClass().addAll(
-            "action-button", "save-button");
-            
+                "action-button", "save-button");
+
         regenButton = createButton("Regenerate Recipe", "regen-icon.png");
         regenButton.getStyleClass().addAll(
-            "action-button", "save-button");
+                "action-button", "save-button");
 
         Region spacer = new Region();
         setHgrow(spacer, Priority.ALWAYS);
@@ -93,11 +87,11 @@ class Footer extends HBox {
     }
 
     public void setOnSave(Runnable onSave) {
-        saveButton.setOnAction(e-> onSave.run());
+        saveButton.setOnAction(e -> onSave.run());
     }
 
-    public void setOnRegen(Runnable onRegen){
-        regenButton.setOnAction(e-> onRegen.run());
+    public void setOnRegen(Runnable onRegen) {
+        regenButton.setOnAction(e -> onRegen.run());
     }
 
     // ref: https://jenkov.com/tutorials/javafx/button.html
