@@ -20,6 +20,7 @@ import server.mongodb.MongoDBBasicAuthenticator;
 import server.mongodb.MongoDBRecipeRepository;
 import server.mongodb.MongoDBAccountService;
 import server.recipe.IRecipeRepository;
+import server.recipe.ISharedRecipeConfiguration;
 import server.recipe.ISharedRecipeRepository;
 import server.recipe.JSONRecipeRepository;
 
@@ -76,7 +77,8 @@ public class PantryPalServer {
         } else {
             System.out.println("[db:INFO] The server is running with a mongodb instance.");
 
-            MongoDBRecipeRepository mongoRepository = new MongoDBRecipeRepository(configuration, accountContext);
+            ISharedRecipeConfiguration shareConfig = () -> String.format("http://%s:%s/recipe/shared/?url=", SERVER_HOSTNAME, SERVER_PORT);
+            MongoDBRecipeRepository mongoRepository = new MongoDBRecipeRepository(configuration, shareConfig, accountContext);
             recipeRepository = mongoRepository;
             sharedRecipeRepository = mongoRepository;
 

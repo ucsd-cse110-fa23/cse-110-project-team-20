@@ -10,14 +10,17 @@ public class RecipeDetailsPageCallbacks {
   private Runnable onGoBackButtonClicked;
   private Runnable onEditButtonClicked;
   private Runnable onDeleteButtonClicked;
+  private Runnable onShareButtonClicked;
 
   public RecipeDetailsPageCallbacks(
       Runnable onGoBackButtonClicked,
       Runnable onEditButtonClicked,
-      Runnable onDeleteButtonClicked) {
+      Runnable onDeleteButtonClicked,
+      Runnable onShareButtonClicked) {
     this.onGoBackButtonClicked = onGoBackButtonClicked;
     this.onEditButtonClicked = onEditButtonClicked;
     this.onDeleteButtonClicked = onDeleteButtonClicked;
+    this.onShareButtonClicked = onShareButtonClicked;
   }
 
   public Runnable getOnGoBackButtonClicked() {
@@ -30,5 +33,9 @@ public class RecipeDetailsPageCallbacks {
 
   public Runnable getOnDeleteButtonClicked() {
     return onDeleteButtonClicked;
+  }
+
+  public Runnable getOnShareButtonClicked() {
+    return onShareButtonClicked;
   }
 }

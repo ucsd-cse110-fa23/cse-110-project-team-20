@@ -112,4 +112,15 @@ public class ServerRecipeModelTest {
 
     assertEquals("2", server.getLastHttpRequestQuery("id"));
   }
+
+  @Test
+  public void shareRecipe() throws IOException {
+    server = new MockHttpServer("/recipe/share", null);
+    ServerRecipeModel model = new ServerRecipeModel(mockSession, "http://localhost:3105");
+    server.start(3105);
+
+    model.shareRecipe(2);
+
+    assertEquals("2", server.getLastHttpRequestQuery("id"));
+  }
 }
