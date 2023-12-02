@@ -168,6 +168,61 @@
   padding: 10px;
 }
 
+.filter-combo-box {
+  -fx-background-color: #f4f4f4;
+  -fx-border-color: #ccc;
+  -fx-border-radius: 5;
+  -fx-padding: 5;
+}
+
+.filter-combo-box .arrow-button {
+  -fx-background-color: #e0e0e0;
+  -fx-shape: "M 0 0 L 3 6 L 6 0 Z"; 
+  -fx-scale-x: 0.7; 
+  -fx-scale-y: 0.7; 
+}
+
+.filter-combo-box .arrow-button:hover {
+  -fx-background-color: #d0d0d0;
+}
+
+.filter-combo-box .list-cell {
+  -fx-background-color: #f4f4f4;
+}
+
+.filter-combo-box .list-view {
+  -fx-background-color: #f4f4f4;
+  -fx-border-color: #ccc;
+}
+
+.filter-combo-box .list-view .list-cell:selected {
+  -fx-background-color: #007bff;
+  -fx-text-fill: white;
+}
+
+.options-bar {
+  -fx-spacing: 10;
+  -fx-padding: 10;
+}
+
+.options-bar .filter-combo-box-label {
+  -fx-font-size: 14;
+  -fx-font-weight: bold;
+  -fx-text-fill: #333;
+}
+
+.filter-combo-box .arrow {
+  -fx-opacity: 0;
+}
+
+.filter-combo-box .arrow-button:hover, .filter-combo-box .list-view:hover {
+  -fx-cursor: hand;
+}
+
+.filter-combo-box .list-view .list-cell:hover {
+  -fx-text-fill: #786783;
+}
+
 /**
 * Recording Page
 */
