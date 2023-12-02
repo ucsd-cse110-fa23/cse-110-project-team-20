@@ -16,17 +16,38 @@
         margin: 0 0 20px 0;
         color: #654321;
       }
-      .tags {
+      .labels {
         margin: 1rem 0;
       }
-      .tags span {
+      .meal-type-label {
         display: inline-block;
-        background: orange;
-        border-radius: 3px;
+        background-color: #808080; /* deafult: unknown color */
+        border-radius: 20px;
+        text-transform: capitalize;
         padding: 5px 10px;
+      }
+      .meal-type-label[meal-type="breakfast"] {
+        background-color: #FAEDCB;
+      }
+      .meal-type-label[meal-type="lunch"] {
+        background-color: #C9E4DE;
+      }
+      .meal-type-label[meal-type="dinner"] {
+        background-color: #DBCDF0;
       }
       .desc {
         line-height: 1.7;
+      }
+      .desc:after {
+        content: "";
+        clear: both;
+        display: block;
+      }
+      .image {
+        float: right;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        border-radius: 3px;
       }
     </style>
   </head>
@@ -35,10 +56,10 @@
       <h1>PantryPal</h1>
       <h2>%TITLE%</h2>
 
-      <!-- %IMAGE% -->
+      <img class="image" src="%IMAGE%" alt="image of %TITLE%" />
 
-      <div class="tags">
-        <span>%MEAL_TYPE%</span>
+      <div class="labels">
+        <span class="meal-type-label" meal-type="%MEAL_TYPE%">%MEAL_TYPE%</span>
       </div>
       <div class="desc">
         %DESCRIPTION%

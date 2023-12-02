@@ -59,5 +59,6 @@ public class SharedRecipeHttpHandlerTest {
     assertTrue(result.contains(recipe.getTitle()), "title is missing from the recipe web page");
     assertTrue(result.contains(recipe.getDescription()), "description is missing from the recipe web page");
     assertTrue(result.contains(recipe.getMealType()), "meal type is missing from the recipe web page");
+    assertTrue(result.contains(recipe.getImageUrl()), "image url is missing from the recipe web page");
   }
 }
