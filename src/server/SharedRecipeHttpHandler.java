@@ -50,6 +50,7 @@ public class SharedRecipeHttpHandler extends HttpHandlerBase {
     return template
         .replaceAll("%TITLE%", recipe.getTitle())
         .replaceAll("%MEAL_TYPE%", recipe.getMealType())
+        .replaceAll("%IMAGE%", recipe.getImageUrl())
         .replaceAll("%DESCRIPTION%", recipe.getDescription().replaceAll("\n", "<br />"));
   }
 
