@@ -26,12 +26,19 @@ public class NewRecipeConfirmPage extends BorderPane {
     private Label header;
     private TextArea body;
     private Footer footer;
+    private ImageView imageView;
 
     public NewRecipeConfirmPage(Recipe recipe) {
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         header = new Label(recipe.getTitle());
         header.getStyleClass().add("recipe-title");
+
+        String imageurl = recipe.getImageUrl();
+        imageView = new ImageView(new Image(imageurl));
+        imageView.setFitWidth(100); 
+        imageView.setFitHeight(100); 
+        imageView.getStyleClass().add("recipe-image");
 
         body = new TextArea(recipe.getDescription());
         body.getStyleClass().add("recipe-description");
@@ -43,6 +50,7 @@ public class NewRecipeConfirmPage extends BorderPane {
         body.setWrapText(true);
 
         this.setTop(header);
+        this.setLeft(imageView);
         this.setCenter(body);
         this.setBottom(footer);
     }
