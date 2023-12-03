@@ -353,7 +353,7 @@
   /* -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 1); */
   -fx-font-weight: bold;
   -fx-wrap-text: true;
-  -fx-pref-width: 480;
+  -fx-pref-width: 390;
   /* -fx-pref-height: 400; */
   -fx-alignment: top-left; /* Adjusted alignment */
   background-color: #e8ddb5;
