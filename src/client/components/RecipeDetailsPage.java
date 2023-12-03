@@ -14,6 +14,8 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /*
  * Recipe details
@@ -86,6 +88,12 @@ public class RecipeDetailsPage extends BorderPane {
         recipeTitle.getStyleClass().add("recipe-title");
         this.header.setCenter(recipeTitle);
         this.body.setText(recipe.getDescription());
+        String imageurl = recipe.getImageUrl();
+        ImageView imageView = new ImageView(new Image(imageurl));
+        imageView.setFitWidth(100); 
+        imageView.setFitHeight(100); 
+        imageView.getStyleClass().add("recipe-image");
+        this.setLeft(imageView);
     }
 }
 
