@@ -109,4 +109,32 @@ public class ServerRecipeGeneratorTest {
 
     assertEquals("Meal type file cannot found.", actual);
   }
+
+  @Test
+  public void anyServerErrorOccurs() throws InterruptedException, ExecutionException, IOException
+  {
+    String mockRecipeResponse = "{\"error\": \"ingredients are missing\"}";
+    server = new MockHttpServer("/recipe/generate", mockRecipeResponse);
+
+    CompletableFuture<String> future = new CompletableFuture<>();
+    ServerRecipeGenerator generator = new ServerRecipeGenerator(mockSession, "http://localhost:4105");
+
+    server.start(4105);
+
+    RecipeRequestParameter params = new RecipeRequestParameter(new File("test/resources/silence.mp3"), new File("test/resources/silence.mp3"));
+
+    generator.requestGeneratingRecipe(params, (recipe) -> {
+      server.stop();
+    }, (String errorMessage) -> {
+      future.complete(errorMessage);
+      server.stop();
+    });
+
+    // if the test takes more than 3 seconds, consider empty string is returned.
+    future.completeOnTimeout(null, 15, TimeUnit.SECONDS);
+
+    String actual = future.get();
+    assertEquals("ingredients are missing", actual);
+  }
+
 }

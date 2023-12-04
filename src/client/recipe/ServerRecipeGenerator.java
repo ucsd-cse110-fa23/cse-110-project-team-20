@@ -11,6 +11,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.json.JSONObject;
+
 import client.Recipe;
 import client.account.IAccountSession;
 
@@ -43,6 +45,12 @@ public class ServerRecipeGenerator implements IRecipeGenerator {
     Thread t = new Thread(() -> {
       try {
         String recipeResponse = request(parameter);
+
+        JSONObject responseJson = new JSONObject(recipeResponse.trim());
+        if (responseJson.has("error")) {
+          throw new GenerateRecipeException(responseJson.getString("error"));
+        }
+
         Recipe recipe = Recipe.fromJson(recipeResponse);
         onRecipeGenerated.onRecipeGenerated(recipe);
       } catch (Exception e) {
