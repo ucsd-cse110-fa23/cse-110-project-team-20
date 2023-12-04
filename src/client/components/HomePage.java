@@ -11,14 +11,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /*
  * Home Page
@@ -32,8 +39,7 @@ public class HomePage extends BorderPane {
     private HBox optionsBar;
 
     public HomePage(List<Recipe> recipes, Runnable createButtonCallback,
-        RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback)
-    {
+            RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback) {
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         header = new Header();
@@ -63,11 +69,13 @@ public class HomePage extends BorderPane {
 class OptionsBar extends HBox {
     private ComboBox<String> filterComboBox;
     private Runnable r;
+    private Button chronoSortButton;
+    private Button alphaSortButton;
 
-    public OptionsBar()
-    {
-        ObservableList<String> filterOptions =
-            FXCollections.observableArrayList("Filter: None", "Breakfast", "Lunch", "Dinner");
+    public OptionsBar() {
+        // Create filter options list
+        ObservableList<String> filterOptions = FXCollections.observableArrayList("Filter: None", "Breakfast", "Lunch",
+                "Dinner");
 
         filterComboBox = new ComboBox<>(filterOptions);
         filterComboBox.setPromptText("Filter by meal type");
@@ -79,13 +87,46 @@ class OptionsBar extends HBox {
                 r.run();
             }
         });
+        // Create chronological sort button
+        chronoSortButton = createButton("", "clock-icon.png");
+        chronoSortButton.getStyleClass().addAll("chrono-button");
+        Tooltip chronoTooltip = new Tooltip("Sort by reverse chronological Order");
+        chronoSortButton.setTooltip(chronoTooltip);
 
-        this.getChildren().addAll(filterComboBox);
+        // Create alphabetical sort button
+        alphaSortButton = createButton("", "alpha-icon.png");
+        alphaSortButton.getStyleClass().addAll("alpha-button");
+        Tooltip alphaTooltip = new Tooltip("Sort alphabetically");
+        alphaSortButton.setTooltip(alphaTooltip);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        // Set alignment to place sort buttons on the right side
+        setAlignment(Pos.CENTER_LEFT);
+
+        getChildren().addAll(filterComboBox, spacer, chronoSortButton, alphaSortButton);
     }
 
-    public void
-    setSelectionCallback(Runnable r)
-    {
+    private Button createButton(String buttonLabel, String resourceName) {
+        Button btn = new Button(buttonLabel);
+
+        try (InputStream imageStream = getClass().getResource(resourceName).openStream()) {
+            Image image = new Image(imageStream);
+            ImageView imageView = new ImageView(image);
+
+            imageView.setFitWidth(24);
+            imageView.setFitHeight(24);
+
+            btn = new Button(buttonLabel, imageView);
+            btn.setGraphicTextGap(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return btn;
+    }
+
+    public void setSelectionCallback(Runnable r) {
         this.r = r;
     }
 }
@@ -95,8 +136,7 @@ class Header extends BorderPane {
     private Button createButton;
     private Button logoutButton;
 
-    public Header()
-    {
+    public Header() {
         createButton = new Button("\uff0b"); // unicode version of plus sign
         createButton.getStyleClass().add("create-button");
         createButton.setAlignment(Pos.CENTER);
@@ -117,23 +157,19 @@ class Header extends BorderPane {
         setAlignment(logoutButton, Pos.CENTER_RIGHT);
     }
 
-    public void
-    setCreateButtonCallback(Runnable r)
-    {
+    public void setCreateButtonCallback(Runnable r) {
         this.createButton.setOnAction(e -> r.run());
     }
 
-    public void
-    setLogoutButtonCallback(Runnable r)
-    {
+    public void setLogoutButtonCallback(Runnable r) {
         this.logoutButton.setOnAction(e -> r.run());
     }
 }
 
 class RecipeBox extends HBox {
     private static final int MAX_TITLE_LEN = 38;
-    public RecipeBox(Recipe recipe)
-    {
+
+    public RecipeBox(Recipe recipe) {
         VBox recipeDetails = new VBox(10);
 
         Label titleLabel = new Label(trimTitle(recipe.getTitle()));
@@ -155,9 +191,7 @@ class RecipeBox extends HBox {
         getStyleClass().add("recipe-box");
     }
 
-    private static String
-    trimTitle(String title)
-    {
+    private static String trimTitle(String title) {
         String trimmed = title.trim();
         if (trimmed.length() > MAX_TITLE_LEN) {
             return title.substring(0, MAX_TITLE_LEN - 3).trim() + "...";
@@ -165,40 +199,35 @@ class RecipeBox extends HBox {
         return trimmed;
     }
 
-    private static String
-    getMealType(Recipe r)
-    {
+    private static String getMealType(Recipe r) {
         switch (r.getMealType().toLowerCase()) {
-        case "breakfast":
-            return "Breakfast";
-        case "lunch":
-            return "Lunch";
-        case "dinner":
-            return "Dinner";
-        default:
-            return "Unknown";
+            case "breakfast":
+                return "Breakfast";
+            case "lunch":
+                return "Lunch";
+            case "dinner":
+                return "Dinner";
+            default:
+                return "Unknown";
         }
     }
 
-    private static String
-    getColorHexCode(String mealType)
-    {
+    private static String getColorHexCode(String mealType) {
         switch (mealType.toLowerCase()) {
-        case "breakfast":
-            return "FAEDCB";
-        case "lunch":
-            return "C9E4DE";
-        case "dinner":
-            return "DBCDF0";
-        default:
-            return "808080";
+            case "breakfast":
+                return "FAEDCB";
+            case "lunch":
+                return "C9E4DE";
+            case "dinner":
+                return "DBCDF0";
+            default:
+                return "808080";
         }
     }
 }
 
 class RecipeList extends VBox {
-    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback)
-    {
+    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback) {
         this.setSpacing(10); // sets spacing between contacts
         this.setPrefSize(500, 460);
         getStyleClass().add("recipe-list");
