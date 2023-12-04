@@ -180,7 +180,6 @@ public class Controller {
         Recipe recipe = recipeModel.getRecipe(id);
         Runnable cancelCallback = () -> backToHomeScene();
 
-        // TODO: Added transition to edit
         Runnable editCallback = () -> transitionToEditScene(id);
         Runnable deleteCallback = () -> deleteRecipeClicked(id);
         Runnable shareCallback = () -> shareRecipeClicked(id);
@@ -194,7 +193,6 @@ public class Controller {
         viewTransitioner.transitionTo(RecipeDetailsPage.class, recipe, callbacks);
     }
 
-    // TODO: Add in edit page
     public void
     transitionToEditScene(int id)
     {
@@ -263,8 +261,9 @@ public class Controller {
     {
         Runnable saveCallback = () -> saveRecipeClicked(recipe);
         Runnable discardCallback = () -> discardGeneratedRecipeClicked();
-        viewTransitioner.transitionTo(
-            NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback);
+        // TODO:
+        Runnable regenerateCallback = () -> requestTranscription();
+        viewTransitioner.transitionTo(NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback, regenerateCallback);
     }
 
     public void

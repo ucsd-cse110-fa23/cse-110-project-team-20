@@ -6,32 +6,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 public class CompositeViewTransitionerTest {
-    @Test
-    public void
-    instance()
-    {
-        CompositeViewTransitioner transitioner = new CompositeViewTransitioner();
-        assertInstanceOf(CompositeViewTransitioner.class, transitioner);
-    }
+  @Test
+  public void instance() {
+    CompositeViewTransitioner transitioner = new CompositeViewTransitioner();
+    assertInstanceOf(CompositeViewTransitioner.class, transitioner);
+  }
+  
+  @Test
+  public void cascadeTransitionToWithoutParam() {
+    CompositeViewTransitioner transitioner = new CompositeViewTransitioner();
+    MockTransitioner testTransitioner1 = new MockTransitioner(MockCompositeClass.class);
+    MockTransitioner testTransitioner2 = new MockTransitioner(MockCompositeClass.class);
+    MockTransitioner testTransitioner3 = new MockTransitioner(MockCompositeClass.class);
 
-    @Test
-    public void
-    cascadeTransitionToWithoutParam()
-    {
-        CompositeViewTransitioner transitioner = new CompositeViewTransitioner();
-        MockTransitioner testTransitioner1 = new MockTransitioner(MockCompositeClass.class);
-        MockTransitioner testTransitioner2 = new MockTransitioner(MockCompositeClass.class);
-        MockTransitioner testTransitioner3 = new MockTransitioner(MockCompositeClass.class);
-
-        transitioner.add(testTransitioner1);
-        transitioner.add(testTransitioner2);
-        transitioner.add(testTransitioner3);
+    transitioner.add(testTransitioner1);
+    transitioner.add(testTransitioner2);
+    transitioner.add(testTransitioner3);
 
         transitioner.transitionTo(MockCompositeClass.class, new Object[] {});
         assertTrue(testTransitioner1.transitionCalled);
         assertTrue(testTransitioner2.transitionCalled);
         assertTrue(testTransitioner3.transitionCalled);
-    }
+  }
 
     @Test
     public void
