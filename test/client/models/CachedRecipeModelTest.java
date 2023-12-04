@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import client.Recipe;
 import client.account.IAccountSession;
 import client.mock.MockHttpServer;
+import client.models.mock.MockGetRecipesRecipeModel;
 
 import java.io.IOException;
 import java.util.List;
@@ -106,5 +107,19 @@ public class CachedRecipeModelTest {
     model.deleteRecipe(2);
     
     assertEquals(2, model.getRecipes().size());
+  }
+
+  @Test
+  public void clearCache() {
+    MockGetRecipesRecipeModel innerModel = new MockGetRecipesRecipeModel();
+    CachedRecipeModel model = new CachedRecipeModel(innerModel);
+
+    model.getRecipes(); // loaded into cache, count increases
+    model.getRecipes(); // used cache, count not change
+    model.clearCache();
+    model.getRecipes(); // loaded into cache, count increases
+    model.getRecipes(); // used cache, count not change
+
+    assertEquals(2, innerModel.getNumberOfGetRecipesCalled());
   }
 }
