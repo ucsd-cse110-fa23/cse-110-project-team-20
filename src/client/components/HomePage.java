@@ -82,11 +82,6 @@ class OptionsBar extends HBox {
         filterComboBox.getStyleClass().add("filter-combo-box");
         this.getStyleClass().add("options-bar");
 
-        filterComboBox.setOnAction(event -> {
-            if (r != null) {
-                r.run();
-            }
-        });
         // Create chronological sort button
         chronoSortButton = createButton("", "clock-icon.png");
         chronoSortButton.getStyleClass().addAll("chrono-button");
@@ -126,9 +121,30 @@ class OptionsBar extends HBox {
         return btn;
     }
 
-    public void setSelectionCallback(Runnable r) {
-        this.r = r;
+    public void setFilterCallback(Runnable r) {
+        filterComboBox.setOnAction(event -> {
+            if (r != null) {
+                r.run();
+            }
+        });
     }
+
+    public void setAlphaSortButtonCallback(Runnable r) {
+        this.alphaSortButton.setOnAction(event -> {
+            if (r != null) {
+                r.run();
+            }
+        });
+    }
+    
+    public void setChronoSortButtonCallback(Runnable r) {
+        this.chronoSortButton.setOnAction(event -> {
+            if (r != null) {
+                r.run();
+            }
+        });
+    }
+
 }
 
 class Header extends BorderPane {
