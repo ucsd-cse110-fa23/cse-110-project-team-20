@@ -22,6 +22,7 @@ import server.api.IVoiceToTextService;
 import server.api.IRecipeQuery;
 import server.api.TextGenerateServiceException;
 import server.mock.MockHttpRequest;
+import server.recipe.IMealTypeSanitizer;
 
 public class GenerateRecipeHttpHandlerTest {
     @Test
@@ -42,7 +43,9 @@ public class GenerateRecipeHttpHandlerTest {
 
         ITextToImageService textToImageService = (IRecipeQuery query) -> "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII";
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService);
+        IMealTypeSanitizer mealTypeSanitizer = (String value) -> value;
+
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService, mealTypeSanitizer);
         assertInstanceOf(GenerateRecipeHttpHandler.class, handler);
     }
 
@@ -86,7 +89,9 @@ public class GenerateRecipeHttpHandlerTest {
         };
         ITextToImageService textToImageService = (IRecipeQuery query) -> "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII";
 
-        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService);
+        IMealTypeSanitizer mealTypeSanitizer = (String value) -> value;
+
+        GenerateRecipeHttpHandler handler = new GenerateRecipeHttpHandler(textGenerateService, voiceToTextService, textToImageService, mealTypeSanitizer);
         MockHttpRequest request = new MockHttpRequest();
 
         request.setHeaders(headers);
