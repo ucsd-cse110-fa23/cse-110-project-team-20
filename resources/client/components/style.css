@@ -322,6 +322,11 @@
   padding: 5px 10px;
 }
 
+.chrono-button.active,
+.alpha-button.active {
+  -fx-border-color: #d65412;
+  border-color: #d65412;
+}
 
 .chrono-button:hover:tooltip,
 .alpha-button:hover:tooltip {

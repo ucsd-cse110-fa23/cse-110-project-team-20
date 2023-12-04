@@ -5,6 +5,7 @@ import client.utils.runnables.RunnableWithId;
 import client.utils.runnables.RunnableWithString;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +39,8 @@ public class HomePage extends BorderPane {
 
     public HomePage(List<Recipe> recipes, Runnable createButtonCallback,
         RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback,
-        RunnableWithString mealTypeFilterCallback)
+        RunnableWithString mealTypeFilterCallback,
+        RunnableWithString sortCallback)
     {
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -50,8 +52,11 @@ public class HomePage extends BorderPane {
         optionsBar.setFilterCallback(() -> {
             mealTypeFilterCallback.run(optionsBar.getSelectedValue());
         });
+        optionsBar.setAlphaSortButtonCallback(sortCallback);
+        optionsBar.setChronoSortButtonCallback(sortCallback);
 
         recipeList = new RecipeList(recipes, openRecipeDetailButtonCallback);
+        recipeList.setSortType(RecipeSortOrder.TIME_ASC.name());
 
         ScrollPane scrollPane = new ScrollPane(recipeList);
         scrollPane.setFitToHeight(true);
@@ -77,12 +82,25 @@ public class HomePage extends BorderPane {
         recipeList.setMealTypeFilter(filterName);
         recipeList.refresh();
     }
+
+    public void applySort(String sortType) {
+        System.out.println(
+            String.format("[%s] sort applied: %s",
+                getClass().getName(),
+                sortType));
+
+        recipeList.setSortType(sortType);
+        recipeList.refresh();
+    }
 }
 
 class OptionsBar extends HBox {
     private ComboBox<String> filterComboBox;
-    private Button chronoSortButton;
-    private Button alphaSortButton;
+    private ToggleButton chronoSortButton;
+    private ToggleButton alphaSortButton;
+
+    private RunnableWithString chronoButtonCallback;
+    private RunnableWithString alphaButtonCallback;
 
     public OptionsBar() {
         // Create filter options list
@@ -95,16 +113,59 @@ class OptionsBar extends HBox {
         this.getStyleClass().add("options-bar");
 
         // Create chronological sort button
-        chronoSortButton = createButton("", "clock-icon.png");
+        chronoSortButton = createButton("", "clock-icon.png", "clock-rev-icon.png");
         chronoSortButton.getStyleClass().addAll("chrono-button");
         Tooltip chronoTooltip = new Tooltip("Sort by oldest to newest");
         chronoSortButton.setTooltip(chronoTooltip);
 
+        // default sort
+        chronoSortButton.setActive(true);
+
+        chronoSortButton.setOnAction(e -> {
+            if (chronoSortButton.isActive()) {
+                // flip toggle if it is already active
+                chronoSortButton.setToggle(! chronoSortButton.isToggled());
+            } else {
+                chronoSortButton.setActive(true);
+                alphaSortButton.setActive(false);
+            }
+
+            if (chronoSortButton.isToggled()) {
+                chronoTooltip.setText("Sort by oldest to newest");
+            } else {
+                chronoTooltip.setText("Sort by newest to oldest");
+            }
+            chronoButtonCallback.run(
+                chronoSortButton.isToggled()
+                ? RecipeSortOrder.TIME_DESC.name()
+                : RecipeSortOrder.TIME_ASC.name());
+        });
+
         // Create alphabetical sort button
-        alphaSortButton = createButton("", "alpha-icon.png");
+        alphaSortButton = createButton("", "alpha-icon.png", "alpha-rev-icon.png");
         alphaSortButton.getStyleClass().addAll("alpha-button");
         Tooltip alphaTooltip = new Tooltip("Sort alphabetically");
         alphaSortButton.setTooltip(alphaTooltip);
+
+        alphaSortButton.setOnAction(e -> {
+            if (alphaSortButton.isActive()) {
+                // flip toggle if it is already active
+                alphaSortButton.setToggle(! alphaSortButton.isToggled());
+            } else {
+                alphaSortButton.setActive(true);
+                chronoSortButton.setActive(false);
+            }
+
+            if (chronoSortButton.isToggled()) {
+                alphaTooltip.setText("Sort alphabetically (Descending)");
+            } else {
+                alphaTooltip.setText("Sort alphabetically");
+            }
+            alphaButtonCallback.run(
+                alphaSortButton.isToggled()
+                ? RecipeSortOrder.ALPHA_DESC.name()
+                : RecipeSortOrder.ALPHA_ASC.name());
+        });
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -123,38 +184,16 @@ class OptionsBar extends HBox {
         });
     }
 
-    public void setAlphaSortButtonCallback(Runnable r) {
-        this.alphaSortButton.setOnAction(event -> {
-            if (r != null) {
-                r.run();
-            }
-        });
+    public void setAlphaSortButtonCallback(RunnableWithString r) {
+        alphaButtonCallback = r;
     }
-    
-    public void setChronoSortButtonCallback(Runnable r) {
-        this.chronoSortButton.setOnAction(event -> {
-            if (r != null) {
-                r.run();
-            }
-        });
+
+    public void setChronoSortButtonCallback(RunnableWithString r) {
+        chronoButtonCallback = r;
     }
-    
-    private Button createButton(String buttonLabel, String resourceName) {
-        Button btn = new Button(buttonLabel);
 
-        try (InputStream imageStream = getClass().getResource(resourceName).openStream()) {
-            Image image = new Image(imageStream);
-            ImageView imageView = new ImageView(image);
-
-            imageView.setFitWidth(24);
-            imageView.setFitHeight(24);
-
-            btn = new Button(buttonLabel, imageView);
-            btn.setGraphicTextGap(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return btn;
+    private ToggleButton createButton(String buttonLabel, String resourceName, String toggledResourceName) {
+        return new ToggleButton(buttonLabel, resourceName, toggledResourceName);
     }
 
     public String
@@ -170,6 +209,64 @@ class OptionsBar extends HBox {
             default:
                 return null;
         }
+    }
+}
+
+class ToggleButton extends Button {
+    ImageView imageView;
+    ImageView toggledImageView;
+
+    private boolean active = false;
+    private boolean toggled = false;
+
+    public ToggleButton(String buttonLabel, String resourceName, String toggledResourceName) {
+        super(buttonLabel);
+
+        imageView = getImageView(resourceName);
+        toggledImageView = getImageView(toggledResourceName);
+
+        setGraphic(imageView);
+    }
+
+    public void setActive(boolean status) {
+        if (status) {
+            getStyleClass().add("active");
+        } else {
+            getStyleClass().remove("active");
+        }
+        active = status;
+    }
+
+    public void setToggle(boolean status) {
+        if (status) {
+            setGraphic(toggledImageView);
+        } else {
+            setGraphic(imageView);
+        }
+        toggled = status;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public boolean isToggled() {
+        return toggled;
+    }
+
+    private ImageView getImageView(String resourceName) {
+        try (InputStream imageStream = getClass().getResource(resourceName).openStream()) {
+            Image image = new Image(imageStream);
+            ImageView imageView = new ImageView(image);
+
+            imageView.setFitWidth(24);
+            imageView.setFitHeight(24);
+
+            return imageView;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
 
@@ -283,6 +380,7 @@ class RecipeBox extends HBox {
 class RecipeList extends VBox {
     private List<RecipeBox> _recipeBoxes;
     private String mealTypeForFilter = null;
+    private RecipeSortOrder sortType = null;
 
     public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback)
     {
@@ -310,10 +408,24 @@ class RecipeList extends VBox {
         mealTypeForFilter = filterText;
     }
 
+    public void setSortType(String srt) {
+        sortType = RecipeSortOrder.valueOf(srt);
+    }
+
+    public List<RecipeBox> applySort(List<RecipeBox> recipes) {
+        switch (sortType) {
+            case TIME_ASC:
+                // do nothing, it is a default order from the server
+                break;
+            default:
+                break;
+        }
+        return recipes;
+    }
+
     public void refresh() {
         List<RecipeBox> recipeBoxes = getFilteredRecipeBoxes();
-
-        // @TODO apply sort after the filter
+        recipeBoxes = applySort(recipeBoxes);
 
         getChildren().clear();
         getChildren().addAll(recipeBoxes);
@@ -337,4 +449,16 @@ class RecipeList extends VBox {
         }
         return newRecipeBoxes;
     }
+}
+
+/**
+ * Sort order
+ *
+ * RecipeSortOrder enum helps us not miss the name of sort order
+ */
+enum RecipeSortOrder {
+  TIME_ASC,
+  TIME_DESC,
+  ALPHA_ASC,
+  ALPHA_DESC;
 }

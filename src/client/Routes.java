@@ -4,6 +4,7 @@ import client.components.ErrorMessage;
 import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.HomePageMealTypeFiltered;
+import client.components.HomePageSorted;
 import client.components.LoadingPage;
 import client.components.LoginPage;
 import client.components.NewRecipeConfirmPage;
@@ -69,9 +70,11 @@ public class Routes {
             RunnableWithId openRecipeDetailButtonCallback = (RunnableWithId) params[2];
             Runnable logoutButtonCallback = (Runnable) params[3];
             RunnableWithString mealTypeFilterCallback = (RunnableWithString) params[4];
+            RunnableWithString sortFilterCallback = (RunnableWithString) params[5];
 
             HomePage homePage = new HomePage(recipes, createButtonCallback,
-                openRecipeDetailButtonCallback, logoutButtonCallback, mealTypeFilterCallback);
+                openRecipeDetailButtonCallback, logoutButtonCallback, mealTypeFilterCallback,
+                sortFilterCallback);
 
             primaryStage.setScene(new Scene(homePage, WIDTH, HEIGHT));
         });
@@ -86,6 +89,19 @@ public class Routes {
             Parent node = primaryStage.getScene().getRoot();
             if (node instanceof HomePage) {
                 new HomePageMealTypeFiltered((HomePage) node, mealType);
+            }
+        });
+
+        /**
+         * Home Page (Sorted)
+         *
+         * Apply sort on current homepage
+         */
+        routes.register(HomePageSorted.class, (Object[] params) -> {
+            String sortType = (String) params[0];
+            Parent node = primaryStage.getScene().getRoot();
+            if (node instanceof HomePage) {
+                new HomePageSorted((HomePage) node, sortType);
             }
         });
 
