@@ -2,6 +2,9 @@ package server;
 
 import com.sun.net.httpserver.*;
 import java.io.*;
+
+import org.json.JSONObject;
+
 import server.request.*;
 
 /*
@@ -65,5 +68,17 @@ public abstract class HttpHandlerBase implements HttpHandler {
     handleDelete(IHttpRequest request) throws UnsupportedMethodException
     {
         throw new UnsupportedMethodException();
+    }
+
+    protected String success() {
+        JSONObject response = new JSONObject();
+        response.put("success", true);
+        return response.toString(2);
+    }
+
+    protected String fail(String message) {
+        JSONObject response = new JSONObject();
+        response.put("error", message);
+        return response.toString(2);
     }
 }
