@@ -66,13 +66,11 @@
 }
 
 .homepage-header .app-name {
-  -fx-font: Lucida Calligraphy;
   -fx-text-fill: #654321;
   -fx-font-size: 30px;
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
-  font: Lucida Calligraphy;
 }
 
 .homepage-header .create-button {
@@ -169,7 +167,6 @@
 }
 
 .recipe-box .recipe-title {
-  -fx-font: Lucida Calligraphy;
   -fx-border-radius: 5px;
   -fx-text-fill: #654321;
   -fx-font-size: 20px;
@@ -177,7 +174,6 @@
   border-radius: 5px;
   color: #654321;
   font-size: 20px;
-  font: Lucida Calligraphy;
 }
 .recipe-box:hover .recipe-title {
   -fx-text-fill: #82859b;
@@ -247,6 +243,32 @@
   -fx-text-fill: #786783;
 }
 
+.chrono-button, .alpha-button {
+  -fx-background-color: transparent;
+  -fx-border-color: black;
+  -fx-border-width: 2px;
+  -fx-border-radius: 5px;
+  -fx-padding: 5px 10px;
+}
+
+.chrono-button:hover:tooltip, .alpha-button:hover:tooltip {
+  -fx-font-size: 12px;
+  -fx-background-color: black;
+  -fx-text-fill: white;
+}
+
+.chrono-button:hover, .alpha-button:hover
+{
+  -fx-background-color: #d6d6d6;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 5, 0, 0, 1);
+  -fx-transition: -fx-background-color 0.3s;
+
+  cursor: hand;
+  transition: background-color 0.3s;
+
+}
+
 /**
 * Recording Page
 */
@@ -313,13 +335,11 @@
 }
 
 .recipe-title {
-  -fx-font: Lucida Calligraphy;
   -fx-text-fill: #654321;
   -fx-font-size: 30px;
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
-  font: Lucida Calligraphy;
 }
 
 .recipe-body {
@@ -660,7 +680,6 @@
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
-  font: Lucida Calligraphy;
 }
 
 .login-page .login-button {
