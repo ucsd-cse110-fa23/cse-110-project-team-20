@@ -27,6 +27,7 @@ public class ServerRecipeModel implements IRecipeModel {
   private String path = "/recipe";
   private String URL;
   private IAccountSession session;
+  private IRecipeModelErrorHandler errorHandler = null;
 
   public ServerRecipeModel(IAccountSession session) {
     this(session, "http://localhost:8100");
@@ -35,6 +36,10 @@ public class ServerRecipeModel implements IRecipeModel {
   public ServerRecipeModel(IAccountSession session, String baseUrl) {
     URL = String.format("%s%s", baseUrl, path);
     this.session = session;
+  }
+
+  public void setErrorHandler(IRecipeModelErrorHandler handler) {
+    this.errorHandler = handler;
   }
 
   @Override
@@ -147,6 +152,9 @@ public class ServerRecipeModel implements IRecipeModel {
 
       response = sb.toString();
     } catch (Exception e) {
+      if (this.errorHandler != null) {
+        errorHandler.onError(e);
+      }
       e.printStackTrace();
     }
 

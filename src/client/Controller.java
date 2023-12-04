@@ -298,4 +298,13 @@ public class Controller {
             viewTransitioner.transitionTo(SharedRecipeModal.class, recipe.getSharedUrl());
         }
     }
+
+    public void
+    onRecipeModelError(Exception e) {
+        Runnable callback = () -> start();
+        viewTransitioner.transitionTo(ErrorPage.class,
+            "Server error occured: " + e.getMessage(),
+            callback,
+            "Go to login page");
+    }
 }
