@@ -34,7 +34,7 @@ abstract public class UserStoryTestBase {
         accountSession = new MockAccountSession();
 
         recipeStub = new Recipe("Banana Pancake", "Some generated recipe for banana pancake.",
-            "banana, flour, eggs", "dinner", "pancake.jpg");
+            "banana, flour, eggs", "dinner", "data:image/gif;base64,R0lGODlhAQABAAAAACw=");
         generateRecipe.setMockRecipe(recipeStub);
 
         controller = new Controller(viewTransitioner, generateRecipe, audioRecorder, recipeModel,

@@ -2,11 +2,13 @@ package feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import client.Recipe;
 import client.components.ErrorMessage;
 import client.components.HomePage;
 import client.components.SharedRecipeModal;
+import client.components.NewRecipeConfirmPage;
 import client.utils.runnables.RunnableForLogin;
 import feature.mock.MockAccountManager;
 
@@ -24,6 +26,7 @@ import org.junit.jupiter.api.Test;
  * - Scenario 3.2: Access shared recipe webpage (Web page test, done by SharedRecipeHttpHandlerTest and manual testing)
  * - Scenario 3.3: Update shared recipe webpage (Web page test, done by SharedRecipeHttpHandlerTest and manual testing)
  * - Scenario 3.4: Delete shared recipe webpage (Web page test, done by SharedRecipeHttpHandlerTest and manual testing)
+ * - Scenario 9.2: Save Button is clicked (the scenario covered by MS1 scenario 2.3)
  */
 
 public class MS2UserStoryTest extends UserStoryTestBase {
@@ -130,5 +133,38 @@ public class MS2UserStoryTest extends UserStoryTestBase {
         // expected to show shared url on shared recipe modal screen
         assertEquals(SharedRecipeModal.class, viewTransitioner.currentPageClass);
         assertTrue(((String) viewTransitioner.params[0]).contains("http://localhost/recipe/shared/?url="));
+    }
+
+    @Test
+    public void
+    scenario_9_1_userGeneratesARecipe()
+    {
+        // Scenario 9.1 User generates a recipe
+        // Given the user has just inputted their ingredients list "banana, flour, eggs"
+        //     And the user already inputted "breakfast" for their meal type
+        // When the user hits 'Stop Recording'
+        // Then after generation completes a recipe generation page with an AI-generated image of "banana pancakes" should appear
+        //     And there should also be a title labeled "Banana Pancakes" along with the appropriate ingredients list and instructions
+        GivenTheUserIsGeneratedNewRecipe();
+        WhenTheUserHitsStopRecording();
+        ThenImageUrlShouldBeProvidedInTheRecipe();
+    }
+
+    private void
+    GivenTheUserIsGeneratedNewRecipe() {
+        // assume user provided appropriate input
+        controller.requestTranscription();
+    }
+
+    private void
+    WhenTheUserHitsStopRecording() {
+        // assume user clicks stop recording button
+    }
+
+    private void
+    ThenImageUrlShouldBeProvidedInTheRecipe() {
+        assertEquals(NewRecipeConfirmPage.class, viewTransitioner.currentPageClass);
+        Recipe recipe = (Recipe) viewTransitioner.params[0];
+        assertNotNull(recipe.getImageUrl());
     }
 }
