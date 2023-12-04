@@ -106,7 +106,7 @@ public class Controller {
             () -> mealTypeRecordingStarted(), () -> mealTypeRecordingCompleted());
 
         viewTransitioner.transitionTo(RecordingPage.class,
-            "What kind of meal do you want?\nLunch, Dinner, Snack etc.", callbacks);
+            "What kind of meal do you want?\n(Breakfast, Lunch, or Dinner)", callbacks);
     }
 
     public void
