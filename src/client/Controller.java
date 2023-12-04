@@ -153,7 +153,15 @@ public class Controller {
             recipeGenerator.requestGeneratingRecipe(params,
                 (recipe)
                     -> { transitionToNewRecipeConfirmPage(recipe); },
-                (errorMessage) -> { transitionToHomeScene(); });
+                (errorMessage) -> {
+                    Runnable retryButtonCallback = () -> {
+                        transitionToHomeScene();
+                    };
+                    viewTransitioner.transitionTo(ErrorPage.class,
+                        "Generating new recipe is failed: " + errorMessage,
+                        retryButtonCallback,
+                        "Go back to home");
+                 });
         }
     }
 
