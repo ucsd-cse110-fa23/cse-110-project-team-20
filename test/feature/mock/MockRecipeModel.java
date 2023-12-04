@@ -43,13 +43,14 @@ public class MockRecipeModel implements IRecipeModel {
       return;
     }
     // generate random string and set as shared url
-    String sharedUrl = UUID.randomUUID().toString();
-    Recipe newRecipe = new Recipe(r.getTitle(), r.getDescription(), r.getIngredients(), r.getMealType(), sharedUrl);
-    updateRecipe(id, newRecipe);
+    String sharedUrl = "http://localhost/recipe/shared/?url=" + UUID.randomUUID().toString();
+    Recipe newRecipe = new Recipe(r.getTitle(), r.getDescription(), r.getIngredients(), r.getMealType(), r.getImageUrl(), sharedUrl);
+    recipes.set(id, newRecipe);
   }
 
   @Override
   public void shareRecipe(int id, Runnable onComplete) {
     shareRecipe(id);
+    onComplete.run();
   }
 }
