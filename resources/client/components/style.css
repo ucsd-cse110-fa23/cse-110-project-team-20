@@ -35,8 +35,10 @@
 }
 
 .recipe-image {
-  -fx-clip-path: circle(); 
+  -fx-clip-path: circle();
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 0);
+
+  clip-path: circle();
 }
 
 /**
@@ -66,13 +68,11 @@
 }
 
 .homepage-header .app-name {
-  -fx-font: Lucida Calligraphy;
   -fx-text-fill: #654321;
   -fx-font-size: 30px;
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
-  font: Lucida Calligraphy;
 }
 
 .homepage-header .create-button {
@@ -124,7 +124,9 @@
 .meal-type-label {
   -fx-background-radius: 20;
   -fx-padding: 5px 10px;
-  /* border-radius: 20; */
+
+
+  padding: 5px 10px;
 }
 
 .bubble-label {
@@ -134,10 +136,13 @@
   -fx-border-width: 1.25;
   -fx-text-fill: #654321;
 
-  /* border-radius: 20px; */
-  /* border-color: black; */
-  /* border-width: 1px; */
+
+  border-radius: 20px;
+  border-color: black;
+  border-width: 1.25px;
+  color: #654321;
 }
+
 
 .recipe-box {
   -fx-border-color: #b9bccc;
@@ -169,7 +174,6 @@
 }
 
 .recipe-box .recipe-title {
-  -fx-font: Lucida Calligraphy;
   -fx-border-radius: 5px;
   -fx-text-fill: #654321;
   -fx-font-size: 20px;
@@ -177,8 +181,8 @@
   border-radius: 5px;
   color: #654321;
   font-size: 20px;
-  font: Lucida Calligraphy;
 }
+
 .recipe-box:hover .recipe-title {
   -fx-text-fill: #82859b;
   color: #82859b;
@@ -196,6 +200,26 @@
   -fx-border-color: #ccc;
   -fx-border-radius: 5;
   -fx-padding: 5;
+
+
+  background-color: #f4f4f4;
+  border-color: #ccc;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+
+.filter-combo-box {
+  -fx-background-color: #f4f4f4;
+  -fx-border-color: #ccc;
+  -fx-border-radius: 5;
+  -fx-padding: 5;
+
+
+  background-color: #f4f4f4;
+  border-color: #ccc;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .filter-combo-box .arrow-button {
@@ -203,48 +227,123 @@
   -fx-shape: 'M 0 0 L 3 6 L 6 0 Z';
   -fx-scale-x: 0.7;
   -fx-scale-y: 0.7;
+
+
+  background-color: #e0e0e0;
+  transform: scale(0.7, 0.7);
 }
 
 .filter-combo-box .arrow-button:hover {
   -fx-background-color: #d0d0d0;
+
+
+  background-color: #d0d0d0;
 }
 
 .filter-combo-box .list-cell {
   -fx-background-color: #f4f4f4;
+
+
+  background-color: #f4f4f4;
 }
 
 .filter-combo-box .list-view {
   -fx-background-color: #f4f4f4;
   -fx-border-color: #ccc;
+
+
+  background-color: #f4f4f4;
+  border-color: #ccc;
 }
 
 .filter-combo-box .list-view .list-cell:selected {
   -fx-background-color: #007bff;
   -fx-text-fill: white;
+
+
+  background-color: #007bff;
+  color: white;
 }
 
 .options-bar {
   -fx-spacing: 10;
   -fx-padding: 10;
+
+
+  padding: 10px;
 }
 
 .options-bar .filter-combo-box-label {
   -fx-font-size: 14;
   -fx-font-weight: bold;
   -fx-text-fill: #333;
+
+
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
 }
 
 .filter-combo-box .arrow {
   -fx-opacity: 0;
+
+
+  opacity: 0;
 }
 
 .filter-combo-box .arrow-button:hover,
 .filter-combo-box .list-view:hover {
   -fx-cursor: hand;
+
+
+  cursor: pointer;
 }
 
 .filter-combo-box .list-view .list-cell:hover {
   -fx-text-fill: #786783;
+
+
+  color: #786783;
+}
+
+.chrono-button,
+.alpha-button {
+  -fx-background-color: transparent;
+  -fx-border-color: black;
+  -fx-border-width: 2px;
+  -fx-border-radius: 5px;
+  -fx-padding: 5px 10px;
+
+
+  background-color: transparent;
+  border-color: black;
+  border-width: 2px;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+
+.chrono-button:hover:tooltip,
+.alpha-button:hover:tooltip {
+  -fx-font-size: 12px;
+  -fx-background-color: black;
+  -fx-text-fill: white;
+
+  font-size: 12px;
+  background-color: black;
+}
+
+.chrono-button:hover,
+.alpha-button:hover {
+  -fx-background-color: #d6d6d6;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 5, 0, 0, 1);
+  -fx-transition: -fx-background-color 0.3s;
+
+  cursor: hand;
+  transition: background-color 0.3s;
+  background-color: #d6d6d6;
+
 }
 
 /**
@@ -313,26 +412,26 @@
 }
 
 .recipe-title {
-  -fx-font: Lucida Calligraphy;
   -fx-text-fill: #654321;
   -fx-font-size: 30px;
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
-  font: Lucida Calligraphy;
 }
 
 .recipe-body {
   -fx-font-family: Avantgarde;
   -fx-text-fill: #654321;
   -fx-font-size: 12px;
-  -fx-padding: 5px 10px; /* Adjusted padding */
+  -fx-padding: 5px 10px;
+  /* Adjusted padding */
   /* -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 1); */
   -fx-font-weight: bold;
   -fx-wrap-text: true;
   -fx-pref-width: 390;
   /* -fx-pref-height: 400; */
-  -fx-alignment: top-left; /* Adjusted alignment */
+  -fx-alignment: top-left;
+  /* Adjusted alignment */
   background-color: #e8ddb5;
   font-family: Avantgarde;
   color: #654321;
@@ -358,7 +457,7 @@
 }
 
 /* ref: https://forums.oracle.com/ords/apexds/post/css-styling-of-scrollpanes-broken-in-javafx-8-3855 */
-.recipe-scroll-pane > .viewport {
+.recipe-scroll-pane>.viewport {
   -fx-background-color: #e8ddb5;
   background-color: #e8ddb5;
 }
@@ -603,10 +702,12 @@
   -fx-font-family: Avantgarde;
   -fx-text-fill: #654321;
   -fx-font-size: 12px;
-  -fx-padding: 5px 10px; /* Adjusted padding */
+  -fx-padding: 5px 10px;
+  /* Adjusted padding */
   -fx-font-weight: bold;
   -fx-wrap-text: true;
-  -fx-alignment: top-left; /* Adjusted alignment */
+  -fx-alignment: top-left;
+  /* Adjusted alignment */
   background-color: #e8ddb5;
   font-family: Avantgarde;
   color: #654321;
@@ -623,13 +724,15 @@
   -fx-font-family: Avantgarde;
   -fx-text-fill: #654321;
   -fx-font-size: 12px;
-  -fx-padding: 5px 10px; /* Adjusted padding */
+  -fx-padding: 5px 10px;
+  /* Adjusted padding */
   /* -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 1); */
   -fx-font-weight: bold;
   -fx-wrap-text: true;
   /* -fx-pref-width: 490;
   -fx-pref-height: 400; */
-  -fx-alignment: top-left; /* Adjusted alignment */
+  -fx-alignment: top-left;
+  /* Adjusted alignment */
   background-color: #e8ddb5;
   font-family: Avantgarde;
   color: #654321;
@@ -647,6 +750,8 @@
 .login-page {
   -fx-alignment: center;
   -fx-padding: 20px;
+
+  padding: 20px;
 }
 
 .login-page .login-form {
@@ -660,7 +765,6 @@
   font-family: Lucida Calligraphy;
   color: #654321;
   font-size: 30px;
-  font: Lucida Calligraphy;
 }
 
 .login-page .login-button {
@@ -673,10 +777,24 @@
   -fx-cursor: hand;
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 5, 0, 0, 1);
   -fx-transition: background-color 0.3s;
+
+
+  font-size: 18px;
+  background-color: #97cfa3;
+  color: #3e3811;
+  text-align: center;
+  padding: 8px 52px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 5px 0 0;
+  transition: background-color 0.3s;
 }
 
 .login-page .login-button:hover {
   -fx-background-color: #6d9e78d5;
+  background-color: #6d9e78d5;
+
+
   background-color: #6d9e78d5;
 }
 
@@ -685,19 +803,33 @@
 .login-page .stay-logged-in-label {
   -fx-font-size: 18px;
   -fx-color: #654321;
+
+
+  font-size: 18px;
+  color: #654321;
 }
 
 .login-page .username-label,
 .login-page .password-label {
   -fx-padding: 20px 0 10px 0;
+
+
+  padding: 20px 0 10px 0;
 }
 
 .login-page .username-field,
 .login-page .password-field {
   -fx-font-size: 20px;
+
+
+  font-size: 20px;
 }
 
 .login-page .stay-logged-in-checkbox {
   -fx-padding: 20px 0 20px 0;
   -fx-font-size: 20px;
+
+
+  padding: 20px 0 20px 0;
+  font-size: 20px;
 }
