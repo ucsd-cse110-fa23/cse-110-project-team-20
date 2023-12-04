@@ -3,6 +3,7 @@ package client;
 import client.components.ErrorMessage;
 import client.components.ErrorPage;
 import client.components.HomePage;
+import client.components.HomePageMealTypeFiltered;
 import client.components.LoadingPage;
 import client.components.LoginPage;
 import client.components.NewRecipeConfirmPage;
@@ -15,8 +16,11 @@ import client.components.RecordingPageCallbacks;
 import client.components.SharedRecipeModal;
 import client.utils.runnables.RunnableForLogin;
 import client.utils.runnables.RunnableWithId;
+import client.utils.runnables.RunnableWithString;
 import client.utils.transitions.javafx.JavaFXViewTransitioner;
 import java.util.List;
+
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -64,10 +68,25 @@ public class Routes {
             Runnable createButtonCallback = (Runnable) params[1];
             RunnableWithId openRecipeDetailButtonCallback = (RunnableWithId) params[2];
             Runnable logoutButtonCallback = (Runnable) params[3];
+            RunnableWithString mealTypeFilterCallback = (RunnableWithString) params[4];
+
             HomePage homePage = new HomePage(recipes, createButtonCallback,
-                openRecipeDetailButtonCallback, logoutButtonCallback);
+                openRecipeDetailButtonCallback, logoutButtonCallback, mealTypeFilterCallback);
 
             primaryStage.setScene(new Scene(homePage, WIDTH, HEIGHT));
+        });
+
+        /**
+         * Home Page (MealType Filtered)
+         *
+         * Apply filter on current homepage
+         */
+        routes.register(HomePageMealTypeFiltered.class, (Object[] params) -> {
+            String mealType = (String) params[0];
+            Parent node = primaryStage.getScene().getRoot();
+            if (node instanceof HomePage) {
+                new HomePageMealTypeFiltered((HomePage) node, mealType);
+            }
         });
 
         /**
