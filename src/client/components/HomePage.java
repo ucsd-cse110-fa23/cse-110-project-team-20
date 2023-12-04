@@ -79,7 +79,7 @@ class OptionsBar extends HBox {
         // Create chronological sort button
         chronoSortButton = createButton("", "clock-icon.png");
         chronoSortButton.getStyleClass().addAll("chrono-button");
-        Tooltip chronoTooltip = new Tooltip("Sort by reverse chronological order");
+        Tooltip chronoTooltip = new Tooltip("Sort by oldest to newest");
         chronoSortButton.setTooltip(chronoTooltip);
 
         // Create alphabetical sort button
