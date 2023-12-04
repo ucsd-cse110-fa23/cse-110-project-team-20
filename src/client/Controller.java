@@ -9,6 +9,7 @@ import client.audio.IAudioRecorder;
 import client.components.ErrorMessage;
 import client.components.ErrorPage;
 import client.components.HomePage;
+import client.components.HomePageMealTypeFiltered;
 import client.components.LoadingPage;
 import client.components.LoginPage;
 import client.components.NewRecipeConfirmPage;
@@ -25,6 +26,7 @@ import client.recipe.RecipeRequestParameter;
 import client.utils.runnables.RunnableForLogin;
 import client.utils.runnables.RunnableWithId;
 import client.utils.runnables.RunnableWithRecipe;
+import client.utils.runnables.RunnableWithString;
 import client.utils.transitions.IViewTransitioner;
 import java.io.File;
 import java.util.List;
@@ -134,10 +136,17 @@ public class Controller {
 
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
         Runnable logoutButtonCallback = () -> logoutButtonClicked();
+        RunnableWithString mealTypeFilterCallback = (String value) -> mealTypeFilterButtonClicked(value);
 
         RunnableWithId openRecipeDetailButtonCallback = (int id) -> openRecipeDetailPage(id);
         viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback,
-            openRecipeDetailButtonCallback, logoutButtonCallback);
+            openRecipeDetailButtonCallback, logoutButtonCallback, mealTypeFilterCallback);
+    }
+
+    public void
+    mealTypeFilterButtonClicked(String filterText)
+    {
+        viewTransitioner.transitionTo(HomePageMealTypeFiltered.class, filterText);
     }
 
     public void

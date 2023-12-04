@@ -2,6 +2,9 @@ package client.components;
 
 import client.Recipe;
 import client.utils.runnables.RunnableWithId;
+import client.utils.runnables.RunnableWithString;
+
+import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,10 +34,12 @@ import java.io.InputStream;
 public class HomePage extends BorderPane {
     private Header header;
     private RecipeList recipeList;
-    private HBox optionsBar;
+    private OptionsBar optionsBar;
 
     public HomePage(List<Recipe> recipes, Runnable createButtonCallback,
-            RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback) {
+        RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback,
+        RunnableWithString mealTypeFilterCallback)
+    {
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         header = new Header();
@@ -42,6 +47,9 @@ public class HomePage extends BorderPane {
         header.setLogoutButtonCallback(logoutButtonCallback);
 
         optionsBar = new OptionsBar();
+        optionsBar.setFilterCallback(() -> {
+            mealTypeFilterCallback.run(optionsBar.getSelectedValue());
+        });
 
         recipeList = new RecipeList(recipes, openRecipeDetailButtonCallback);
 
@@ -58,6 +66,16 @@ public class HomePage extends BorderPane {
         this.setTop(topContainer);
         this.setCenter(scrollPane);
         this.setPrefSize(500, 800);
+    }
+
+    public void applyMealTypeFilter(String filterName) {
+        System.out.println(
+            String.format("[%s] meal type filter applied: %s",
+                getClass().getName(),
+                filterName != null ? filterName : "(not selected)"));
+
+        recipeList.setMealTypeFilter(filterName);
+        recipeList.refresh();
     }
 }
 
@@ -138,6 +156,21 @@ class OptionsBar extends HBox {
         }
         return btn;
     }
+
+    public String
+    getSelectedValue()
+    {
+        switch (filterComboBox.getValue()) {
+            case "Breakfast":
+                return "breakfast";
+            case "Lunch":
+                return "lunch";
+            case "Dinner":
+                return "dinner";
+            default:
+                return null;
+        }
+    }
 }
 
 class Header extends BorderPane {
@@ -181,7 +214,9 @@ class Header extends BorderPane {
 class RecipeBox extends HBox {
     private static final int MAX_TITLE_LEN = 38;
 
+    private Recipe recipe;
     public RecipeBox(Recipe recipe) {
+        this.recipe = recipe;
         VBox recipeDetails = new VBox(10);
 
         Label titleLabel = new Label(trimTitle(recipe.getTitle()));
@@ -203,7 +238,9 @@ class RecipeBox extends HBox {
         getStyleClass().add("recipe-box");
     }
 
-    private static String trimTitle(String title) {
+    private static String
+    trimTitle(String title)
+    {
         String trimmed = title.trim();
         if (trimmed.length() > MAX_TITLE_LEN) {
             return title.substring(0, MAX_TITLE_LEN - 3).trim() + "...";
@@ -236,14 +273,24 @@ class RecipeBox extends HBox {
                 return "808080";
         }
     }
+
+    public Recipe getRecipe()
+    {
+        return recipe;
+    }
 }
 
 class RecipeList extends VBox {
-    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback) {
+    private List<RecipeBox> _recipeBoxes;
+    private String mealTypeForFilter = null;
+
+    public RecipeList(List<Recipe> recipes, RunnableWithId openRecipeDetailButtonCallback)
+    {
         this.setSpacing(10); // sets spacing between contacts
         this.setPrefSize(500, 460);
         getStyleClass().add("recipe-list");
 
+        List<RecipeBox> recipeBoxes = new ArrayList<>();
         for (int i = 0; i < recipes.size(); i++) {
             Recipe recipe = recipes.get(i);
 
@@ -251,7 +298,43 @@ class RecipeList extends VBox {
             RecipeBox newRecipeBox = new RecipeBox(recipe);
             newRecipeBox.setOnMouseClicked(event -> openRecipeDetailButtonCallback.run(id));
 
-            this.getChildren().add(newRecipeBox);
+            recipeBoxes.add(newRecipeBox);
         }
+
+        this.getChildren().addAll(recipeBoxes);
+        // store it for later
+        _recipeBoxes = recipeBoxes;
+    }
+
+    public void setMealTypeFilter(String filterText) {
+        mealTypeForFilter = filterText;
+    }
+
+    public void refresh() {
+        List<RecipeBox> recipeBoxes = getFilteredRecipeBoxes();
+
+        // @TODO apply sort after the filter
+
+        getChildren().clear();
+        getChildren().addAll(recipeBoxes);
+    }
+
+    private List<RecipeBox> getRecipeBoxes() {
+        return new ArrayList<>(_recipeBoxes);
+    }
+
+    private List<RecipeBox> getFilteredRecipeBoxes() {
+        List<RecipeBox> newRecipeBoxes;
+        if (mealTypeForFilter == null) {
+            newRecipeBoxes = getRecipeBoxes();
+        } else {
+            newRecipeBoxes = new ArrayList<>();
+            for (RecipeBox recipeBox : getRecipeBoxes()) {
+                if (recipeBox.getRecipe().getMealType().equalsIgnoreCase(mealTypeForFilter)) {
+                    newRecipeBoxes.add(recipeBox);
+                }
+            }
+        }
+        return newRecipeBoxes;
     }
 }
