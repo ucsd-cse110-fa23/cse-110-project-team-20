@@ -154,7 +154,15 @@ public class Routes {
         routes.register(ErrorPage.class, (Object[] params) -> {
             String message = (String) params[0];
             Runnable retry = (Runnable) params[1];
-            ErrorPage errorPage = new ErrorPage(message, retry);
+
+            ErrorPage errorPage;
+
+            if (params.length == 3) { // if there is label param, then use it
+                String buttonLabel = (String) params[2];
+                errorPage = new ErrorPage(message, retry, buttonLabel);
+            } else {
+                errorPage = new ErrorPage(message, retry);
+            }
 
             primaryStage.setTitle("PantryPal");
             primaryStage.setScene(new Scene(errorPage, WIDTH, HEIGHT));

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import client.Recipe;
 import client.components.ErrorMessage;
+import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.SharedRecipeModal;
 import client.components.NewRecipeConfirmPage;
@@ -133,6 +134,90 @@ public class MS2UserStoryTest extends UserStoryTestBase {
         // expected to show shared url on shared recipe modal screen
         assertEquals(SharedRecipeModal.class, viewTransitioner.currentPageClass);
         assertTrue(((String) viewTransitioner.params[0]).contains("http://localhost/recipe/shared/?url="));
+    }
+
+    @Test
+    public void
+    scenario_6_1_generationFailed()
+    {
+        // Scenario 6.1: Generation failed
+        // Given the user has said “breakfast” and “eggs” on the respective recording pages
+        //  And there happens to be a OpenAI error
+        // When the server returns an error
+        // Then error message page pops up
+        // When the user presses “Back to home page”
+        // Then the app goes to home page, which remains unchanged from its original base state
+
+        GivenTheServerIsExpectedToBeFailedByThirdPartyAPI();
+        GivenTheUserIsRequestingToGenerateRecipe();
+        WhenTheServerReturnsAnError();
+        ThenErrorPageIsExpected();
+    }
+
+    private void
+    GivenTheServerIsExpectedToBeFailedByThirdPartyAPI()
+    {
+        generateRecipe.mustFailWith("Some OpenAI error. Your token is expired.");
+    }
+
+    private void
+    GivenTheUserIsRequestingToGenerateRecipe()
+    {
+        controller.requestTranscription();
+    }
+
+    private void
+    WhenTheServerReturnsAnError()
+    {
+        // handled in given
+    }
+
+    private void
+    ThenErrorPageIsExpected()
+    {
+        assertEquals(ErrorPage.class, viewTransitioner.currentPageClass);
+        // message on the error page
+        assertEquals("Generating new recipe is failed: Some OpenAI error. Your token is expired.", viewTransitioner.params[0]);
+        // button label
+        assertEquals("Go back to home", viewTransitioner.params[2]);
+    }
+
+    @Test
+    public void
+    scenario_6_2_connectionFailed()
+    {
+        // Scenario 6.2: Connection failed
+        // Given there is no connection between client and server
+        // When the user turns the app on
+        // Then error message page pops up
+        // When the user presses “Back to home page”
+        // Then error message page pops up again
+
+        GivenThereIsNoConnection();
+        WhenErrorOccurs();
+        ThenErrorMessagePageShouldAppear();
+    }
+
+    private void
+    GivenThereIsNoConnection()
+    {
+        // assume no connection
+    }
+
+    private void
+    WhenErrorOccurs()
+    {
+        controller.onRecipeModelError(new Exception("Connection Refused"));
+    }
+
+    private void
+    ThenErrorMessagePageShouldAppear()
+    {
+        assertEquals(ErrorPage.class, viewTransitioner.currentPageClass);
+        // message on the error page
+        assertEquals("Server error occured: Connection Refused", viewTransitioner.params[0]);
+        // button label
+        assertEquals("Go to login page", viewTransitioner.params[2]);
     }
 
     @Test

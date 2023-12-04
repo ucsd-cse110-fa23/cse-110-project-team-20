@@ -2,6 +2,7 @@ package client.models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
@@ -122,5 +123,21 @@ public class ServerRecipeModelTest {
     model.shareRecipe(2);
 
     assertEquals("2", server.getLastHttpRequestQuery("id"));
+  }
+
+  private Exception exceptionOccured = null;
+
+  @Test
+  public void errorHandlerTest() {
+    ServerRecipeModel model = new ServerRecipeModel(mockSession, "http://localhost:3106");
+    model.setErrorHandler((Exception e) -> {
+      exceptionOccured = e;
+    });
+    // we expect to capture any exception during any request in the model.
+    // we will get connection refused since we don't setup mock server on this test.
+    model.shareRecipe(2);
+
+    assertNotNull(exceptionOccured);
+    assertTrue(exceptionOccured.getMessage().contains("Connection refused"));
   }
 }

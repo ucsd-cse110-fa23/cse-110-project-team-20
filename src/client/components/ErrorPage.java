@@ -13,15 +13,19 @@ import javafx.scene.layout.VBox;
  */
 public class ErrorPage extends BorderPane {
   public ErrorPage(String message, Runnable retry) {
+    this(message, retry, "Retry");
+  }
+
+  public ErrorPage(String message, Runnable retry, String buttonLabel) {
     VBox container = new VBox();
     container.setAlignment(Pos.CENTER);
 
-    Label title = new Label("Sorry, we couldn't display the app");
+    Label title = new Label("Sorry, there is a problem...");
     title.setStyle("-fx-font-size: 24px; -fx-font-weight: 600;");
 
     Label desc = new Label(message);
 
-    Button retryButton = new Button("Retry");
+    Button retryButton = new Button(buttonLabel);
     retryButton.setOnAction((e) -> retry.run());
 
     container.getChildren().addAll(title, spacer(), desc, spacer(), retryButton);

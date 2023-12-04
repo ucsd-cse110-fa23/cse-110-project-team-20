@@ -153,7 +153,15 @@ public class Controller {
             recipeGenerator.requestGeneratingRecipe(params,
                 (recipe)
                     -> { transitionToNewRecipeConfirmPage(recipe); },
-                (errorMessage) -> { transitionToHomeScene(); });
+                (errorMessage) -> {
+                    Runnable retryButtonCallback = () -> {
+                        transitionToHomeScene();
+                    };
+                    viewTransitioner.transitionTo(ErrorPage.class,
+                        "Generating new recipe is failed: " + errorMessage,
+                        retryButtonCallback,
+                        "Go back to home");
+                 });
         }
     }
 
@@ -289,5 +297,14 @@ public class Controller {
         } else {
             viewTransitioner.transitionTo(SharedRecipeModal.class, recipe.getSharedUrl());
         }
+    }
+
+    public void
+    onRecipeModelError(Exception e) {
+        Runnable callback = () -> start();
+        viewTransitioner.transitionTo(ErrorPage.class,
+            "Server error occured: " + e.getMessage(),
+            callback,
+            "Go to login page");
     }
 }
