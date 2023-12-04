@@ -105,13 +105,14 @@ public class Routes {
             Recipe recipe = (Recipe) params[0];
             Runnable saveCallback = (Runnable) params[1];
             Runnable discardCallback = (Runnable) params[2];
+            Runnable regenCallback = (Runnable) params[3];
             NewRecipeConfirmPage newRecipeConfirmPage = new NewRecipeConfirmPage(recipe);
 
             newRecipeConfirmPage.setCancelCallback(discardCallback);
             newRecipeConfirmPage.setSaveCallback(saveCallback);
 
-      // TODO: Add setRegenCallback call here, Add new register 
-      // newRecipeConfirmPage.setRegenCallback(regenCallback);
+            // TODO: Add setRegenCallback call here, Add new register 
+            newRecipeConfirmPage.setRegenCallback(regenCallback);
 
             primaryStage.setScene(new Scene(newRecipeConfirmPage, WIDTH, HEIGHT));
         });
