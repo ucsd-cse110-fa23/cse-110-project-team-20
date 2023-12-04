@@ -12,15 +12,11 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -164,13 +160,16 @@ class Header extends BorderPane {
         logoutButton.getStyleClass().add("logout-button");
         logoutButton.setAlignment(Pos.CENTER);
 
+        HBox rightBox = new HBox(logoutButton, createButton);
+        rightBox.setAlignment(Pos.CENTER_RIGHT);
+        rightBox.setSpacing(10);
+
         getStyleClass().add("homepage-header");
         setLeft(appName);
-        setCenter(logoutButton);
-        setRight(createButton);
+        setRight(rightBox);
 
         setAlignment(appName, Pos.CENTER_LEFT);
-        setAlignment(logoutButton, Pos.CENTER_RIGHT);
+        setAlignment(rightBox, Pos.CENTER_RIGHT);
     }
 
     public void setCreateButtonCallback(Runnable r) {
