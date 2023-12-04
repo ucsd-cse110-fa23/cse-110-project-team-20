@@ -5,7 +5,6 @@ import client.utils.runnables.RunnableWithId;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -64,7 +63,6 @@ public class HomePage extends BorderPane {
 
 class OptionsBar extends HBox {
     private ComboBox<String> filterComboBox;
-    private Runnable r;
     private Button chronoSortButton;
     private Button alphaSortButton;
 
@@ -99,24 +97,6 @@ class OptionsBar extends HBox {
         getChildren().addAll(filterComboBox, spacer, chronoSortButton, alphaSortButton);
     }
 
-    private Button createButton(String buttonLabel, String resourceName) {
-        Button btn = new Button(buttonLabel);
-
-        try (InputStream imageStream = getClass().getResource(resourceName).openStream()) {
-            Image image = new Image(imageStream);
-            ImageView imageView = new ImageView(image);
-
-            imageView.setFitWidth(24);
-            imageView.setFitHeight(24);
-
-            btn = new Button(buttonLabel, imageView);
-            btn.setGraphicTextGap(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return btn;
-    }
-
     public void setFilterCallback(Runnable r) {
         filterComboBox.setOnAction(event -> {
             if (r != null) {
@@ -140,7 +120,24 @@ class OptionsBar extends HBox {
             }
         });
     }
+    
+    private Button createButton(String buttonLabel, String resourceName) {
+        Button btn = new Button(buttonLabel);
 
+        try (InputStream imageStream = getClass().getResource(resourceName).openStream()) {
+            Image image = new Image(imageStream);
+            ImageView imageView = new ImageView(image);
+
+            imageView.setFitWidth(24);
+            imageView.setFitHeight(24);
+
+            btn = new Button(buttonLabel, imageView);
+            btn.setGraphicTextGap(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return btn;
+    }
 }
 
 class Header extends BorderPane {
