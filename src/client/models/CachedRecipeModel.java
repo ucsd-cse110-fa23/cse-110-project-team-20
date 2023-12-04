@@ -104,4 +104,8 @@ public class CachedRecipeModel implements IRecipeModel {
       onComplete.run();
     }).start();
   }
+
+  public void clearCache() {
+    loadedOnce = false;
+  }
 }

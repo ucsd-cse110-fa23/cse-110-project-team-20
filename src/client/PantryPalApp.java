@@ -15,6 +15,7 @@ import client.utils.transitions.CompositeViewTransitioner;
 import client.utils.transitions.PrintConsoleViewTransitioner;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import java.beans.PropertyChangeEvent;
 
 /**
  * PantryPal JavaFX Application
@@ -42,6 +43,14 @@ public class PantryPalApp extends Application {
         transitioner
             .add(Routes.getRoutes(primaryStage, controller))
             .add(new PrintConsoleViewTransitioner());
+
+        // added property change listener to refresh cached information in recipe model
+        // when account session is changed
+        ((SimpleAccountSession) accountSession).addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals("token")) {
+                ((CachedRecipeModel) recipeModel).clearCache();
+            }
+        });
 
         controller.start();
     }
