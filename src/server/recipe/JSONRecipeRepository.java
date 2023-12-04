@@ -23,7 +23,7 @@ import client.Recipe;
  * Handles how input from other parts of the application should be formatted in order to meet JSON specifications.
  * Also converts from server-appropriate formatted data to one used by local methods
  */
-public class JSONRecipeRepository implements IRecipeRepository {
+public class JSONRecipeRepository implements IRecipeRepository, ISharedRecipeRepository {
   String path;
 
   public JSONRecipeRepository(String jsonFilePath) {
@@ -63,7 +63,8 @@ public class JSONRecipeRepository implements IRecipeRepository {
         Optional.ofNullable(recipe.getTitle()).orElse(""),
         Optional.ofNullable(recipe.getDescription()).orElse(""),
         Optional.ofNullable(recipe.getIngredients()).orElse(""),
-        Optional.ofNullable(recipe.getMealType()).orElse(""));
+        Optional.ofNullable(recipe.getMealType()).orElse(""),
+        Optional.ofNullable(recipe.getImageUrl()).orElse(""));
     recipes.add(0, newRecipe);
     commit(recipes);
   }
@@ -77,7 +78,8 @@ public class JSONRecipeRepository implements IRecipeRepository {
         Optional.ofNullable(recipe.getTitle()).orElse(""),
         Optional.ofNullable(recipe.getDescription()).orElse(""),
         Optional.ofNullable(originalRecipe.getIngredients()).orElse(""),
-        Optional.ofNullable(originalRecipe.getMealType()).orElse(""));
+        Optional.ofNullable(originalRecipe.getMealType()).orElse(""),
+        Optional.ofNullable(recipe.getImageUrl()).orElse(""));
 
     recipes.set(id, newRecipe);
     commit(recipes);
@@ -138,4 +140,13 @@ public class JSONRecipeRepository implements IRecipeRepository {
     return recipes;
   }
 
+  @Override
+  public void markAsShared(int id) {
+    throw new UnsupportedOperationException("Unimplemented method 'markAsShared'");
+  }
+
+  @Override
+  public Recipe getRecipeBySharedUrl(String sharedUrl) {
+    throw new UnsupportedOperationException("Unimplemented method 'getRecipeBySharedUrl'");
+  }
 }

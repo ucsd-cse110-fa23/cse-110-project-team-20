@@ -132,9 +132,9 @@ class RecipeRepositoryMock implements IRecipeRepository {
   ArrayList<Recipe> list = new ArrayList<>();
 
   public RecipeRepositoryMock() {
-    list.add(0, new Recipe("title_A", "desc_A", "ingredients_A", "meal_type_A"));
-    list.add(0, new Recipe("title_B", "desc_B", "ingredients_B", "meal_type_B"));
-    list.add(0, new Recipe("title_C", "desc_C", "ingredients_C", "meal_type_C"));
+    list.add(0, new Recipe("title_A", "desc_A", "ingredients_A", "meal_type_A", "image_url_A"));
+    list.add(0, new Recipe("title_B", "desc_B", "ingredients_B", "meal_type_B", "image_url_B"));
+    list.add(0, new Recipe("title_C", "desc_C", "ingredients_C", "meal_type_C", "image_url_C"));
   }
   @Override
   public List<Recipe> getRecipes() {

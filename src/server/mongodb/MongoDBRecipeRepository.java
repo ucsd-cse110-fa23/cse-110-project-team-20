@@ -14,10 +14,14 @@ import com.mongodb.client.FindIterable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import client.Recipe;
 import server.account.IAccountContext;
 import server.recipe.IRecipeRepository;
+import server.recipe.ISharedRecipeConfiguration;
+import server.recipe.ISharedRecipeRepository;
+
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Sorts.descending;
 
@@ -27,13 +31,15 @@ import static com.mongodb.client.model.Sorts.descending;
  * This implementation will perform create, update, read, and delete
  * operation on recipe in MongoDB
  */
-public class MongoDBRecipeRepository implements IRecipeRepository {
+public class MongoDBRecipeRepository implements IRecipeRepository, ISharedRecipeRepository {
     private IMongoDBConfiguration config;
+    private ISharedRecipeConfiguration sharedUrlConfig;
     private IAccountContext accountContext;
     private Bson defaultSorting = descending("created_at");
 
-    public MongoDBRecipeRepository(IMongoDBConfiguration config, IAccountContext accountContext) {
+    public MongoDBRecipeRepository(IMongoDBConfiguration config, ISharedRecipeConfiguration sharedUrlConfig, IAccountContext accountContext) {
         this.config = config;
+        this.sharedUrlConfig = sharedUrlConfig;
         this.accountContext = accountContext;
     }
 
@@ -53,6 +59,7 @@ public class MongoDBRecipeRepository implements IRecipeRepository {
                     .sort(defaultSorting);
 
             for (Document recipeDoc : recipeDocList) {
+                recipeDoc.put("shared_url", sharedUrlConfig.sharedUrlBase() + recipeDoc.getString("shared_url"));
                 Recipe recipe = Recipe.fromJson(recipeDoc.toJson());
                 recipeList.add(recipe);
             }
@@ -127,6 +134,31 @@ public class MongoDBRecipeRepository implements IRecipeRepository {
                     .first();
 
             recipeCollection.deleteOne(eq("_id", recipeDoc.get("_id")));
+        }
+    }
+
+    @Override
+    public void markAsShared(int id) {
+        try (MongoClient client = MongoClients.create(config.getConnectionString())) {
+            MongoCollection<Document> recipeCollection = getCollection(client);
+
+            Document recipeDoc = recipeCollection.find(eq("username", accountContext.getUsername()))
+                    .sort(defaultSorting)
+                    .skip(id)
+                    .first();
+
+            Document updatedRecipe = new Document().append("shared_url", UUID.randomUUID().toString());
+
+            recipeCollection.updateOne(eq("_id", recipeDoc.get("_id")), new Document("$set", updatedRecipe));
+        }
+    }
+
+    @Override
+    public Recipe getRecipeBySharedUrl(String sharedUrl) {
+        try (MongoClient client = MongoClients.create(config.getConnectionString())) {
+            MongoCollection<Document> recipeCollection = getCollection(client);
+            Document recipeDoc = recipeCollection.find(eq("shared_url", sharedUrl)).first();
+            return recipeDoc != null ? Recipe.fromJson(recipeDoc.toJson()) : null;
         }
     }
 }

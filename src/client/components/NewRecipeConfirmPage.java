@@ -26,15 +26,19 @@ public class NewRecipeConfirmPage extends BorderPane {
     private Label header;
     private TextArea body;
     private Footer footer;
+    private ImageView imageView;
 
-    public NewRecipeConfirmPage(Recipe recipe)
-    {
-        getStylesheets().add(getClass().getResource(
-            "style.css"
-        ).toExternalForm());
+    public NewRecipeConfirmPage(Recipe recipe) {
+        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         header = new Label(recipe.getTitle());
         header.getStyleClass().add("recipe-title");
+
+        String imageurl = recipe.getImageUrl();
+        imageView = new ImageView(new Image(imageurl));
+        imageView.setFitWidth(100); 
+        imageView.setFitHeight(100); 
+        imageView.getStyleClass().add("recipe-image");
 
         body = new TextArea(recipe.getDescription());
         body.getStyleClass().add("recipe-description");
@@ -46,6 +50,7 @@ public class NewRecipeConfirmPage extends BorderPane {
         body.setWrapText(true);
 
         this.setTop(header);
+        this.setLeft(imageView);
         this.setCenter(body);
         this.setBottom(footer);
     }
@@ -57,8 +62,7 @@ public class NewRecipeConfirmPage extends BorderPane {
         this.footer.setOnCancel(r);
     }
 
-    public void setSaveCallback(Runnable r)
-    {
+    public void setSaveCallback(Runnable r) {
         this.footer.setOnSave(r);
     }
 
@@ -68,24 +72,24 @@ public class NewRecipeConfirmPage extends BorderPane {
     }
 }
 
+
 class Footer extends HBox {
     private Button saveButton;
     private Button cancelButton;
     private Button regenButton;
 
-    public Footer()
-    {
+    public Footer() {
         cancelButton = createButton("Discard", "cross-icon.png");
         cancelButton.getStyleClass().addAll(
-            "action-button", "discard-button");
+                "action-button", "discard-button");
 
         saveButton = createButton("Save", "plus-icon.png");
         saveButton.getStyleClass().addAll(
-            "action-button", "save-button");
-            
+                "action-button", "save-button");
+
         regenButton = createButton("Regenerate Recipe", "regen-icon.png");
         regenButton.getStyleClass().addAll(
-            "action-button", "save-button");
+                "action-button", "save-button");
 
         Region spacer = new Region();
         setHgrow(spacer, Priority.ALWAYS);
@@ -98,11 +102,11 @@ class Footer extends HBox {
     }
 
     public void setOnSave(Runnable onSave) {
-        saveButton.setOnAction(e-> onSave.run());
+        saveButton.setOnAction(e -> onSave.run());
     }
 
-    public void setOnRegen(Runnable onRegen){
-        regenButton.setOnAction(e-> onRegen.run());
+    public void setOnRegen(Runnable onRegen) {
+        regenButton.setOnAction(e -> onRegen.run());
     }
 
     // ref: https://jenkov.com/tutorials/javafx/button.html

@@ -8,12 +8,14 @@ import client.account.SimpleAccountSession;
 import client.audio.AudioRecorder;
 import client.audio.IAudioRecorder;
 import client.models.ServerRecipeModel;
+import client.models.CachedRecipeModel;
 import client.models.IRecipeModel;
 import client.recipe.ServerRecipeGenerator;
 import client.utils.transitions.CompositeViewTransitioner;
 import client.utils.transitions.PrintConsoleViewTransitioner;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import java.beans.PropertyChangeEvent;
 
 /**
  * PantryPal JavaFX Application
@@ -33,7 +35,7 @@ public class PantryPalApp extends Application {
         IAccountSession accountSession = new SimpleAccountSession();
         IRecipeGenerator recipeGenerator = new ServerRecipeGenerator(accountSession);
         IAudioRecorder audioRecorder = new AudioRecorder();
-        IRecipeModel recipeModel = new ServerRecipeModel(accountSession);
+        IRecipeModel recipeModel = new CachedRecipeModel(new ServerRecipeModel(accountSession));
         IAccountManager accountManager = new ServerAccountManager();
 
         Controller controller = new Controller(transitioner, recipeGenerator, audioRecorder, recipeModel, accountManager, accountSession);
@@ -41,6 +43,14 @@ public class PantryPalApp extends Application {
         transitioner
             .add(Routes.getRoutes(primaryStage, controller))
             .add(new PrintConsoleViewTransitioner());
+
+        // added property change listener to refresh cached information in recipe model
+        // when account session is changed
+        ((SimpleAccountSession) accountSession).addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (evt.getPropertyName().equals("token")) {
+                ((CachedRecipeModel) recipeModel).clearCache();
+            }
+        });
 
         controller.start();
     }
