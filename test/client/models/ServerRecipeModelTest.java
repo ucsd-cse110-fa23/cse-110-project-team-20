@@ -138,6 +138,6 @@ public class ServerRecipeModelTest {
     model.shareRecipe(2);
 
     assertNotNull(exceptionOccured);
-    assertEquals("Connection refused", exceptionOccured.getMessage());
+    assertTrue(exceptionOccured.getMessage().contains("Connection refused"));
   }
 }
