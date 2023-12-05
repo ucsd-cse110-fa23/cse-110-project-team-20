@@ -1,5 +1,5 @@
 package client.models;
 
 public interface IRecipeModelErrorHandler {
-  public void onError(Exception e);
+    public void onError(Exception e);
 }

@@ -2,7 +2,7 @@ package client.account;
 
 /**
  * Account Manager interface
- * 
+ *
  * This interface will provide login/create account functionality in this app
  */
 public interface IAccountManager {
@@ -15,5 +15,6 @@ public interface IAccountManager {
      * @throws IncorrectPassword
      * @throws LoginFailed
      */
-    public String loginOrCreateAccount(String username, String password) throws IncorrectPassword, LoginFailed;
+    public String loginOrCreateAccount(String username, String password)
+        throws IncorrectPassword, LoginFailed;
 }

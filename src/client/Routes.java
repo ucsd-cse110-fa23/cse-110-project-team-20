@@ -20,7 +20,6 @@ import client.utils.runnables.RunnableWithId;
 import client.utils.runnables.RunnableWithString;
 import client.utils.transitions.javafx.JavaFXViewTransitioner;
 import java.util.List;
-
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -72,9 +71,9 @@ public class Routes {
             RunnableWithString mealTypeFilterCallback = (RunnableWithString) params[4];
             RunnableWithString sortFilterCallback = (RunnableWithString) params[5];
 
-            HomePage homePage = new HomePage(recipes, createButtonCallback,
-                openRecipeDetailButtonCallback, logoutButtonCallback, mealTypeFilterCallback,
-                sortFilterCallback);
+            HomePage homePage =
+                new HomePage(recipes, createButtonCallback, openRecipeDetailButtonCallback,
+                    logoutButtonCallback, mealTypeFilterCallback, sortFilterCallback);
 
             primaryStage.setScene(new Scene(homePage, WIDTH, HEIGHT));
         });
@@ -146,7 +145,7 @@ public class Routes {
             newRecipeConfirmPage.setCancelCallback(discardCallback);
             newRecipeConfirmPage.setSaveCallback(saveCallback);
 
-            // TODO: Add setRegenCallback call here, Add new register 
+            // TODO: Add setRegenCallback call here, Add new register
             newRecipeConfirmPage.setRegenCallback(regenCallback);
 
             primaryStage.setScene(new Scene(newRecipeConfirmPage, WIDTH, HEIGHT));
@@ -221,7 +220,7 @@ public class Routes {
 
         /**
          * Share URL Modal
-         * 
+         *
          * show share URL of recipe.
          */
         routes.register(SharedRecipeModal.class, (Object[] params) -> {
@@ -229,6 +228,6 @@ public class Routes {
             new SharedRecipeModal(sharedUrl);
         });
 
-    return routes;
-  }
+        return routes;
+    }
 }
