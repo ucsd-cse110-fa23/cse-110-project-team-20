@@ -1,13 +1,13 @@
 package server;
 
+import client.Recipe;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
 import org.json.JSONObject;
-
-import client.Recipe;
 import server.api.ITextGenerateService;
 import server.api.ITextToImageService;
 import server.api.IVoiceToTextService;
@@ -16,22 +16,18 @@ import server.api.RecipeQuery;
 import server.recipe.IMealTypeSanitizer;
 import server.request.FileRequestHelper;
 import server.request.IHttpRequest;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 
-// Primarily for console and debugging purposes; displays the status and result of server interactions.
+// Primarily for console and debugging purposes; displays the status and result of server
+// interactions.
 public class GenerateRecipeHttpHandler extends HttpHandlerBase {
     private ITextGenerateService textGenerateService;
     private IVoiceToTextService voiceToTextService;
     private ITextToImageService textToImageService;
     private IMealTypeSanitizer mealTypeSanitizer;
 
-    public GenerateRecipeHttpHandler(
-        ITextGenerateService textGenerateService,
-        IVoiceToTextService voiceToTextService,
-        ITextToImageService textToImageService,
-        IMealTypeSanitizer mealTypeSanitizer
-        )
+    public GenerateRecipeHttpHandler(ITextGenerateService textGenerateService,
+        IVoiceToTextService voiceToTextService, ITextToImageService textToImageService,
+        IMealTypeSanitizer mealTypeSanitizer)
     {
         this.textGenerateService = textGenerateService;
         this.voiceToTextService = voiceToTextService;
@@ -67,20 +63,21 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
         String ingredients = future1.join();
         String mealType = future2.join();
 
-        if (isApplicableTranscription(ingredients)) {
+        if (isInvalidTranscription(ingredients)) {
             info("Given ingredients are empty.");
-            return fail("INPUT ERROR: ingredients you provided is empty or too short.");
+            return fail("We couldn't figure out what ingredients you specified :(");
         }
 
-        if (isApplicableTranscription(mealType)) {
+        if (isInvalidTranscription(mealType)) {
             info("Given meal type is empty.");
-            return fail("INPUT ERROR: meal type that you provided is empty too short.");
+            return fail("We couldn't figure out what meal type you specified :(");
         }
 
         // sanitize the given meal type to appropriate one
         mealType = mealTypeSanitizer.apply(mealType);
 
-        info(String.format("Recieved: \"%s\", \"%s\" from voice to text service", ingredients, mealType));
+        info(String.format(
+            "Recieved: \"%s\", \"%s\" from voice to text service", ingredients, mealType));
 
         // create recipe query with mealtype and ingredients
         RecipeQuery query = new RecipeQuery(ingredients, mealType);
@@ -94,9 +91,7 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
         // write(recipeText, "text-generated.txt");
 
         // clean up
-        String result[] = recipeText
-            .trim()
-            .split("\n", 2);
+        String result[] = recipeText.trim().split("\n", 2);
 
         // write(result[0], "text-generated-0.txt");
         // write(result[1], "text-generated-1.txt");
@@ -119,20 +114,26 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
         return response;
     }
 
-    private boolean isApplicableTranscription(String text) {
+    private boolean
+    isInvalidTranscription(String text)
+    {
         return text.trim().isEmpty() || text.toLowerCase().contains("audio file is too short");
     }
 
-    private void info(String message) {
+    private void
+    info(String message)
+    {
         System.out.println("[GenerateRecipeHttpHandler] " + message);
     }
 
-    private void write(String data, String filename) {
-      try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-        writer.write(data);
-        writer.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+    private void
+    write(String data, String filename)
+    {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(data);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
