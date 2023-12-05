@@ -65,8 +65,7 @@ public class ServerRecipeGenerator implements IRecipeGenerator {
     request(RecipeRequestParameter parameter)
         throws IOException, InterruptedException, URISyntaxException
     {
-        // @TODO load two files from param, stream out to the server
-
+        // load two files from param, stream out to the server
         File ingredientsFile = parameter.getIngredientsFile();
         File mealTypeFile = parameter.getMealTypeFile();
 
@@ -112,6 +111,14 @@ public class ServerRecipeGenerator implements IRecipeGenerator {
             response.append(inputLine);
         }
         in.close();
+
+        if (response.toString().isEmpty()) {
+          in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+          while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+          }
+          in.close();
+        }
 
         connection.disconnect();
 
