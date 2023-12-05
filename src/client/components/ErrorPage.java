@@ -43,6 +43,7 @@ public class ErrorPage extends BorderPane {
         Button retryButton = new Button(buttonLabel);
         retryButton.setOnAction((e) -> retry.run());
 
+
         container.getChildren().addAll(errorIcon, title, spacer(), desc, spacer(), retryButton);
         setCenter(container);
     }

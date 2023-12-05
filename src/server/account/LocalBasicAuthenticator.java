@@ -8,13 +8,15 @@ import com.sun.net.httpserver.BasicAuthenticator;
  * Allows any auth login without validation
  */
 public class LocalBasicAuthenticator extends BasicAuthenticator {
-    public LocalBasicAuthenticator() {
+    public LocalBasicAuthenticator()
+    {
         super("PantryPal");
     }
 
     @Override
-    public boolean checkCredentials(String username, String password) {
+    public boolean
+    checkCredentials(String username, String password)
+    {
         return true;
     }
-    
 }
