@@ -10,6 +10,7 @@ import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.HomePageMealTypeFiltered;
 import client.components.HomePageSorted;
+import client.components.LoginPage;
 import client.components.SharedRecipeModal;
 import client.components.NewRecipeConfirmPage;
 import client.utils.runnables.RunnableForLogin;
@@ -28,9 +29,11 @@ import org.junit.jupiter.api.Test;
  *
  * - Scenario 1.2: Account exists (covered in scenario 1.1)
  * - Scenario 1.4: Log out (UI interaction, we need to close the app)
+ * - Scenario 2.2: Automatic login not selected (covered in scenario 1.3)
  * - Scenario 3.2: Access shared recipe webpage (Web page test, done by SharedRecipeHttpHandlerTest and manual testing)
  * - Scenario 3.3: Update shared recipe webpage (Web page test, done by SharedRecipeHttpHandlerTest and manual testing)
  * - Scenario 3.4: Delete shared recipe webpage (Web page test, done by SharedRecipeHttpHandlerTest and manual testing)
+ * - Scenario 7.1: View meal type (UI elements in home page, manually tested)
  * - Scenario 9.2: Save Button is clicked (the scenario covered by MS1 scenario 2.3)
  */
 
@@ -105,6 +108,79 @@ public class MS2UserStoryTest extends UserStoryTestBase {
     {
         assertEquals(ErrorMessage.class, viewTransitioner.currentPageClass);
         assertEquals("Incorrect Password", viewTransitioner.params[0]);
+    }
+
+    @Test
+    public void scenario_2_1_automaticLoginSelected()
+    {
+        // Scenario 2.1: Automatic login selected
+        // Given The user is on the login page
+        //     And the user types in username “Hello” and password “World” combo
+        // And account “Hello” does exist
+        //     And the user checks “Stay logged in” button
+        // When The user clicks “Log in”
+        // Then The user is directed to the homepage
+        // When The user exits and re-opens the app
+        // Then The user is immediately directed to the homepage with all their recipes shown
+
+        GivenTheUserIsOnTheLoginPage();
+
+        WhenTheUserTryToLoginWithStayLoggedInCheckbox("Hello", "World");
+        ThenTheUserIsDirectedToTheHomePage();
+
+        WhenTheUserExistsAndReopensTheApp();
+        ThenTheUserIsDirectedToTheHomePage();
+    }
+
+    private void
+    WhenTheUserTryToLoginWithStayLoggedInCheckbox(String username, String password)
+    {
+        RunnableForLogin onLogin = (RunnableForLogin) viewTransitioner.params[0];
+        onLogin.run(username, password, true, () -> {});
+    }
+
+    private void
+    WhenTheUserExistsAndReopensTheApp()
+    {
+        // assume app is restarted
+        controller.start();
+    }
+    
+    @Test
+    public void
+    scenario_2_3_logOutWhenAutomaticLoginSelected()
+    {
+        // Scenario 2.3: Log out when automatic login selected
+        // Given The user is logged in 
+        //     And the user had checked “Stay logged in” button
+        // When The user clicks “Log out”
+        // Then The user is directed to the log in screen
+        // When The user exits and re-opens the app
+        // Then The user is directed to the login page
+        GivenTheUserIsLoggedIn();
+        WhenTheUserClicksLogOut();
+        ThenTheUserIsOnTheLoginPage();
+        WhenTheUserExistsAndReopensTheApp();
+        ThenTheUserIsOnTheLoginPage();
+    }
+
+    private void
+    GivenTheUserIsLoggedIn()
+    {
+        GivenTheUserIsOnTheLoginPage();
+        WhenTheUserTryToLoginWithStayLoggedInCheckbox("Hello", "World");
+    }
+
+    private void
+    WhenTheUserClicksLogOut()
+    {
+        controller.logoutButtonClicked();
+    }
+
+    private void
+    ThenTheUserIsOnTheLoginPage()
+    {
+        assertEquals(LoginPage.class, viewTransitioner.currentPageClass);
     }
 
     @Test
@@ -250,6 +326,45 @@ public class MS2UserStoryTest extends UserStoryTestBase {
         // we uses null as Show All
         WhenTheUserClicksFilterByMealTypeAndSelect(null);
         ThenTheRecipeListShouldDisplayFilteredRecipeListAs(null);
+    }
+
+    @Test
+    public void
+    scenario_5_1_regeneratingARecipe() {
+        // Scenario 5.1 Regenerating a recipe
+        // Given that the user has successfully generated the recipe with ingredients “basil and pasta”
+        //     And is still on the original recipe save or discard page
+        // When the user clicks on the “Reload” button
+        // Then the app reloads the page, generating a new “basil and pasta” recipe using the same ingredients
+        // When the user clicks “save”
+        // Then  it is the new recipe that is saved to database
+        Recipe newGeneratedRecipe = new Recipe("Some new recipe of basil and pasta", "some description");
+        generateRecipe.setMockRecipe(newGeneratedRecipe);
+
+        GivenTheUserIsOnNewRecipeConfirmPage();
+        WhenTheUserClicksOnTheReloadButton();
+        ThenTheNewRecipeWillDisappearOnNewRecipeConfirmPage();
+    }
+
+    private void
+    GivenTheUserIsOnNewRecipeConfirmPage()
+    {
+        controller.transitionToNewRecipeConfirmPage(recipeStub);
+    }
+
+    private void
+    WhenTheUserClicksOnTheReloadButton()
+    {
+        Runnable regenerateCallback = (Runnable) viewTransitioner.params[3];
+        regenerateCallback.run();
+    }
+
+    private void
+    ThenTheNewRecipeWillDisappearOnNewRecipeConfirmPage()
+    {
+        assertEquals(NewRecipeConfirmPage.class, viewTransitioner.currentPageClass);
+        Recipe newRecipe = (Recipe) viewTransitioner.params[0];
+        assertEquals("Some new recipe of basil and pasta", newRecipe.getTitle());
     }
 
     @Test
