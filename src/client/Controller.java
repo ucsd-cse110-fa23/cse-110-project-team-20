@@ -10,6 +10,7 @@ import client.components.ErrorMessage;
 import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.HomePageMealTypeFiltered;
+import client.components.HomePageSorted;
 import client.components.LoadingPage;
 import client.components.LoginPage;
 import client.components.NewRecipeConfirmPage;
@@ -137,16 +138,23 @@ public class Controller {
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
         Runnable logoutButtonCallback = () -> logoutButtonClicked();
         RunnableWithString mealTypeFilterCallback = (String value) -> mealTypeFilterButtonClicked(value);
+        RunnableWithString sortCallback = (String value) -> sortButtonClicked(value);
 
         RunnableWithId openRecipeDetailButtonCallback = (int id) -> openRecipeDetailPage(id);
         viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback,
-            openRecipeDetailButtonCallback, logoutButtonCallback, mealTypeFilterCallback);
+            openRecipeDetailButtonCallback, logoutButtonCallback, mealTypeFilterCallback, sortCallback);
     }
 
     public void
     mealTypeFilterButtonClicked(String filterText)
     {
         viewTransitioner.transitionTo(HomePageMealTypeFiltered.class, filterText);
+    }
+
+    public void
+    sortButtonClicked(String sortText)
+    {
+        viewTransitioner.transitionTo(HomePageSorted.class, sortText);
     }
 
     public void
