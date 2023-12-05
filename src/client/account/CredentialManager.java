@@ -2,6 +2,7 @@ package client.account;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /* Class that maintains a JSON file that (possibly) contains previously saved
@@ -63,6 +64,8 @@ public class CredentialManager implements ICredentialManager {
             credentials = new JSONObject(jsonContent);
         } catch (IOException e) {
             // If there is an issue reading or parsing JSON, reset to default values
+            reset();
+        } catch (JSONException e) {
             reset();
         }
     }
