@@ -1,111 +1,119 @@
 package client.models;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.lang.Thread;
-
 import client.Recipe;
+import java.lang.Thread;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * CachedRecipeModel
  *
- * When we uses remote database such as MongoDB Atlas, waiting time from the remote server is significant,
- * and it causes usability issue on client app. This CachedRecipeModel fetches the all recipes onces and
- * maintain recipes up-to-date in local memory. While storing the recipe info in local, all CRUD operations
- * are still applied on the recipeModel via Thread.
+ * When we uses remote database such as MongoDB Atlas, waiting time from the remote server is
+ * significant, and it causes usability issue on client app. This CachedRecipeModel fetches the all
+ * recipes onces and maintain recipes up-to-date in local memory. While storing the recipe info in
+ * local, all CRUD operations are still applied on the recipeModel via Thread.
  */
 public class CachedRecipeModel implements IRecipeModel {
-  IRecipeModel recipeModel;
+    IRecipeModel recipeModel;
 
-  List<Recipe> recipes = new ArrayList<>();
+    List<Recipe> recipes = new ArrayList<>();
 
-  boolean loadedOnce = false;
+    boolean loadedOnce = false;
 
-  public CachedRecipeModel(IRecipeModel recipeModel) {
-    this.recipeModel = recipeModel;
-  }
-
-  @Override
-  public List<Recipe> getRecipes() {
-    if (! loadedOnce) {
-      recipes = recipeModel.getRecipes();
-      loadedOnce = true;
+    public CachedRecipeModel(IRecipeModel recipeModel)
+    {
+        this.recipeModel = recipeModel;
     }
 
-    return recipes;
-  }
+    @Override
+    public List<Recipe>
+    getRecipes()
+    {
+        if (!loadedOnce) {
+            recipes = recipeModel.getRecipes();
+            loadedOnce = true;
+        }
 
-  private void ensureLoadedOnce() {
-    if (! loadedOnce) {
-      getRecipes();
+        return recipes;
     }
-  }
 
-  @Override
-  public Recipe getRecipe(int id) {
-    ensureLoadedOnce();
-    return recipes.get(id);
-  }
+    private void
+    ensureLoadedOnce()
+    {
+        if (!loadedOnce) {
+            getRecipes();
+        }
+    }
 
-  @Override
-  public void createRecipe(Recipe recipe) {
-    ensureLoadedOnce();
-    new Thread(() -> {
-      recipeModel.createRecipe(recipe);
-    }).start();
+    @Override
+    public Recipe
+    getRecipe(int id)
+    {
+        ensureLoadedOnce();
+        return recipes.get(id);
+    }
 
-    recipes.add(0, recipe);
-  }
+    @Override
+    public void
+    createRecipe(Recipe recipe)
+    {
+        ensureLoadedOnce();
+        new Thread(() -> { recipeModel.createRecipe(recipe); }).start();
 
-  @Override
-  public void updateRecipe(int id, Recipe recipe) {
-    ensureLoadedOnce();
+        recipes.add(0, recipe);
+    }
 
-    new Thread(() -> {
-      recipeModel.updateRecipe(id, recipe);
-    }).start();
+    @Override
+    public void
+    updateRecipe(int id, Recipe recipe)
+    {
+        ensureLoadedOnce();
 
-    Recipe originalRecipe = recipes.get(id);
-    Recipe updatedRecipe = new Recipe(
-      recipe.getTitle(),
-      recipe.getDescription(),
-      originalRecipe.getIngredients(),
-      originalRecipe.getMealType(),
-      originalRecipe.getImageUrl());
+        new Thread(() -> { recipeModel.updateRecipe(id, recipe); }).start();
 
-    recipes.set(id, updatedRecipe);
-  }
+        Recipe originalRecipe = recipes.get(id);
+        Recipe updatedRecipe = new Recipe(recipe.getTitle(), recipe.getDescription(),
+            originalRecipe.getIngredients(), originalRecipe.getMealType(),
+            originalRecipe.getImageUrl(), originalRecipe.getSharedUrl());
 
-  @Override
-  public void deleteRecipe(int id) {
-    ensureLoadedOnce();
+        recipes.set(id, updatedRecipe);
+    }
 
-    new Thread(() -> {
-      recipeModel.deleteRecipe(id);
-    }).start();
+    @Override
+    public void
+    deleteRecipe(int id)
+    {
+        ensureLoadedOnce();
 
-    recipes.remove(id);
-  }
+        new Thread(() -> { recipeModel.deleteRecipe(id); }).start();
 
+        recipes.remove(id);
+    }
 
-  @Override
-  public void shareRecipe(int id) {
-    shareRecipe(id, () -> {});
-  }
+    @Override
+    public void
+    shareRecipe(int id)
+    {
+        shareRecipe(id, () -> {});
+    }
 
-  @Override
-  public void shareRecipe(int id, Runnable onComplete) {
-    new Thread(() -> {
-      recipeModel.shareRecipe(id);
+    @Override
+    public void
+    shareRecipe(int id, Runnable onComplete)
+    {
+        new Thread(() -> {
+            recipeModel.shareRecipe(id);
 
-      loadedOnce = false;
-      ensureLoadedOnce();
+            loadedOnce = false;
+            ensureLoadedOnce();
 
-      onComplete.run();
-    }).start();
-  }
+            onComplete.run();
+        }).start();
+    }
 
-  public void clearCache() {
-    loadedOnce = false;
-  }
+    public void
+    clearCache()
+    {
+        loadedOnce = false;
+    }
 }
