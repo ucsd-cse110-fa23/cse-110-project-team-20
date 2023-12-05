@@ -1,4 +1,3 @@
 package server.account;
 
-public class IncorrectPassword extends RuntimeException {
-}
+public class IncorrectPassword extends RuntimeException {}

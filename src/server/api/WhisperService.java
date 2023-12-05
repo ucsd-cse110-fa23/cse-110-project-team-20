@@ -8,7 +8,7 @@ import org.json.*;
  * Whisper API service
  *
  * Defines the basic parameters used with the Whisper api service such as the endpoint and model
- * 
+ *
  */
 public class WhisperService implements IVoiceToTextService {
     private static final String API_ENDPOINT = "https://api.openai.com/v1/audio/translations";
@@ -16,10 +16,11 @@ public class WhisperService implements IVoiceToTextService {
 
     IOpenAIConfiguration configuration;
 
-    public WhisperService(IOpenAIConfiguration configuration) {
-      this.configuration = configuration;
+    public WhisperService(IOpenAIConfiguration configuration)
+    {
+        this.configuration = configuration;
     }
-  
+
     // Helper method to write a parameter to the output stream in multipart form
     // data format
     private static void

@@ -1,33 +1,29 @@
 package server.mongodb;
 
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.bson.conversions.Bson;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Sorts.descending;
 
-import org.json.JSONObject;
-
+import client.Recipe;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.FindIterable;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import client.Recipe;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+import org.json.JSONObject;
 import server.account.IAccountContext;
 import server.recipe.IRecipeRepository;
 import server.recipe.ISharedRecipeConfiguration;
 import server.recipe.ISharedRecipeRepository;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Sorts.descending;
-
 /**
  * MongoDB implementation of IRecipeRepository
- * 
+ *
  * This implementation will perform create, update, read, and delete
  * operation on recipe in MongoDB
  */
@@ -37,30 +33,37 @@ public class MongoDBRecipeRepository implements IRecipeRepository, ISharedRecipe
     private IAccountContext accountContext;
     private Bson defaultSorting = descending("created_at");
 
-    public MongoDBRecipeRepository(IMongoDBConfiguration config, ISharedRecipeConfiguration sharedUrlConfig, IAccountContext accountContext) {
+    public MongoDBRecipeRepository(IMongoDBConfiguration config,
+        ISharedRecipeConfiguration sharedUrlConfig, IAccountContext accountContext)
+    {
         this.config = config;
         this.sharedUrlConfig = sharedUrlConfig;
         this.accountContext = accountContext;
     }
 
-    private MongoCollection<Document> getCollection(MongoClient client) {
+    private MongoCollection<Document>
+    getCollection(MongoClient client)
+    {
         return client.getDatabase("pantrypal").getCollection("recipes");
     }
 
     @Override
-    public List<Recipe> getRecipes() {
+    public List<Recipe>
+    getRecipes()
+    {
         ArrayList<Recipe> recipeList = new ArrayList<>();
 
         try (MongoClient client = MongoClients.create(config.getConnectionString())) {
             MongoCollection<Document> recipeCollection = getCollection(client);
 
-            FindIterable<Document> recipeDocList = recipeCollection
-                    .find(eq("username", accountContext.getUsername()))
+            FindIterable<Document> recipeDocList =
+                recipeCollection.find(eq("username", accountContext.getUsername()))
                     .sort(defaultSorting);
 
             for (Document recipeDoc : recipeDocList) {
                 if (recipeDoc.getString("shared_url") != null) {
-                    recipeDoc.put("shared_url", sharedUrlConfig.sharedUrlBase() + recipeDoc.getString("shared_url"));
+                    recipeDoc.put("shared_url",
+                        sharedUrlConfig.sharedUrlBase() + recipeDoc.getString("shared_url"));
                 }
                 Recipe recipe = Recipe.fromJson(recipeDoc.toJson());
                 recipeList.add(recipe);
@@ -71,20 +74,24 @@ public class MongoDBRecipeRepository implements IRecipeRepository, ISharedRecipe
     }
 
     @Override
-    public Recipe getRecipe(int id) {
+    public Recipe
+    getRecipe(int id)
+    {
         try (MongoClient client = MongoClients.create(config.getConnectionString())) {
             MongoCollection<Document> recipeCollection = getCollection(client);
             Document recipeDoc = recipeCollection.find(eq("username", accountContext.getUsername()))
-                    .sort(defaultSorting)
-                    .skip(id)
-                    .first();
+                                     .sort(defaultSorting)
+                                     .skip(id)
+                                     .first();
 
             return Recipe.fromJson(recipeDoc.toJson());
         }
     }
 
     @Override
-    public void createRecipe(Recipe recipe) {
+    public void
+    createRecipe(Recipe recipe)
+    {
         try (MongoClient client = MongoClients.create(config.getConnectionString())) {
             MongoCollection<Document> recipeCollection = getCollection(client);
 
@@ -98,14 +105,16 @@ public class MongoDBRecipeRepository implements IRecipeRepository, ISharedRecipe
     }
 
     @Override
-    public void updateRecipe(int id, Recipe recipe) {
+    public void
+    updateRecipe(int id, Recipe recipe)
+    {
         try (MongoClient client = MongoClients.create(config.getConnectionString())) {
             MongoCollection<Document> recipeCollection = getCollection(client);
 
             Document recipeDoc = recipeCollection.find(eq("username", accountContext.getUsername()))
-                    .sort(defaultSorting)
-                    .skip(id)
-                    .first();
+                                     .sort(defaultSorting)
+                                     .skip(id)
+                                     .first();
 
             if (recipe.getTitle() != null) {
                 recipeDoc.append("title", recipe.getTitle());
@@ -120,43 +129,51 @@ public class MongoDBRecipeRepository implements IRecipeRepository, ISharedRecipe
                 recipeDoc.append("meal_type", recipe.getMealType());
             }
 
-            recipeCollection.updateOne(eq("_id", recipeDoc.get("_id")), new Document("$set", recipeDoc));
+            recipeCollection.updateOne(
+                eq("_id", recipeDoc.get("_id")), new Document("$set", recipeDoc));
         }
     }
 
     @Override
-    public void deleteRecipe(int id) {
-
+    public void
+    deleteRecipe(int id)
+    {
         try (MongoClient client = MongoClients.create(config.getConnectionString())) {
             MongoCollection<Document> recipeCollection = getCollection(client);
 
             Document recipeDoc = recipeCollection.find(eq("username", accountContext.getUsername()))
-                    .sort(defaultSorting)
-                    .skip(id)
-                    .first();
+                                     .sort(defaultSorting)
+                                     .skip(id)
+                                     .first();
 
             recipeCollection.deleteOne(eq("_id", recipeDoc.get("_id")));
         }
     }
 
     @Override
-    public void markAsShared(int id) {
+    public void
+    markAsShared(int id)
+    {
         try (MongoClient client = MongoClients.create(config.getConnectionString())) {
             MongoCollection<Document> recipeCollection = getCollection(client);
 
             Document recipeDoc = recipeCollection.find(eq("username", accountContext.getUsername()))
-                    .sort(defaultSorting)
-                    .skip(id)
-                    .first();
+                                     .sort(defaultSorting)
+                                     .skip(id)
+                                     .first();
 
-            Document updatedRecipe = new Document().append("shared_url", UUID.randomUUID().toString());
+            Document updatedRecipe =
+                new Document().append("shared_url", UUID.randomUUID().toString());
 
-            recipeCollection.updateOne(eq("_id", recipeDoc.get("_id")), new Document("$set", updatedRecipe));
+            recipeCollection.updateOne(
+                eq("_id", recipeDoc.get("_id")), new Document("$set", updatedRecipe));
         }
     }
 
     @Override
-    public Recipe getRecipeBySharedUrl(String sharedUrl) {
+    public Recipe
+    getRecipeBySharedUrl(String sharedUrl)
+    {
         try (MongoClient client = MongoClients.create(config.getConnectionString())) {
             MongoCollection<Document> recipeCollection = getCollection(client);
             Document recipeDoc = recipeCollection.find(eq("shared_url", sharedUrl)).first();

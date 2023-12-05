@@ -72,6 +72,7 @@ public class CachedRecipeModel implements IRecipeModel {
         new Thread(() -> { recipeModel.updateRecipe(id, recipe); }).start();
 
         Recipe originalRecipe = recipes.get(id);
+
         Recipe updatedRecipe = new Recipe(recipe.getTitle(), recipe.getDescription(),
             originalRecipe.getIngredients(), originalRecipe.getMealType(),
             originalRecipe.getImageUrl(), originalRecipe.getSharedUrl());

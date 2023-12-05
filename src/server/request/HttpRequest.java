@@ -1,24 +1,26 @@
 package server.request;
 
-import java.io.InputStream;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Scanner;
-
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class HttpRequest implements IHttpRequest {
     private HttpExchange httpExchange;
-    Map<String,String> query = new HashMap<String, String>();
+    Map<String, String> query = new HashMap<String, String>();
 
-    public HttpRequest(HttpExchange httpExchange) {
+    public HttpRequest(HttpExchange httpExchange)
+    {
         this.httpExchange = httpExchange;
 
         parseQuery(httpExchange);
     }
 
-    private void parseQuery(HttpExchange httpExchange) {
+    private void
+    parseQuery(HttpExchange httpExchange)
+    {
         String queryData = httpExchange.getRequestURI().getRawQuery();
         if (queryData == null) {
             return;
@@ -32,20 +34,26 @@ public class HttpRequest implements IHttpRequest {
         }
     }
 
-    public String getQuery(String key) {
+    public String
+    getQuery(String key)
+    {
         return query.get(key);
     }
 
-    public InputStream getRequestBody() {
+    public InputStream
+    getRequestBody()
+    {
         return httpExchange.getRequestBody();
     }
 
-    public String getRequestBodyAsString() {
+    public String
+    getRequestBodyAsString()
+    {
         StringBuffer sb = new StringBuffer();
         InputStream inStream = getRequestBody();
         Scanner scanner = new Scanner(inStream);
 
-        while(scanner.hasNextLine()) {
+        while (scanner.hasNextLine()) {
             sb.append(scanner.nextLine());
         }
 
@@ -54,7 +62,9 @@ public class HttpRequest implements IHttpRequest {
     }
 
     @Override
-    public Headers getHeaders() {
+    public Headers
+    getHeaders()
+    {
         return httpExchange.getRequestHeaders();
     }
 }

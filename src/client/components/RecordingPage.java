@@ -2,7 +2,6 @@ package client.components;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -13,8 +12,9 @@ import javafx.scene.layout.VBox;
 /*
  * Recording page
  *
- * Handles formatting of the recording interface along with basic logic that changes interface based on user input (start/stopRecording)
- * 
+ * Handles formatting of the recording interface along with basic logic that changes interface based
+ * on user input (start/stopRecording)
+ *
  */
 public class RecordingPage extends VBox {
     private Button recodingButton;
@@ -25,12 +25,9 @@ public class RecordingPage extends VBox {
 
     private boolean recordingInProgress = false;
 
-    public
-    RecordingPage(String message)
+    public RecordingPage(String message)
     {
-        getStylesheets().add(getClass().getResource(
-            "style.css"
-        ).toExternalForm());
+        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         getStyleClass().add("recording-page");
 
         title = new Label(message);
@@ -87,7 +84,8 @@ public class RecordingPage extends VBox {
     }
 
     private ImageView
-    createImageView(String resourceName) {
+    createImageView(String resourceName)
+    {
         ImageView imageView = new ImageView();
 
         try (InputStream imageStream = getClass().getResource(resourceName).openStream()) {

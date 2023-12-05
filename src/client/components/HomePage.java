@@ -3,7 +3,8 @@ package client.components;
 import client.Recipe;
 import client.utils.runnables.RunnableWithId;
 import client.utils.runnables.RunnableWithString;
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,16 +17,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /*
  * Home Page
@@ -40,8 +38,7 @@ public class HomePage extends BorderPane {
 
     public HomePage(List<Recipe> recipes, Runnable createButtonCallback,
         RunnableWithId openRecipeDetailButtonCallback, Runnable logoutButtonCallback,
-        RunnableWithString mealTypeFilterCallback,
-        RunnableWithString sortCallback)
+        RunnableWithString mealTypeFilterCallback, RunnableWithString sortCallback)
     {
         getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
@@ -50,9 +47,8 @@ public class HomePage extends BorderPane {
         header.setLogoutButtonCallback(logoutButtonCallback);
 
         optionsBar = new OptionsBar();
-        optionsBar.setFilterCallback(() -> {
-            mealTypeFilterCallback.run(optionsBar.getSelectedValue());
-        });
+        optionsBar.setFilterCallback(
+            () -> { mealTypeFilterCallback.run(optionsBar.getSelectedValue()); });
         optionsBar.setAlphaSortButtonCallback(sortCallback);
         optionsBar.setChronoSortButtonCallback(sortCallback);
 
@@ -74,21 +70,20 @@ public class HomePage extends BorderPane {
         this.setPrefSize(500, 800);
     }
 
-    public void applyMealTypeFilter(String filterName) {
-        System.out.println(
-            String.format("[%s] meal type filter applied: %s",
-                getClass().getName(),
-                filterName != null ? filterName : "(not selected)"));
+    public void
+    applyMealTypeFilter(String filterName)
+    {
+        System.out.println(String.format("[%s] meal type filter applied: %s", getClass().getName(),
+            filterName != null ? filterName : "(not selected)"));
 
         recipeList.setMealTypeFilter(filterName);
         recipeList.refresh();
     }
 
-    public void applySort(String sortType) {
-        System.out.println(
-            String.format("[%s] sort applied: %s",
-                getClass().getName(),
-                sortType));
+    public void
+    applySort(String sortType)
+    {
+        System.out.println(String.format("[%s] sort applied: %s", getClass().getName(), sortType));
 
         recipeList.setSortType(sortType);
         recipeList.refresh();
@@ -103,10 +98,11 @@ class OptionsBar extends HBox {
     private RunnableWithString chronoButtonCallback;
     private RunnableWithString alphaButtonCallback;
 
-    public OptionsBar() {
+    public OptionsBar()
+    {
         // Create filter options list
-        ObservableList<String> filterOptions = FXCollections.observableArrayList("Filter: None", "Breakfast", "Lunch",
-                "Dinner");
+        ObservableList<String> filterOptions =
+            FXCollections.observableArrayList("Filter: None", "Breakfast", "Lunch", "Dinner");
 
         filterComboBox = new ComboBox<>(filterOptions);
         filterComboBox.setPromptText("Filter by meal type");
@@ -125,7 +121,7 @@ class OptionsBar extends HBox {
         chronoSortButton.setOnAction(e -> {
             if (chronoSortButton.isActive()) {
                 // flip toggle if it is already active
-                chronoSortButton.setToggle(! chronoSortButton.isToggled());
+                chronoSortButton.setToggle(!chronoSortButton.isToggled());
             } else {
                 chronoSortButton.setActive(true);
                 alphaSortButton.setActive(false);
@@ -136,10 +132,9 @@ class OptionsBar extends HBox {
             } else {
                 chronoTooltip.setText("Sort by newest to oldest");
             }
-            chronoButtonCallback.run(
-                chronoSortButton.isToggled()
-                ? RecipeSortOrder.TIME_DESC.name()
-                : RecipeSortOrder.TIME_ASC.name());
+            chronoButtonCallback.run(chronoSortButton.isToggled()
+                    ? RecipeSortOrder.TIME_DESC.name()
+                    : RecipeSortOrder.TIME_ASC.name());
         });
 
         // Create alphabetical sort button
@@ -151,7 +146,7 @@ class OptionsBar extends HBox {
         alphaSortButton.setOnAction(e -> {
             if (alphaSortButton.isActive()) {
                 // flip toggle if it is already active
-                alphaSortButton.setToggle(! alphaSortButton.isToggled());
+                alphaSortButton.setToggle(!alphaSortButton.isToggled());
             } else {
                 alphaSortButton.setActive(true);
                 chronoSortButton.setActive(false);
@@ -162,10 +157,8 @@ class OptionsBar extends HBox {
             } else {
                 alphaTooltip.setText("Sort alphabetically");
             }
-            alphaButtonCallback.run(
-                alphaSortButton.isToggled()
-                ? RecipeSortOrder.ALPHA_DESC.name()
-                : RecipeSortOrder.ALPHA_ASC.name());
+            alphaButtonCallback.run(alphaSortButton.isToggled() ? RecipeSortOrder.ALPHA_DESC.name()
+                                                                : RecipeSortOrder.ALPHA_ASC.name());
         });
 
         Region spacer = new Region();
@@ -177,7 +170,9 @@ class OptionsBar extends HBox {
         getChildren().addAll(filterComboBox, spacer, chronoSortButton, alphaSortButton);
     }
 
-    public void setFilterCallback(Runnable r) {
+    public void
+    setFilterCallback(Runnable r)
+    {
         filterComboBox.setOnAction(event -> {
             if (r != null) {
                 r.run();
@@ -185,15 +180,21 @@ class OptionsBar extends HBox {
         });
     }
 
-    public void setAlphaSortButtonCallback(RunnableWithString r) {
+    public void
+    setAlphaSortButtonCallback(RunnableWithString r)
+    {
         alphaButtonCallback = r;
     }
 
-    public void setChronoSortButtonCallback(RunnableWithString r) {
+    public void
+    setChronoSortButtonCallback(RunnableWithString r)
+    {
         chronoButtonCallback = r;
     }
 
-    private ToggleButton createButton(String buttonLabel, String resourceName, String toggledResourceName) {
+    private ToggleButton
+    createButton(String buttonLabel, String resourceName, String toggledResourceName)
+    {
         return new ToggleButton(buttonLabel, resourceName, toggledResourceName);
     }
 
@@ -201,14 +202,14 @@ class OptionsBar extends HBox {
     getSelectedValue()
     {
         switch (filterComboBox.getValue()) {
-            case "Breakfast":
-                return "breakfast";
-            case "Lunch":
-                return "lunch";
-            case "Dinner":
-                return "dinner";
-            default:
-                return null;
+        case "Breakfast":
+            return "breakfast";
+        case "Lunch":
+            return "lunch";
+        case "Dinner":
+            return "dinner";
+        default:
+            return null;
         }
     }
 }
@@ -220,7 +221,8 @@ class ToggleButton extends Button {
     private boolean active = false;
     private boolean toggled = false;
 
-    public ToggleButton(String buttonLabel, String resourceName, String toggledResourceName) {
+    public ToggleButton(String buttonLabel, String resourceName, String toggledResourceName)
+    {
         super(buttonLabel);
 
         imageView = getImageView(resourceName);
@@ -229,7 +231,9 @@ class ToggleButton extends Button {
         setGraphic(imageView);
     }
 
-    public void setActive(boolean status) {
+    public void
+    setActive(boolean status)
+    {
         if (status) {
             getStyleClass().add("active");
         } else {
@@ -238,7 +242,9 @@ class ToggleButton extends Button {
         active = status;
     }
 
-    public void setToggle(boolean status) {
+    public void
+    setToggle(boolean status)
+    {
         if (status) {
             setGraphic(toggledImageView);
         } else {
@@ -247,15 +253,21 @@ class ToggleButton extends Button {
         toggled = status;
     }
 
-    public boolean isActive() {
+    public boolean
+    isActive()
+    {
         return active;
     }
 
-    public boolean isToggled() {
+    public boolean
+    isToggled()
+    {
         return toggled;
     }
 
-    private ImageView getImageView(String resourceName) {
+    private ImageView
+    getImageView(String resourceName)
+    {
         try (InputStream imageStream = getClass().getResource(resourceName).openStream()) {
             Image image = new Image(imageStream);
             ImageView imageView = new ImageView(image);
@@ -276,7 +288,8 @@ class Header extends BorderPane {
     private Button createButton;
     private Button logoutButton;
 
-    public Header() {
+    public Header()
+    {
         createButton = new Button("\uff0b"); // unicode version of plus sign
         createButton.getStyleClass().add("create-button");
         createButton.setAlignment(Pos.CENTER);
@@ -300,11 +313,15 @@ class Header extends BorderPane {
         setAlignment(rightBox, Pos.CENTER_RIGHT);
     }
 
-    public void setCreateButtonCallback(Runnable r) {
+    public void
+    setCreateButtonCallback(Runnable r)
+    {
         this.createButton.setOnAction(e -> r.run());
     }
 
-    public void setLogoutButtonCallback(Runnable r) {
+    public void
+    setLogoutButtonCallback(Runnable r)
+    {
         this.logoutButton.setOnAction(e -> r.run());
     }
 }
@@ -313,7 +330,8 @@ class RecipeBox extends HBox {
     private static final int MAX_TITLE_LEN = 38;
 
     private Recipe recipe;
-    public RecipeBox(Recipe recipe) {
+    public RecipeBox(Recipe recipe)
+    {
         this.recipe = recipe;
         VBox recipeDetails = new VBox(10);
 
@@ -346,33 +364,38 @@ class RecipeBox extends HBox {
         return trimmed;
     }
 
-    private static String getMealType(Recipe r) {
+    private static String
+    getMealType(Recipe r)
+    {
         switch (r.getMealType().toLowerCase()) {
-            case "breakfast":
-                return "Breakfast";
-            case "lunch":
-                return "Lunch";
-            case "dinner":
-                return "Dinner";
-            default:
-                return "Unknown";
+        case "breakfast":
+            return "Breakfast";
+        case "lunch":
+            return "Lunch";
+        case "dinner":
+            return "Dinner";
+        default:
+            return "Unknown";
         }
     }
 
-    private static String getColorHexCode(String mealType) {
+    private static String
+    getColorHexCode(String mealType)
+    {
         switch (mealType.toLowerCase()) {
-            case "breakfast":
-                return "FAEDCB";
-            case "lunch":
-                return "C9E4DE";
-            case "dinner":
-                return "DBCDF0";
-            default:
-                return "808080";
+        case "breakfast":
+            return "FAEDCB";
+        case "lunch":
+            return "C9E4DE";
+        case "dinner":
+            return "DBCDF0";
+        default:
+            return "808080";
         }
     }
 
-    public Recipe getRecipe()
+    public Recipe
+    getRecipe()
     {
         return recipe;
     }
@@ -405,36 +428,44 @@ class RecipeList extends VBox {
         _recipeBoxes = recipeBoxes;
     }
 
-    public void setMealTypeFilter(String filterText) {
+    public void
+    setMealTypeFilter(String filterText)
+    {
         mealTypeForFilter = filterText;
     }
 
-    public void setSortType(String srt) {
+    public void
+    setSortType(String srt)
+    {
         sortType = RecipeSortOrder.valueOf(srt);
     }
 
-    public List<RecipeBox> applySort(List<RecipeBox> recipes) {
+    public List<RecipeBox>
+    applySort(List<RecipeBox> recipes)
+    {
         switch (sortType) {
-            case TIME_ASC:
-                // do nothing, it is a default order from the server
-                break;
-            case TIME_DESC:
-                Collections.reverse(recipes);
-                break;
-            case ALPHA_ASC:
-                Collections.sort(recipes, new AlphabeticalRecipeTitleComparator());
-                break;
-            case ALPHA_DESC:
-                Collections.sort(recipes, new AlphabeticalRecipeTitleComparator());
-                Collections.reverse(recipes);
-                break;
-            default:
-                break;
+        case TIME_ASC:
+            // do nothing, it is a default order from the server
+            break;
+        case TIME_DESC:
+            Collections.reverse(recipes);
+            break;
+        case ALPHA_ASC:
+            Collections.sort(recipes, new AlphabeticalRecipeTitleComparator());
+            break;
+        case ALPHA_DESC:
+            Collections.sort(recipes, new AlphabeticalRecipeTitleComparator());
+            Collections.reverse(recipes);
+            break;
+        default:
+            break;
         }
         return recipes;
     }
 
-    public void refresh() {
+    public void
+    refresh()
+    {
         List<RecipeBox> recipeBoxes = getFilteredRecipeBoxes();
         recipeBoxes = applySort(recipeBoxes);
 
@@ -442,11 +473,15 @@ class RecipeList extends VBox {
         getChildren().addAll(recipeBoxes);
     }
 
-    private List<RecipeBox> getRecipeBoxes() {
+    private List<RecipeBox>
+    getRecipeBoxes()
+    {
         return new ArrayList<>(_recipeBoxes);
     }
 
-    private List<RecipeBox> getFilteredRecipeBoxes() {
+    private List<RecipeBox>
+    getFilteredRecipeBoxes()
+    {
         List<RecipeBox> newRecipeBoxes;
         if (mealTypeForFilter == null) {
             newRecipeBoxes = getRecipeBoxes();
@@ -469,7 +504,9 @@ class RecipeList extends VBox {
  */
 class AlphabeticalRecipeTitleComparator implements Comparator<RecipeBox> {
     @Override
-    public int compare(RecipeBox o1, RecipeBox o2) {
+    public int
+    compare(RecipeBox o1, RecipeBox o2)
+    {
         return o1.getRecipe().getTitle().compareTo(o2.getRecipe().getTitle());
     }
 }
@@ -480,8 +517,8 @@ class AlphabeticalRecipeTitleComparator implements Comparator<RecipeBox> {
  * RecipeSortOrder enum helps us not miss the name of sort order
  */
 enum RecipeSortOrder {
-  TIME_ASC,
-  TIME_DESC,
-  ALPHA_ASC,
-  ALPHA_DESC;
+    TIME_ASC,
+    TIME_DESC,
+    ALPHA_ASC,
+    ALPHA_DESC;
 }
