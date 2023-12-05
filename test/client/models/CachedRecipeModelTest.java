@@ -2,6 +2,7 @@ package client.models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +11,12 @@ import client.Recipe;
 import client.account.IAccountSession;
 import client.mock.MockHttpServer;
 import client.models.mock.MockGetRecipesRecipeModel;
+import feature.mock.MockRecipeModel;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.List;
 
 public class CachedRecipeModelTest {
@@ -121,5 +126,48 @@ public class CachedRecipeModelTest {
     model.getRecipes(); // used cache, count not change
 
     assertEquals(2, innerModel.getNumberOfGetRecipesCalled());
+  }
+
+  @Test
+  public void sharedRecipe() throws IOException, InterruptedException, ExecutionException {
+    MockRecipeModel innerRecipeModel = new MockRecipeModel();
+    innerRecipeModel.createRecipe(new Recipe("test recipe title", "test recipe desc"));
+
+    CachedRecipeModel model = new CachedRecipeModel(innerRecipeModel);
+
+    CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+    model.shareRecipe(0, () -> {
+      future.complete(true);
+    });
+
+    future.completeOnTimeout(null, 3, TimeUnit.SECONDS);
+    assertTrue(future.get());
+    // it can be only true if mock recipe model was called by the cached recipe model
+    assertTrue(innerRecipeModel.getRecipe(0).getSharedUrl().contains("http://localhost/recipe/shared/?url="));
+  }
+
+  @Test
+  public void sharedUrlMissingIssueWhenUpdatingRecipe() throws IOException {
+    // Issue reference: DS5-10 #230
+    String mockedResponse = "{\"recipes\":[{\"meal_type\":\"meal_type_C\",\"description\":\"desc_C\",\"ingredients\":\"ingredients_C\",\"title\":\"title_C\", \"image_url\":\"base 64 image string\", \"shared_url\": \"ABCD-EFG0\"}]}";
+    server = new MockHttpServer("/recipe", mockedResponse);
+    CachedRecipeModel model = new CachedRecipeModel(new ServerRecipeModel(mockSession, "http://localhost:3110"));
+
+    server.start(3110);
+
+    Recipe recipe = new Recipe("title_test_update", "desc_test_update");
+    model.updateRecipe(0, recipe);
+
+    Recipe actual = model.getRecipe(0);
+    // server should update only title and description so the cache one
+    // should mimic same behavior -- updating title, desc only.
+    assertEquals("title_test_update", actual.getTitle());
+    assertEquals("desc_test_update", actual.getDescription());
+
+    assertEquals("meal_type_C", actual.getMealType());
+    assertEquals("ingredients_C", actual.getIngredients());
+    assertEquals("base 64 image string", actual.getImageUrl());
+    assertEquals("ABCD-EFG0", actual.getSharedUrl());
   }
 }
