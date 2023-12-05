@@ -19,6 +19,7 @@ public class SharedRecipeModal {
     public SharedRecipeModal(String sharedUrl)
     {
         TextInputDialog dialog = new TextInputDialog(sharedUrl);
+        dialog.setTitle("");
 
         Button copyButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         Button closeButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
