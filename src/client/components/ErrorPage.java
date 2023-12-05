@@ -12,31 +12,35 @@ import javafx.scene.layout.VBox;
  * Display given message with the title.
  */
 public class ErrorPage extends BorderPane {
-  public ErrorPage(String message, Runnable retry) {
-    this(message, retry, "Retry");
-  }
+    public ErrorPage(String message, Runnable retry)
+    {
+        this(message, retry, "Retry");
+    }
 
-  public ErrorPage(String message, Runnable retry, String buttonLabel) {
-    VBox container = new VBox();
-    container.setAlignment(Pos.CENTER);
+    public ErrorPage(String message, Runnable retry, String buttonLabel)
+    {
+        VBox container = new VBox();
+        container.setAlignment(Pos.CENTER);
 
-    Label title = new Label("Sorry, there is a problem...");
-    title.setStyle("-fx-font-size: 24px; -fx-font-weight: 600;");
+        Label title = new Label("Sorry, there is a problem...");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: 600;");
 
-    Label desc = new Label(message);
-    desc.setWrapText(true);
-    desc.setStyle("-fx-padding: 20px");
+        Label desc = new Label(message);
+        desc.setWrapText(true);
+        desc.setStyle("-fx-padding: 20px");
 
-    Button retryButton = new Button(buttonLabel);
-    retryButton.setOnAction((e) -> retry.run());
+        Button retryButton = new Button(buttonLabel);
+        retryButton.setOnAction((e) -> retry.run());
 
-    container.getChildren().addAll(title, spacer(), desc, spacer(), retryButton);
-    setCenter(container);
-  }
+        container.getChildren().addAll(title, spacer(), desc, spacer(), retryButton);
+        setCenter(container);
+    }
 
-  Label spacer() {
-    Label spacer = new Label();
-    spacer.setStyle("-fx-height: 10px;");
-    return spacer;
-  }
+    Label
+    spacer()
+    {
+        Label spacer = new Label();
+        spacer.setStyle("-fx-height: 10px;");
+        return spacer;
+    }
 }

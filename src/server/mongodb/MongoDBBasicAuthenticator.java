@@ -1,39 +1,42 @@
 package server.mongodb;
 
-import org.bson.Document;
+import static com.mongodb.client.model.Filters.eq;
+
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.sun.net.httpserver.*;
-
+import org.bson.Document;
 import server.account.IAccountContext;
-
-import static com.mongodb.client.model.Filters.eq;
 
 /**
  * MongoDB based BasicAuthenticator for java server
  *
  * Our basic authentication will be handled with this class.
- * ref: https://stackoverflow.com/questions/41407510/java-httpserver-basic-authentication-for-different-request-methods
+ * ref:
+ * https://stackoverflow.com/questions/41407510/java-httpserver-basic-authentication-for-different-request-methods
  */
 public class MongoDBBasicAuthenticator extends BasicAuthenticator {
     private IMongoDBConfiguration config;
     private IAccountContext accountContext;
 
-    public MongoDBBasicAuthenticator(IMongoDBConfiguration config, IAccountContext accountContext) {
+    public MongoDBBasicAuthenticator(IMongoDBConfiguration config, IAccountContext accountContext)
+    {
         super("PantryPal");
         this.config = config;
         this.accountContext = accountContext;
     }
 
     @Override
-    public boolean checkCredentials(String username, String password) {
+    public boolean
+    checkCredentials(String username, String password)
+    {
         accountContext.setUsername(null);
 
         // check credential by checking mongodb with given username and password
         try (MongoClient client = MongoClients.create(config.getConnectionString())) {
-            MongoCollection<Document> accountCollection = client.getDatabase("pantrypal")
-                .getCollection("accounts");
+            MongoCollection<Document> accountCollection =
+                client.getDatabase("pantrypal").getCollection("accounts");
 
             // check if username is in the collection
             Document user = accountCollection.find(eq("username", username)).first();

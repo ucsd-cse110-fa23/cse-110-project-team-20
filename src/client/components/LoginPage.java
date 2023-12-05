@@ -4,12 +4,12 @@ import client.utils.runnables.RunnableForLogin;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -26,12 +26,12 @@ public class LoginPage extends BorderPane {
     private Button button;
     private RunnableForLogin loginCallback;
 
-    public LoginPage(RunnableForLogin loginCallback) {
+    public LoginPage(RunnableForLogin loginCallback)
+    {
         this.loginCallback = loginCallback;
 
         // get style sheet
-        getStylesheets().add(getClass().getResource(
-                "style.css").toExternalForm());
+        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         getStyleClass().add("login-page");
 
@@ -55,19 +55,13 @@ public class LoginPage extends BorderPane {
         stayLoggedInCheckBox.getStyleClass().add("stay-logged-in-checkbox");
 
         VBox box = new VBox(
-                usernameLabel,
-                usernameField,
-                passwordLabel,
-                passwordField,
-                stayLoggedInCheckBox);
+            usernameLabel, usernameField, passwordLabel, passwordField, stayLoggedInCheckBox);
         box.getStyleClass().add("login-form");
 
         // button for login or create account
         button = new Button("Log In\nor\nCreate Account");
         button.getStyleClass().add("login-button");
-        button.setOnAction(e -> {
-            onLoginButtonClicked();
-        });
+        button.setOnAction(e -> { onLoginButtonClicked(); });
 
         // set those components on the page
         setTop(label);
@@ -78,35 +72,38 @@ public class LoginPage extends BorderPane {
         setAlignment(button, Pos.CENTER);
     }
 
-    private void onLoginButtonClicked() {
+    private void
+    onLoginButtonClicked()
+    {
         // when the button is clicked, username and password fields will be checked if
         // it is empty or not.
         // then, call loginCallback when the form validation passes.
 
         if (usernameField.getText().isEmpty()) {
-            Alert alert = new Alert(AlertType.WARNING, "Username is missing. Please check the username.");
+            Alert alert =
+                new Alert(AlertType.WARNING, "Username is missing. Please check the username.");
             alert.show();
             return;
         }
 
         if (passwordField.getText().isEmpty()) {
-            Alert alert = new Alert(AlertType.WARNING, "Password is missing. Please check the password.");
+            Alert alert =
+                new Alert(AlertType.WARNING, "Password is missing. Please check the password.");
             alert.show();
             return;
         }
 
         new Thread(() -> {
-            loginCallback.run(
-                    usernameField.getText(),
-                    passwordField.getText(),
-                    stayLoggedInCheckBox.isSelected(),
-                    () -> onLoaded());
+            loginCallback.run(usernameField.getText(), passwordField.getText(),
+                stayLoggedInCheckBox.isSelected(), () -> onLoaded());
         }).start();
 
         setDisableOnForm(true);
     }
 
-    private void setDisableOnForm(boolean value) {
+    private void
+    setDisableOnForm(boolean value)
+    {
         Platform.runLater(() -> {
             usernameField.setDisable(value);
             passwordField.setDisable(value);
@@ -115,7 +112,9 @@ public class LoginPage extends BorderPane {
         });
     }
 
-    private void onLoaded() {
+    private void
+    onLoaded()
+    {
         setDisableOnForm(false);
     }
 
@@ -124,7 +123,9 @@ public class LoginPage extends BorderPane {
      *
      * @param error
      */
-    public void onError(String error) {
+    public void
+    onError(String error)
+    {
         Alert alert = new Alert(AlertType.WARNING, String.format("Error: %s", error));
         alert.show();
     }
