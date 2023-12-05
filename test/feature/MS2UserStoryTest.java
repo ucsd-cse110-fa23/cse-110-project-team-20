@@ -408,9 +408,9 @@ public class MS2UserStoryTest extends UserStoryTestBase {
     {
         assertEquals(ErrorPage.class, viewTransitioner.currentPageClass);
         // message on the error page
-        assertEquals("Generating new recipe is failed: Some OpenAI error. Your token is expired.", viewTransitioner.params[0]);
+        assertEquals("Unable to generate recipe: Some OpenAI error. Your token is expired.", viewTransitioner.params[0]);
         // button label
-        assertEquals("Go back to home", viewTransitioner.params[2]);
+        assertEquals("Go back home", viewTransitioner.params[2]);
     }
 
     @Test
