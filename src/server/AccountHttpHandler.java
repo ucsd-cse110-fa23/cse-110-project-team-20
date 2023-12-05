@@ -59,10 +59,4 @@ public class AccountHttpHandler extends HttpHandlerBase {
         response.put("token", String.format("Basic %s", token));
         return response.toString(2);
     }
-
-    private String fail(String message) {
-        JSONObject response = new JSONObject();
-        response.put("error", message);
-        return response.toString(2);
-    }
 }

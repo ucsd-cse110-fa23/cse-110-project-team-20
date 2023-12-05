@@ -67,6 +67,16 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
         String ingredients = future1.join();
         String mealType = future2.join();
 
+        if (isApplicableTranscription(ingredients)) {
+            info("Given ingredients are empty.");
+            return fail("INPUT ERROR: ingredients you provided is empty or too short.");
+        }
+
+        if (isApplicableTranscription(mealType)) {
+            info("Given meal type is empty.");
+            return fail("INPUT ERROR: meal type that you provided is empty too short.");
+        }
+
         // sanitize the given meal type to appropriate one
         mealType = mealTypeSanitizer.apply(mealType);
 
@@ -107,6 +117,10 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
         info("Image created: " + imageUrl.substring(0, 60) + "...");
         // write(response, "created.txt");
         return response;
+    }
+
+    private boolean isApplicableTranscription(String text) {
+        return text.trim().isEmpty() || text.toLowerCase().contains("audio file is too short");
     }
 
     private void info(String message) {

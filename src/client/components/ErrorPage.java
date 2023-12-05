@@ -24,6 +24,8 @@ public class ErrorPage extends BorderPane {
     title.setStyle("-fx-font-size: 24px; -fx-font-weight: 600;");
 
     Label desc = new Label(message);
+    desc.setWrapText(true);
+    desc.setStyle("-fx-padding: 20px");
 
     Button retryButton = new Button(buttonLabel);
     retryButton.setOnAction((e) -> retry.run());
