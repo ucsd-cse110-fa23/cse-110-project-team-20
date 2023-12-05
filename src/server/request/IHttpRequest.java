@@ -1,8 +1,7 @@
 package server.request;
 
-import java.io.InputStream;
-
 import com.sun.net.httpserver.Headers;
+import java.io.InputStream;
 
 public interface IHttpRequest {
     public String getQuery(String key);

@@ -2,16 +2,14 @@ package server;
 
 import com.sun.net.httpserver.*;
 import java.io.*;
-
 import org.json.JSONObject;
-
 import server.request.*;
 
 /*
  * HTTP handler base class
  *
  * Calls the appropriate methods for 4 of the base HTTP requests.
- * 
+ *
  */
 public abstract class HttpHandlerBase implements HttpHandler {
     public void
@@ -70,13 +68,17 @@ public abstract class HttpHandlerBase implements HttpHandler {
         throw new UnsupportedMethodException();
     }
 
-    protected String success() {
+    protected String
+    success()
+    {
         JSONObject response = new JSONObject();
         response.put("success", true);
         return response.toString(2);
     }
 
-    protected String fail(String message) {
+    protected String
+    fail(String message)
+    {
         JSONObject response = new JSONObject();
         response.put("error", message);
         return response.toString(2);

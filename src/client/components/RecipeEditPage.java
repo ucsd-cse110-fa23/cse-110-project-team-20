@@ -7,22 +7,20 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-
 import javafx.scene.control.TextArea;
-
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-
 /*
  * Recipe details editing
  *
- * Controls the format of the editing interface along with how edits interact both locally and on the HTTP server.
- * Similar in format to the details page, except there is a save button and callback in lieu of delete and edit.
+ * Controls the format of the editing interface along with how edits interact both locally and on
+ * the HTTP server. Similar in format to the details page, except there is a save button and
+ * callback in lieu of delete and edit.
  */
-public class RecipeEditPage extends BorderPane{
+public class RecipeEditPage extends BorderPane {
     private RecipeEditHeader header;
     private TextArea body;
     private EditFooter footer;
@@ -35,10 +33,8 @@ public class RecipeEditPage extends BorderPane{
         body.setWrapText(true);
         footer = new EditFooter();
 
-        getStylesheets().add(getClass().getResource(
-            "style.css"
-        ).toExternalForm());
-        
+        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+
         body.getStyleClass().add("recipe-edit-body");
         // ScrollPane scrollpane = new ScrollPane(body);
         // scrollpane.getStyleClass().add("recipe-edit-scroll-pane");
@@ -71,7 +67,7 @@ public class RecipeEditPage extends BorderPane{
         this.body.setText(recipe.getDescription());
     }
 
-    //TODO: added getter for new body
+    // TODO: added getter for new body
     public String
     getUpdatedBody()
     {
@@ -83,17 +79,17 @@ public class RecipeEditPage extends BorderPane{
 class RecipeEditHeader extends BorderPane {
     // private Button cancelButton;
 
-    public RecipeEditHeader() {
+    public RecipeEditHeader()
+    {
         getStyleClass().add("recipe-edit-header");
     }
 }
-
 
 class EditFooter extends HBox {
     private Button saveButton;
     private Button cancelButton;
 
-    /** 
+    /**
      * Constructor for Edit Page's footer
      */
     public EditFooter()
@@ -119,7 +115,7 @@ class EditFooter extends HBox {
         this.cancelButton.setOnAction(e -> onCancel.run());
     }
 
-    //TODO: Added 
+    // TODO: Added
     public void
     setOnSave(RunnableWithRecipe onSave, Label title, TextArea body)
     {

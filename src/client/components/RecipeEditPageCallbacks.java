@@ -13,17 +13,21 @@ public class RecipeEditPageCallbacks {
     private RunnableWithRecipe onSaveButtonClicked;
 
     public RecipeEditPageCallbacks(
-        Runnable onGoBackButtonClicked,
-        RunnableWithRecipe onSaveButtonClicked) {
+        Runnable onGoBackButtonClicked, RunnableWithRecipe onSaveButtonClicked)
+    {
         this.onGoBackButtonClicked = onGoBackButtonClicked;
         this.onSaveButtonClicked = onSaveButtonClicked;
     }
 
-    public Runnable getOnGoBackButtonClicked() {
+    public Runnable
+    getOnGoBackButtonClicked()
+    {
         return onGoBackButtonClicked;
     }
 
-    public RunnableWithRecipe getOnSaveButtonClicked() {
+    public RunnableWithRecipe
+    getOnSaveButtonClicked()
+    {
         return onSaveButtonClicked;
     }
 }
