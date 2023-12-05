@@ -59,7 +59,9 @@ public class MongoDBRecipeRepository implements IRecipeRepository, ISharedRecipe
                     .sort(defaultSorting);
 
             for (Document recipeDoc : recipeDocList) {
-                recipeDoc.put("shared_url", sharedUrlConfig.sharedUrlBase() + recipeDoc.getString("shared_url"));
+                if (recipeDoc.getString("shared_url") != null) {
+                    recipeDoc.put("shared_url", sharedUrlConfig.sharedUrlBase() + recipeDoc.getString("shared_url"));
+                }
                 Recipe recipe = Recipe.fromJson(recipeDoc.toJson());
                 recipeList.add(recipe);
             }
