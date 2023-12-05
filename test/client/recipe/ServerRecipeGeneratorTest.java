@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -137,4 +139,31 @@ public class ServerRecipeGeneratorTest {
     assertEquals("ingredients are missing", actual);
   }
 
+  @Test
+  public void parseError() throws IOException, InterruptedException, ExecutionException
+  {
+    // some generated response failed to be parsed
+    String mockRecipeResponse = Files.readString(Path.of("test/resources/sp-meatball.json"));
+    server = new MockHttpServer("/recipe/generate", mockRecipeResponse);
+
+    CompletableFuture<String> future = new CompletableFuture<>();
+    ServerRecipeGenerator generator = new ServerRecipeGenerator(mockSession, "http://localhost:4106");
+
+    server.start(4106);
+
+    RecipeRequestParameter params = new RecipeRequestParameter(new File("test/resources/silence.mp3"), new File("test/resources/silence.mp3"));
+
+    generator.requestGeneratingRecipe(params, (recipe) -> {
+      server.stop();
+    }, (String errorMessage) -> {
+      future.complete(errorMessage);
+      server.stop();
+    });
+
+    // if the test takes more than 3 seconds, consider empty string is returned.
+    future.completeOnTimeout(null, 15, TimeUnit.SECONDS);
+
+    String actual = future.get();
+    assertNotEquals("A JSONObject text must begin with '{' at 0 [character 1 line 1]", actual);
+  }
 }
