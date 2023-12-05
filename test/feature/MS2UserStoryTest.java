@@ -8,6 +8,7 @@ import client.Recipe;
 import client.components.ErrorMessage;
 import client.components.ErrorPage;
 import client.components.HomePage;
+import client.components.HomePageMealTypeFiltered;
 import client.components.SharedRecipeModal;
 import client.components.NewRecipeConfirmPage;
 import client.utils.runnables.RunnableForLogin;
@@ -134,6 +135,118 @@ public class MS2UserStoryTest extends UserStoryTestBase {
         // expected to show shared url on shared recipe modal screen
         assertEquals(SharedRecipeModal.class, viewTransitioner.currentPageClass);
         assertTrue(((String) viewTransitioner.params[0]).contains("http://localhost/recipe/shared/?url="));
+    }
+
+    @Test
+    public void
+    scenario_4_1_selectFilterByMealType() {
+        // Scenario 4.1: select filter by meal type
+        // Given the user is on home page
+        //     And the recipe list displays 2 lunch, 3 dinner meal type recipes
+        // When the user clicks filter by meal type
+        //     And select “Dinner” from the filter
+        // Then the recipe list should display 3 recipe items
+        //     And the recipe should be a dinner meal type recipes
+        GivenTheUserIsOnHomePageWithMultipleRecipes();
+        WhenTheUserClicksFilterByMealTypeAndSelect("dinner");
+        ThenTheRecipeListShouldDisplayFilteredRecipeListAs("dinner");
+    }
+
+    private void
+    GivenTheUserIsOnHomePageWithMultipleRecipes() {
+        // add 2 lunch and 3 dinner meal type
+        recipeModel.recipes.add(
+            new Recipe(
+                "Chicken Cream Pasta 1",
+                "Chicken Cream Pasta recipe instruction.",
+                "some ingredients",
+                "lunch",
+                "some image"));
+        recipeModel.recipes.add(
+            new Recipe(
+                "Chicken Cream Pasta 2",
+                "Chicken Cream Pasta recipe instruction.",
+                "some ingredients",
+                "lunch",
+                "some image"));
+        recipeModel.recipes.add(
+            new Recipe(
+                "Chicken Cream Pasta 3",
+                "Chicken Cream Pasta recipe instruction.",
+                "some ingredients",
+                "dinner",
+                "some image"));
+        recipeModel.recipes.add(
+            new Recipe(
+                "Chicken Cream Pasta 4",
+                "Chicken Cream Pasta recipe instruction.",
+                "some ingredients",
+                "dinner",
+                "some image"));
+        recipeModel.recipes.add(
+            new Recipe(
+                "Chicken Cream Pasta 5",
+                "Chicken Cream Pasta recipe instruction.",
+                "some ingredients",
+                "dinner",
+                "some image"));
+    }
+
+    private void
+    WhenTheUserClicksFilterByMealTypeAndSelect(String filterText) {
+        controller.mealTypeFilterButtonClicked(filterText);
+    }
+
+    private void
+    ThenTheRecipeListShouldDisplayFilteredRecipeListAs(String filterText) {
+        // Since filtering is handled in the UI context, we only check
+        // if the right view transitioner is called or not.
+
+        assertEquals(HomePageMealTypeFiltered.class, viewTransitioner.currentPageClass);
+        assertEquals(filterText, viewTransitioner.params[0]);
+    }
+
+    @Test
+    public void
+    scenario_4_2_changeSelectedFilterOfMealType() {
+        // Scenario 4.2: change selected filter of meal type
+        // Given the user is on home page
+        //     And the app have a list of recipes: 2 lunch, 3 dinner, 1 breakfast meal type recipes
+        //     And the list is filtered with “dinner”
+        //     And the list shows 3 filtered recipes
+        // When the user clicks filter by meal type
+        //     And select “Breakfast” from the filter
+        // Then the recipe list should display 1 breakfast recipe item
+        GivenPreSelectedMealTypeListOfHomePage("dinner");
+        WhenTheUserClicksFilterByMealTypeAndSelect("breakfast");
+        ThenTheRecipeListShouldDisplayFilteredRecipeListAs("breakfast");
+    }
+
+    private void
+    GivenPreSelectedMealTypeListOfHomePage(String filterText) {
+        GivenTheUserIsOnHomePageWithMultipleRecipes();
+        WhenTheUserClicksFilterByMealTypeAndSelect(filterText);
+        ThenTheRecipeListShouldDisplayFilteredRecipeListAs(filterText);
+    }
+
+    @Test
+    public void
+    scenario_4_3_unselectFilterOfMealType() {
+        // Scenario 4.3: unselect filter of meal type
+        // Given the user is on homepage
+        //     And the app have a list of recipes: 2 lunch, 3 dinner meal type recipes
+        //     And the list is filtered with “dinner”
+        //     And the list shows 3 filtered recipes
+        // When the user clicks filter by meal type
+        //     And select “Show All” from the filter
+        // Then the recipe list should display 5 recipes
+        //     And the recipe list should contains 2 lunch meal type recipes
+        //     And the recipe list should contains 3 dinner meal type recipes
+
+        GivenPreSelectedMealTypeListOfHomePage("dinner");
+        // we uses null as Show All
+        WhenTheUserClicksFilterByMealTypeAndSelect(null);
+        ThenTheRecipeListShouldDisplayFilteredRecipeListAs(null);
     }
 
     @Test
