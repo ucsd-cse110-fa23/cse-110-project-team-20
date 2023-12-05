@@ -334,3 +334,5 @@ gradle-app.setting
 
 app.properties
 database.json
+credentials.json
+test_credentials.json
