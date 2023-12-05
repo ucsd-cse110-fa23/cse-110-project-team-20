@@ -1,7 +1,9 @@
 package client;
 
+import client.account.CredentialManager;
 import client.account.IAccountManager;
 import client.account.IAccountSession;
+import client.account.ICredentialManager;
 import client.account.IncorrectPassword;
 import client.account.LoginFailed;
 import client.account.SimpleAccountSession;
@@ -39,6 +41,7 @@ public class Controller {
     private IRecipeModel recipeModel;
     private IAccountManager accountManager;
     private IAccountSession accountSession;
+    private ICredentialManager credentialManager;
 
     /**
      * Controller glues all functions together.
@@ -51,7 +54,7 @@ public class Controller {
      */
     public Controller(IViewTransitioner viewTransitioner, IRecipeGenerator recipeGenerator,
         IAudioRecorder audioRecorder, IRecipeModel recipeModel, IAccountManager accountManager,
-        IAccountSession accountSession)
+        IAccountSession accountSession, ICredentialManager credentialManager)
     {
         this.viewTransitioner = viewTransitioner;
         this.recipeGenerator = recipeGenerator;
@@ -59,22 +62,29 @@ public class Controller {
         this.recipeModel = recipeModel;
         this.accountManager = accountManager;
         this.accountSession = accountSession;
+        this.credentialManager = credentialManager;
     }
 
     public void
     start()
     {
+        // transitionToHomeScene();
         transitionToLoginScene();
     }
 
     public void
     transitionToLoginScene()
     {
-        RunnableForLogin onLogin = (String username, String password, boolean stayLoggedIn, Runnable onLoaded) -> {
+        RunnableForLogin onLogin =
+            (String username, String password, boolean stayLoggedIn, Runnable onLoaded) ->
+        {
             try {
                 String token = accountManager.loginOrCreateAccount(username, password);
                 if (token != null) {
                     accountSession.setToken(token);
+                }
+                if (stayLoggedIn) {
+                    credentialManager.setCredentials(username, password);
                 }
             } catch (IncorrectPassword e) {
                 viewTransitioner.transitionTo(ErrorMessage.class, e.getMessage());
@@ -94,7 +104,15 @@ public class Controller {
             transitionToHomeScene();
         };
 
-        viewTransitioner.transitionTo(LoginPage.class, onLogin);
+        if (credentialManager.hasCredentials()) {
+            String username = credentialManager.getUsername();
+            String password = credentialManager.getPassword();
+            // It will not work if you remove this line for some reason
+            viewTransitioner.transitionTo(LoginPage.class, onLogin);
+            onLogin.run(username, password, true, () -> {});
+        } else {
+            viewTransitioner.transitionTo(LoginPage.class, onLogin);
+        }
     }
 
     public void
@@ -136,6 +154,7 @@ public class Controller {
         Runnable logoutButtonCallback = () -> logoutButtonClicked();
 
         RunnableWithId openRecipeDetailButtonCallback = (int id) -> openRecipeDetailPage(id);
+        System.out.println("TransitionTo homepage.class");
         viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback,
             openRecipeDetailButtonCallback, logoutButtonCallback);
     }
@@ -154,14 +173,14 @@ public class Controller {
                 (recipe)
                     -> { transitionToNewRecipeConfirmPage(recipe); },
                 (errorMessage) -> {
-                    Runnable retryButtonCallback = () -> {
+                    Runnable retryButtonCallback = () ->
+                    {
                         transitionToHomeScene();
                     };
                     viewTransitioner.transitionTo(ErrorPage.class,
-                        "Generating new recipe is failed: " + errorMessage,
-                        retryButtonCallback,
+                        "Generating new recipe is failed: " + errorMessage, retryButtonCallback,
                         "Go back to home");
-                 });
+                });
         }
     }
 
@@ -177,11 +196,7 @@ public class Controller {
         Runnable shareCallback = () -> shareRecipeClicked(id);
 
         RecipeDetailsPageCallbacks callbacks = new RecipeDetailsPageCallbacks(
-            cancelCallback,
-            editCallback,
-            deleteCallback,
-            shareCallback
-        );
+            cancelCallback, editCallback, deleteCallback, shareCallback);
         viewTransitioner.transitionTo(RecipeDetailsPage.class, recipe, callbacks);
     }
 
@@ -219,6 +234,7 @@ public class Controller {
     public void
     logoutButtonClicked()
     {
+        this.credentialManager.setCredentials(null, null);
         this.transitionToLoginScene();
     }
 
@@ -291,20 +307,17 @@ public class Controller {
     {
         Recipe recipe = recipeModel.getRecipe(id);
         if (recipe.getSharedUrl() == null) {
-            recipeModel.shareRecipe(id, () -> {
-                shareRecipeClicked(id);
-            });
+            recipeModel.shareRecipe(id, () -> { shareRecipeClicked(id); });
         } else {
             viewTransitioner.transitionTo(SharedRecipeModal.class, recipe.getSharedUrl());
         }
     }
 
     public void
-    onRecipeModelError(Exception e) {
+    onRecipeModelError(Exception e)
+    {
         Runnable callback = () -> start();
-        viewTransitioner.transitionTo(ErrorPage.class,
-            "Server error occured: " + e.getMessage(),
-            callback,
-            "Go to login page");
+        viewTransitioner.transitionTo(ErrorPage.class, "Server error occured: " + e.getMessage(),
+            callback, "Go to login page");
     }
 }
