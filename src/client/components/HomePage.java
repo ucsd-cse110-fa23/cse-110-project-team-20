@@ -5,6 +5,7 @@ import client.utils.runnables.RunnableWithId;
 import client.utils.runnables.RunnableWithString;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javafx.collections.FXCollections;
@@ -417,6 +418,16 @@ class RecipeList extends VBox {
             case TIME_ASC:
                 // do nothing, it is a default order from the server
                 break;
+            case TIME_DESC:
+                Collections.reverse(recipes);
+                break;
+            case ALPHA_ASC:
+                Collections.sort(recipes, new AlphabeticalRecipeTitleComparator());
+                break;
+            case ALPHA_DESC:
+                Collections.sort(recipes, new AlphabeticalRecipeTitleComparator());
+                Collections.reverse(recipes);
+                break;
             default:
                 break;
         }
@@ -448,6 +459,18 @@ class RecipeList extends VBox {
             }
         }
         return newRecipeBoxes;
+    }
+}
+
+/**
+ * Alphabetical sort for recipe box
+ *
+ * Since RecipeBox is in HomePage UI context, we will maintain the comparator here
+ */
+class AlphabeticalRecipeTitleComparator implements Comparator<RecipeBox> {
+    @Override
+    public int compare(RecipeBox o1, RecipeBox o2) {
+        return o1.getRecipe().getTitle().compareTo(o2.getRecipe().getTitle());
     }
 }
 
