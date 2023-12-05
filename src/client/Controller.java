@@ -155,15 +155,13 @@ public class Controller {
 
         Runnable createButtonCallback = () -> createRecipeButtonClicked();
         Runnable logoutButtonCallback = () -> logoutButtonClicked();
-        RunnableWithString mealTypeFilterCallback =
-            (String value) -> mealTypeFilterButtonClicked(value);
+        RunnableWithString mealTypeFilterCallback = (String value) -> mealTypeFilterButtonClicked(value);
         RunnableWithString sortCallback = (String value) -> sortButtonClicked(value);
 
         RunnableWithId openRecipeDetailButtonCallback = (int id) -> openRecipeDetailPage(id);
         System.out.println("TransitionTo homepage.class");
         viewTransitioner.transitionTo(HomePage.class, recipes, createButtonCallback,
-            openRecipeDetailButtonCallback, logoutButtonCallback, mealTypeFilterCallback,
-            sortCallback);
+            openRecipeDetailButtonCallback, logoutButtonCallback, mealTypeFilterCallback, sortCallback);
     }
 
     public void
@@ -197,8 +195,8 @@ public class Controller {
                         transitionToHomeScene();
                     };
                     viewTransitioner.transitionTo(ErrorPage.class,
-                        "Unable to generate recipe: " + errorMessage, retryButtonCallback,
-                        "Go back home");
+                        "Generating new recipe is failed: " + errorMessage, retryButtonCallback,
+                        "Go back to home");
                 });
         }
     }
@@ -288,14 +286,12 @@ public class Controller {
         Runnable saveCallback = () -> saveRecipeClicked(recipe);
         Runnable discardCallback = () -> discardGeneratedRecipeClicked();
 
-        Runnable regenerateCallback = () ->
-        {
+        Runnable regenerateCallback = () -> {
             transitionToLoadingScene();
             requestTranscription();
         };
 
-        viewTransitioner.transitionTo(
-            NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback, regenerateCallback);
+        viewTransitioner.transitionTo(NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback, regenerateCallback);
     }
 
     public void
