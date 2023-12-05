@@ -285,8 +285,12 @@ public class Controller {
     {
         Runnable saveCallback = () -> saveRecipeClicked(recipe);
         Runnable discardCallback = () -> discardGeneratedRecipeClicked();
-        // TODO:
-        Runnable regenerateCallback = () -> requestTranscription();
+
+        Runnable regenerateCallback = () -> {
+            transitionToLoadingScene();
+            requestTranscription();
+        };
+
         viewTransitioner.transitionTo(NewRecipeConfirmPage.class, recipe, saveCallback, discardCallback, regenerateCallback);
     }
 
