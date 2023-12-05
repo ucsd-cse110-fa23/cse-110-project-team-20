@@ -9,10 +9,12 @@ import client.components.ErrorMessage;
 import client.components.ErrorPage;
 import client.components.HomePage;
 import client.components.HomePageMealTypeFiltered;
+import client.components.HomePageSorted;
 import client.components.LoginPage;
 import client.components.SharedRecipeModal;
 import client.components.NewRecipeConfirmPage;
 import client.utils.runnables.RunnableForLogin;
+import client.utils.runnables.RunnableWithString;
 import feature.mock.MockAccountManager;
 import javafx.beans.binding.When;
 
@@ -447,6 +449,148 @@ public class MS2UserStoryTest extends UserStoryTestBase {
         assertEquals("Server error occured: Connection Refused", viewTransitioner.params[0]);
         // button label
         assertEquals("Go to login page", viewTransitioner.params[2]);
+    }
+
+    @Test
+    public void
+    scenario_8_1_chronologicalSortRecipeList()
+    {
+        // Scenario 8.1: Chronological sort recipe list
+        // Given the user has 3 saved recipes “scrambled eggs”, “chicken soup”, and “pesto pasta”
+        // And “chicken soup” has a creation timestamp of “11/19/23 16:44:20”	
+        // And “scrambled eggs” has a creation timestamp of “11/19/23 00:05:45”
+        // 	And “pesto pasta” has a creation timestamp of “11/17/23 10:56:12”
+        // When the user navigates to the homepage by clicking “go back” while viewing “scrambled eggs”
+        // Then the ordering of the recipes should be such that “chicken soup” is first
+        // 	And “scrambled eggs” is second
+        // 	And “pesto pasta” is third
+        // And 
+        // When the user clicks the chronological sort button
+        // Then the ordering of the recipes should be such that “chicken soup” is third
+        // 	And “scrambled eggs” is second
+        // 	And “pesto pasta” is first
+        // And 
+        // When the user clicks the chronological sort button again
+        // Then the ordering of the recipes should be such that “chicken soup” is first
+        // 	And “scrambled eggs” is second
+        // 	And “pesto pasta” is third
+        
+        // Since we are handling sorting/filtering feature on UI side, we are just checking
+        // view transitioner passses correct page and value
+
+        GivenTheThreeSavedRecipes();
+        WhenTheUserAccessHomePage();
+        ThenTheOrderOfRecipeShouldBeNewOneToOldOneInitially();
+        WhenTheUserClickChronologicalSortButtonAs("TIME_DESC");
+        ThenTheOrderOfRecipeShouldBeSortedAs("TIME_DESC");
+        WhenTheUserClickChronologicalSortButtonAs("TIME_ASC");
+        ThenTheOrderOfRecipeShouldBeSortedAs("TIME_ASC");
+    }
+
+    private void
+    GivenTheThreeSavedRecipes()
+    {
+        recipeModel.recipes.add(
+            new Recipe(
+                "scrambled eggs",
+                "scrambled eggs recipe instruction.",
+                "some ingredients",
+                "lunch",
+                "some image"));
+        recipeModel.recipes.add(
+            new Recipe(
+                "chicken soup",
+                "chicken soup recipe instruction.",
+                "some ingredients",
+                "lunch",
+                "some image"));
+        recipeModel.recipes.add(
+            new Recipe(
+                "pesto pasta",
+                "Chicken Cream Pasta recipe instruction.",
+                "some ingredients",
+                "dinner",
+                "some image"));
+    }
+
+    private void
+    WhenTheUserAccessHomePage()
+    {
+        controller.transitionToHomeScene();
+    }
+
+    private void
+    ThenTheOrderOfRecipeShouldBeNewOneToOldOneInitially()
+    {
+        // since the server implementation of recipe is always returning newest to oldest order.
+        // skip the check
+        assertEquals(HomePage.class, viewTransitioner.currentPageClass);
+    }
+
+    RunnableWithString sortForTimeCallback = null;
+
+    private void
+    WhenTheUserClickChronologicalSortButtonAs(String sortOrder)
+    {
+        if (sortForTimeCallback == null) {
+            sortForTimeCallback = (RunnableWithString) viewTransitioner.params[5];
+        }
+        sortForTimeCallback.run(sortOrder);
+    }
+
+    private void
+    ThenTheOrderOfRecipeShouldBeSortedAs(String sortOrder)
+    {
+        assertEquals(HomePageSorted.class, viewTransitioner.currentPageClass);
+        assertEquals(sortOrder, viewTransitioner.params[0]);
+    }
+
+    @Test
+    public void
+    scenario_8_2_alphabeticalSortRecipeList()
+    {
+        // Scenario 8.2: Alphabetical sort recipe list
+        // Given the user has 3 saved recipes “scrambled eggs”, “chicken soup”, and “pesto pasta” and is on the recipe view homepage
+        // And “chicken soup” has a creation timestamp of “11/19/23 16:44:20”	
+        // And “scrambled eggs” has a creation timestamp of “11/19/23 00:05:45”
+        // 	And “pesto pasta” has a creation timestamp of “11/17/23 10:56:12”
+        // When the user clicks the alphabetical sort button
+        // Then the ordering of the recipes should be such that “chicken soup” is first
+        // 	And “scrambled eggs” is third
+        // 	And “pesto pasta” is second
+        // And 
+        // When the user clicks the alphabetical sort button again
+        // Then the ordering of the recipes should be such that “chicken soup” is third
+        // 	And “scrambled eggs” is first
+        // 	And “pesto pasta” is second
+        // And 
+        // When the user clicks the alphabetical sort button again
+        // Then the ordering of the recipes should be such that “chicken soup” is first
+        // 	And “scrambled eggs” is second
+        // 	And “pesto pasta” is third
+
+        
+        // Since we are handling sorting/filtering feature on UI side, we are just checking
+        // view transitioner passses correct page and value
+
+        GivenTheThreeSavedRecipes();
+        WhenTheUserAccessHomePage();
+        ThenTheOrderOfRecipeShouldBeNewOneToOldOneInitially();
+        WhenTheUserClickAlphabeticalSortButtonAs("ALPHA_DESC");
+        ThenTheOrderOfRecipeShouldBeSortedAs("ALPHA_DESC");
+        WhenTheUserClickAlphabeticalSortButtonAs("ALPHA_ASC");
+        ThenTheOrderOfRecipeShouldBeSortedAs("ALPHA_ASC");
+    }
+
+    RunnableWithString sortForAlphabetCallback = null;
+
+    private void
+    WhenTheUserClickAlphabeticalSortButtonAs(String sortOrder)
+    {
+        if (sortForAlphabetCallback == null) {
+            sortForAlphabetCallback = (RunnableWithString) viewTransitioner.params[5];
+        }
+        sortForAlphabetCallback.run(sortOrder);
     }
 
     @Test
