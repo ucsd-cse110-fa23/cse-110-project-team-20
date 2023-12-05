@@ -94,6 +94,7 @@ public class MongoDBRecipeRepositoryTest {
                                  .append("description", "some desc 0")
                                  .append("ingredients", "some ingredients 0")
                                  .append("meal_type", "some meal type 0")
+                                 .append("shared_url", "some-shared-url")
                                  .append("created_at", new Date()));
         collection.insertOne(new Document()
                                  .append("username", "some username")
@@ -113,10 +114,12 @@ public class MongoDBRecipeRepositoryTest {
         assertEquals("some desc 1", recipes.get(0).getDescription());
         assertEquals("some ingredients 1", recipes.get(0).getIngredients());
         assertEquals("some meal type 1", recipes.get(0).getMealType());
+        assertNull(recipes.get(0).getSharedUrl());
         assertEquals("some title 0", recipes.get(1).getTitle());
         assertEquals("some desc 0", recipes.get(1).getDescription());
         assertEquals("some ingredients 0", recipes.get(1).getIngredients());
         assertEquals("some meal type 0", recipes.get(1).getMealType());
+        assertEquals(shareConfig.sharedUrlBase() + "some-shared-url", recipes.get(1).getSharedUrl());
     }
 
     @Test
