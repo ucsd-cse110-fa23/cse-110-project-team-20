@@ -10,76 +10,80 @@ import java.util.Base64;
 import org.json.JSONObject;
 
 public class DallEService implements ITextToImageService {
-  private static final String API_ENDPOINT = "https://api.openai.com/v1/images/generations";
-  private static final String MODEL = "dall-e-2";
+    private static final String API_ENDPOINT = "https://api.openai.com/v1/images/generations";
+    private static final String MODEL = "dall-e-2";
 
-  private static final String SIZE = "256x256";
-  private static final double N = 1;
+    private static final String SIZE = "256x256";
+    private static final double N = 1;
 
-  IOpenAIConfiguration configuration;
+    IOpenAIConfiguration configuration;
 
-  public DallEService(IOpenAIConfiguration configuration) {
-    this.configuration = configuration;
-  }
-
-  @Override
-  public String createImage(IRecipeQuery query) throws TextToImageServiceException {
-    JSONObject response;
-    try {
-      response = request(query.toQueryableString());
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new TextToImageServiceException(e);
+    public DallEService(IOpenAIConfiguration configuration)
+    {
+        this.configuration = configuration;
     }
 
-    if (response.has("error")) {
-      throw new TextGenerateServiceException(response.getJSONObject("error").getString("message"));
+    @Override
+    public String
+    createImage(IRecipeQuery query) throws TextToImageServiceException
+    {
+        JSONObject response;
+        try {
+            response = request(query.toQueryableString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TextToImageServiceException(e);
+        }
+
+        if (response.has("error")) {
+            throw new TextGenerateServiceException(
+                response.getJSONObject("error").getString("message"));
+        }
+
+        String imageUrl = response.getJSONArray("data").getJSONObject(0).getString("url");
+
+        String result = "";
+
+        try {
+            InputStream in = new URI(imageUrl).toURL().openStream();
+            result = Base64.getEncoder().encodeToString(in.readAllBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new TextToImageServiceException(e);
+        }
+
+        return "data:image/jpg;base64," + result;
     }
 
-    String imageUrl = response.getJSONArray("data").getJSONObject(0).getString("url");
+    private JSONObject
+    request(String prompt) throws IOException, InterruptedException
+    {
+        // Create a request body which you will pass into request object
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("model", MODEL);
+        requestBody.put("prompt", prompt);
+        requestBody.put("n", N);
+        requestBody.put("size", SIZE);
 
-    String result = "";
+        // Create the HTTP client
+        HttpClient client = HttpClient.newHttpClient();
 
-    try {
-      InputStream in = new URI(imageUrl).toURL().openStream();
-      result = Base64.getEncoder().encodeToString(in.readAllBytes());
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new TextToImageServiceException(e);
+        // Create the request object
+        HttpRequest request =
+            HttpRequest.newBuilder()
+                .uri(URI.create(API_ENDPOINT))
+                .header("Content-Type", "application/json")
+                .header("Authorization", String.format("Bearer %s", configuration.apiKey()))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                .build();
+
+        // Send the request and receive the response
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Process the response
+        String responseBody = response.body();
+
+        JSONObject responseJson = new JSONObject(responseBody);
+        return responseJson;
     }
-
-    return "data:image/jpg;base64," + result;
-  }
-
-  private JSONObject request(String prompt) throws IOException, InterruptedException {
-    // Create a request body which you will pass into request object
-    JSONObject requestBody = new JSONObject();
-    requestBody.put("model", MODEL);
-    requestBody.put("prompt", prompt);
-    requestBody.put("n", N);
-    requestBody.put("size", SIZE);
-
-    // Create the HTTP client
-    HttpClient client = HttpClient.newHttpClient();
-
-    // Create the request object
-    HttpRequest request = HttpRequest
-        .newBuilder()
-        .uri(URI.create(API_ENDPOINT))
-        .header("Content-Type", "application/json")
-        .header("Authorization", String.format("Bearer %s", configuration.apiKey()))
-        .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-        .build();
-
-    // Send the request and receive the response
-    HttpResponse<String> response = client.send(
-        request,
-        HttpResponse.BodyHandlers.ofString());
-
-    // Process the response
-    String responseBody = response.body();
-
-    JSONObject responseJson = new JSONObject(responseBody);
-    return responseJson;
-  }
 }

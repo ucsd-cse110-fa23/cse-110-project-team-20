@@ -13,11 +13,15 @@ public class RecipeRequestParameter {
         this.ingredients = ingredientsFile;
     }
 
-    public File getMealTypeFile() {
+    public File
+    getMealTypeFile()
+    {
         return mealType;
     }
 
-    public File getIngredientsFile() {
+    public File
+    getIngredientsFile()
+    {
         return ingredients;
     }
 }

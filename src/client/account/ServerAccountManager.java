@@ -1,35 +1,38 @@
 package client.account;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URI;
+import java.net.URL;
+import org.json.JSONObject;
 
 /**
  * Server Account Manager
- * 
- * request to the server with given username and password. Process the response to take user login token.
- * Any error during the login process will throw appropriate exception message such as IncorrectPassword.
+ *
+ * request to the server with given username and password. Process the response to take user login
+ * token. Any error during the login process will throw appropriate exception message such as
+ * IncorrectPassword.
  */
 public class ServerAccountManager implements IAccountManager {
-
     private String path = "/account/login-or-create";
     private String URL;
 
-    public ServerAccountManager() {
+    public ServerAccountManager()
+    {
         this("http://localhost:8100");
     }
 
-    public ServerAccountManager(String baseUrl) {
+    public ServerAccountManager(String baseUrl)
+    {
         URL = String.format("%s%s", baseUrl, path);
     }
 
     @Override
-    public String loginOrCreateAccount(String username, String password) throws IncorrectPassword, LoginFailed {
+    public String
+    loginOrCreateAccount(String username, String password) throws IncorrectPassword, LoginFailed
+    {
         // request to the server with username nad password
         JSONObject resObj = performRequest(username, password);
 
@@ -47,7 +50,9 @@ public class ServerAccountManager implements IAccountManager {
         return resObj.has("token") ? resObj.getString("token") : null;
     }
 
-    private JSONObject performRequest(String username, String password) {
+    private JSONObject
+    performRequest(String username, String password)
+    {
         String urlString = URL;
         String response = "{\"error\": \"Could not perform request\"}";
         JSONObject reqObj = new JSONObject();
@@ -65,8 +70,7 @@ public class ServerAccountManager implements IAccountManager {
             out.flush();
             out.close();
 
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
             StringBuilder sb = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {
