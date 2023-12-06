@@ -19,7 +19,7 @@ public class AppConfiguration {
 
         try {
             properties.load(new FileInputStream(PROPERTIES_FILENAME));
-            apiUrl = properties.getProperty("server.api_url", apiUrl);
+            apiUrl = properties.getProperty("api.host_url", apiUrl);
         } catch (Exception e) {
             System.out.println("[INFO] Cannot load app.properties config. The app is running with a default setting.");
         }
