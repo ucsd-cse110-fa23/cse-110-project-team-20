@@ -1,9 +1,11 @@
 package server;
 
 import client.Recipe;
+import java.net.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.Path;
 import server.recipe.ISharedRecipeRepository;
 import server.request.IHttpRequest;
 
@@ -70,17 +72,21 @@ public class SharedRecipeHttpHandler extends HttpHandlerBase {
     private String
     loadTemplate(String filename)
     {
-        String fileContent;
+        String fileContent = "";
 
         try {
             // ref: https://www.baeldung.com/reading-file-in-java
-            fileContent = String.join(
-                "", Files.readAllLines(Paths.get(getClass().getResource(filename).getPath())));
+        URI uri = getClass().getResource(filename).toURI();
+        Path path = Paths.get(uri);
+        fileContent = String.join("", Files.readAllLines(path));
         } catch (IOException e) {
             e.printStackTrace();
             fileContent = filename + " is missing";
+        } catch(URISyntaxException e) {
+            e.printStackTrace();
         }
 
         return fileContent;
+
     }
 }
