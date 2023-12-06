@@ -1,7 +1,6 @@
 package server.recipe;
 
 import client.Recipe;
-;
 import java.util.List;
 
 /*
