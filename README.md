@@ -1,6 +1,6 @@
 # PantryPal
 
-This project contains PantryPal app and server by Team 20 CSE110 Fall 2023.
+This project contains PantryPal app and server by Team 20 CSE110 Fall 2023.<br>
 Repository link: https://github.com/ucsd-cse110-fa23/cse-110-project-team-20
 
 # How to setup the server
