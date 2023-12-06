@@ -1,8 +1,9 @@
 # PantryPal
 
-This project contains PantryPal app and server by Team 20 CSE110 Fall 2023.
+This project contains PantryPal app and server by Team 20 CSE110 Fall 2023.<br>
+Repository link: https://github.com/ucsd-cse110-fa23/cse-110-project-team-20
 
-# How to Use
+# How to setup the server
 
 ## PantryPal Server
 
@@ -17,7 +18,7 @@ This project contains PantryPal app and server by Team 20 CSE110 Fall 2023.
 
 **NOTE:** If the server need to be accessed from outside of localhost, please make sure to update the config as well. If the server indicates that `localhost` is in the config, it will prompt possible IP addresses for the configuration.
 
-# How to Use
+# How to use the application
 
 ## PantryPal Client
 
@@ -30,7 +31,7 @@ This project contains PantryPal app and server by Team 20 CSE110 Fall 2023.
 ./gradlew runApp
 ```
 
-# Server Configuration
+# Database Configuration
 
 ## MongoDB setup
 
