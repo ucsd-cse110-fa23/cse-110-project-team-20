@@ -79,16 +79,16 @@ public class LoginPage extends BorderPane {
         // it is empty or not.
         // then, call loginCallback when the form validation passes.
 
-        if (usernameField.getText().isEmpty()) {
+        if (usernameField.getText().trim().isEmpty()) {
             Alert alert =
-                new Alert(AlertType.WARNING, "Username is missing. Please check the username.");
+                new Alert(AlertType.ERROR, "Username is missing. Please check the username.");
             alert.show();
             return;
         }
 
         if (passwordField.getText().isEmpty()) {
             Alert alert =
-                new Alert(AlertType.WARNING, "Password is missing. Please check the password.");
+                new Alert(AlertType.ERROR, "Password is missing. Please check the password.");
             alert.show();
             return;
         }
