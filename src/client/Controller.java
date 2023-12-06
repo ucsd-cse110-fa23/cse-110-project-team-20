@@ -197,8 +197,8 @@ public class Controller {
                         transitionToHomeScene();
                     };
                     viewTransitioner.transitionTo(ErrorPage.class,
-                        "Generating new recipe is failed: " + errorMessage, retryButtonCallback,
-                        "Go back to home");
+                        "Unable to generate recipe: " + errorMessage, retryButtonCallback,
+                        "Go back home");
                 });
         }
     }

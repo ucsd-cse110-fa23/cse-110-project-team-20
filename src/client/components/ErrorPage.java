@@ -1,8 +1,13 @@
 package client.components;
-
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -19,10 +24,16 @@ public class ErrorPage extends BorderPane {
 
     public ErrorPage(String message, Runnable retry, String buttonLabel)
     {
-        VBox container = new VBox();
+        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        VBox container = new VBox(20);
         container.setAlignment(Pos.CENTER);
+        // Load the error icon
+        ImageView errorIcon =
+            new ImageView(new Image(getClass().getResourceAsStream("cross-icon.png")));
+        errorIcon.setFitWidth(100); // Adjust the size as needed
+        errorIcon.setFitHeight(100);
 
-        Label title = new Label("Sorry, there is a problem...");
+        Label title = new Label("Oops, something went wrong.");
         title.setStyle("-fx-font-size: 24px; -fx-font-weight: 600;");
 
         Label desc = new Label(message);
@@ -32,7 +43,8 @@ public class ErrorPage extends BorderPane {
         Button retryButton = new Button(buttonLabel);
         retryButton.setOnAction((e) -> retry.run());
 
-        container.getChildren().addAll(title, spacer(), desc, spacer(), retryButton);
+
+        container.getChildren().addAll(errorIcon, title, spacer(), desc, spacer(), retryButton);
         setCenter(container);
     }
 

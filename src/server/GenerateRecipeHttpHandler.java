@@ -63,14 +63,14 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
         String ingredients = future1.join();
         String mealType = future2.join();
 
-        if (isApplicableTranscription(ingredients)) {
+        if (isInvalidTranscription(ingredients)) {
             info("Given ingredients are empty.");
-            return fail("INPUT ERROR: ingredients you provided is empty or too short.");
+            return fail("We couldn't figure out what ingredients you specified :(");
         }
 
-        if (isApplicableTranscription(mealType)) {
+        if (isInvalidTranscription(mealType)) {
             info("Given meal type is empty.");
-            return fail("INPUT ERROR: meal type that you provided is empty too short.");
+            return fail("We couldn't figure out what meal type you specified :(");
         }
 
         // sanitize the given meal type to appropriate one
@@ -115,7 +115,7 @@ public class GenerateRecipeHttpHandler extends HttpHandlerBase {
     }
 
     private boolean
-    isApplicableTranscription(String text)
+    isInvalidTranscription(String text)
     {
         return text.trim().isEmpty() || text.toLowerCase().contains("audio file is too short");
     }
