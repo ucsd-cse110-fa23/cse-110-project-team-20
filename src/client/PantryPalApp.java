@@ -7,14 +7,12 @@ import client.account.ServerAccountManager;
 import client.account.SimpleAccountSession;
 import client.audio.AudioRecorder;
 import client.audio.IAudioRecorder;
-import client.components.ErrorPage;
 import client.models.CachedRecipeModel;
 import client.models.IRecipeModel;
 import client.models.ServerRecipeModel;
 import client.recipe.IRecipeGenerator;
 import client.recipe.ServerRecipeGenerator;
 import client.utils.transitions.CompositeViewTransitioner;
-import client.utils.transitions.IViewTransitioner;
 import client.utils.transitions.PrintConsoleViewTransitioner;
 import java.beans.PropertyChangeEvent;
 import javafx.application.Application;
@@ -35,16 +33,18 @@ public class PantryPalApp extends Application {
     public void
     start(Stage primaryStage) throws Exception
     {
+        AppConfiguration config = new AppConfiguration();
+
         CompositeViewTransitioner transitioner = new CompositeViewTransitioner();
 
         IAccountSession accountSession = new SimpleAccountSession();
-        IRecipeGenerator recipeGenerator = new ServerRecipeGenerator(accountSession);
+        IRecipeGenerator recipeGenerator = new ServerRecipeGenerator(accountSession, config.getApiUrl());
         IAudioRecorder audioRecorder = new AudioRecorder();
 
-        ServerRecipeModel serverRecipeModel = new ServerRecipeModel(accountSession);
+        ServerRecipeModel serverRecipeModel = new ServerRecipeModel(accountSession, config.getApiUrl());
         IRecipeModel recipeModel = new CachedRecipeModel(serverRecipeModel);
 
-        IAccountManager accountManager = new ServerAccountManager();
+        IAccountManager accountManager = new ServerAccountManager(config.getApiUrl());
         CredentialManager credentialManager = new CredentialManager("credentials.json");
 
         Controller controller = new Controller(transitioner, recipeGenerator, audioRecorder,

@@ -333,6 +333,7 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,linux,java,gradle,visualstudiocode,intellij,eclipse
 
 app.properties
+server.properties
 database.json
 credentials.json
 test_credentials.json

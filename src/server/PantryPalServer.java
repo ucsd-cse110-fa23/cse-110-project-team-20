@@ -2,8 +2,12 @@ package server;
 
 import com.sun.net.httpserver.*;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.*;
 import server.account.AccountContext;
 import server.account.IAccountContext;
@@ -31,12 +35,21 @@ import server.recipe.JSONRecipeRepository;
 
 public class PantryPalServer {
     // initialize server port and hostname
-    private static final int SERVER_PORT = 8100;
-    private static final String SERVER_HOSTNAME = "localhost";
+    private static int SERVER_PORT = 8100;
+    private static String SERVER_HOSTNAME = "0";
 
     public static void
     main(String[] args) throws IOException
     {
+        ServerConfiguration configuration = new ServerConfiguration();
+
+        SERVER_HOSTNAME = configuration.getHostname(); // expected to be server IP
+        SERVER_PORT = configuration.getPort(); // expected to be server port
+        
+        if (SERVER_HOSTNAME.equals("localhost")) {
+            printServerSettingInfo();
+        }
+
         // create a thread pool to handle requests
         ThreadPoolExecutor threadPoolExecutor =
             (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
@@ -44,8 +57,6 @@ public class PantryPalServer {
         // create a server
         HttpServer server =
             HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
-
-        ServerConfiguration configuration = new ServerConfiguration();
 
         IAccountContext accountContext = new AccountContext();
 
@@ -57,7 +68,7 @@ public class PantryPalServer {
 
         if (configuration.apiKey() == null || configuration.apiKey().equals("")) {
             System.out.println(
-                "[api:INFO] Coudln't find API KEY in app.properties file. The server will be running with mock data.");
+                "[api:INFO] Coudln't find API KEY in server.properties file. The server will be running with mock data.");
             textGenerateService = new LocalTextGenerateService();
             voiceToTextService = new LocalVoiceToTextService();
             textToImageService = new LocalTextToImageService();
@@ -77,7 +88,7 @@ public class PantryPalServer {
         if (configuration.getConnectionString() == null
             || configuration.getConnectionString().equals("")) {
             System.out.println(
-                "[db:INFO] Couldn't find mongodb connection string in app.properties file. The server will use database.json file as storage.");
+                "[db:INFO] Couldn't find mongodb connection string in server.properties file. The server will use database.json file as storage.");
             JSONRecipeRepository jsonRepository = new JSONRecipeRepository("database.json");
             recipeRepository = jsonRepository;
             sharedRecipeRepository = jsonRepository;
@@ -117,6 +128,37 @@ public class PantryPalServer {
         server.setExecutor(threadPoolExecutor);
         server.start();
 
-        System.out.println("Server started on port " + SERVER_PORT);
+        System.out.println("[config:INFO] Server started on " + SERVER_HOSTNAME + " under port " + SERVER_PORT);
+    }
+
+    private static void
+    printServerSettingInfo()
+    {
+        System.out.println("[config:INFO] The server is up and running on localhost. This server is only open");
+        System.out.println("[config:INFO]   to access from the same computer.");
+        System.out.println("[config:INFO] If the server need to be public choose one of IP address from below");
+        System.out.println("[config:INFO]   and update the configuration in server.properties.");
+        System.out.println("");
+        printCurrentServerAddress();
+        System.out.println("");
+        System.out.println("");
+    }
+
+    private static void
+    printCurrentServerAddress()
+    {
+        // collect all host addresses
+        // ref: https://stackoverflow.com/questions/20353450
+        try {
+            for (NetworkInterface ni : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                for (InetAddress address : Collections.list(ni.getInetAddresses())) {
+                    if (address instanceof Inet4Address) {
+                        System.out.println("\t" + address.getHostAddress());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

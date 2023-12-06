@@ -10,10 +10,13 @@ import server.mongodb.IMongoDBConfiguration;
  */
 public class ServerConfiguration implements IOpenAIConfiguration, IMongoDBConfiguration {
     // default file name for the configuration file
-    private static final String PROPERTIES_FILENAME = "app.properties";
+    private static final String PROPERTIES_FILENAME = "server.properties";
 
     private String connectionString;
     private String apiKey;
+
+    private String hostname = "localhost";
+    private int port = 8100;
 
     public ServerConfiguration()
     {
@@ -21,6 +24,9 @@ public class ServerConfiguration implements IOpenAIConfiguration, IMongoDBConfig
 
         try {
             properties.load(new FileInputStream(PROPERTIES_FILENAME));
+
+            hostname = properties.getProperty("server.hostname", hostname);
+            port = Integer.parseInt(properties.getProperty("server.port", String.valueOf(port)));
 
             connectionString = properties.getProperty("mongodb.connection_string", "");
             apiKey = properties.getProperty("chatgpt.api_key", "");
@@ -41,5 +47,17 @@ public class ServerConfiguration implements IOpenAIConfiguration, IMongoDBConfig
     apiKey()
     {
         return apiKey;
+    }
+
+    public String
+    getHostname()
+    {
+        return hostname;
+    }
+
+    public int
+    getPort()
+    {
+        return port;
     }
 }
