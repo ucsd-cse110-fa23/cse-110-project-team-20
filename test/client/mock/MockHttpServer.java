@@ -10,6 +10,7 @@ import java.util.concurrent.*;
 import java.io.*;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.text.Normalizer;
 
 public class MockHttpServer {
     private static final int SERVER_PORT = 8100;
@@ -80,6 +81,9 @@ class MockRequestHandler implements HttpHandler {
         // }
         lastRequest = new HttpRequest(httpExchange);
         body = lastRequest.getRequestBodyAsString();
+
+        response = Normalizer.normalize(response, Normalizer.Form.NFD);
+        response = response.replaceAll("\\P{InBasic_Latin}", "");
 
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream outStream = httpExchange.getResponseBody();

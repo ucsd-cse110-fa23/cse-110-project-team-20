@@ -1,6 +1,8 @@
 package client.recipe;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -146,7 +148,7 @@ public class ServerRecipeGeneratorTest {
     String mockRecipeResponse = Files.readString(Path.of("test/resources/sp-meatball.json"));
     server = new MockHttpServer("/recipe/generate", mockRecipeResponse);
 
-    CompletableFuture<String> future = new CompletableFuture<>();
+    CompletableFuture<Recipe> future = new CompletableFuture<>();
     ServerRecipeGenerator generator = new ServerRecipeGenerator(mockSession, "http://localhost:4106");
 
     server.start(4106);
@@ -154,16 +156,17 @@ public class ServerRecipeGeneratorTest {
     RecipeRequestParameter params = new RecipeRequestParameter(new File("test/resources/silence.mp3"), new File("test/resources/silence.mp3"));
 
     generator.requestGeneratingRecipe(params, (recipe) -> {
+      future.complete(recipe);
       server.stop();
     }, (String errorMessage) -> {
-      future.complete(errorMessage);
       server.stop();
     });
 
     // if the test takes more than 3 seconds, consider empty string is returned.
     future.completeOnTimeout(null, 15, TimeUnit.SECONDS);
 
-    String actual = future.get();
+    Recipe actual = future.get();
     assertNotEquals("A JSONObject text must begin with '{' at 0 [character 1 line 1]", actual);
+    assertEquals("Spaghetti Meatball", actual.getTitle());
   }
 }

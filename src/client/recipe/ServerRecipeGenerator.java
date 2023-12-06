@@ -112,14 +112,6 @@ public class ServerRecipeGenerator implements IRecipeGenerator {
         }
         in.close();
 
-        if (response.toString().isEmpty()) {
-          in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-          in.close();
-        }
-
         connection.disconnect();
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
