@@ -2,6 +2,8 @@ package server;
 
 import com.sun.net.httpserver.*;
 import java.io.*;
+import java.text.Normalizer;
+
 import org.json.JSONObject;
 import server.request.*;
 
@@ -37,6 +39,10 @@ public abstract class HttpHandlerBase implements HttpHandler {
             response = e.toString();
             e.printStackTrace();
         }
+
+        response = Normalizer.normalize(response, Normalizer.Form.NFD);
+        response = response.replaceAll("\\P{InBasic_Latin}", "");
+
         // Sending back response to the client
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream outStream = httpExchange.getResponseBody();
