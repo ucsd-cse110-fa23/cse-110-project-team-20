@@ -15,12 +15,18 @@ public class ServerConfiguration implements IOpenAIConfiguration, IMongoDBConfig
     private String connectionString;
     private String apiKey;
 
+    private String hostname = "localhost";
+    private int port = 8100;
+
     public ServerConfiguration()
     {
         Properties properties = new Properties();
 
         try {
             properties.load(new FileInputStream(PROPERTIES_FILENAME));
+
+            hostname = properties.getProperty("server.hostname", hostname);
+            port = Integer.parseInt(properties.getProperty("server.port", String.valueOf(port)));
 
             connectionString = properties.getProperty("mongodb.connection_string", "");
             apiKey = properties.getProperty("chatgpt.api_key", "");
@@ -41,5 +47,17 @@ public class ServerConfiguration implements IOpenAIConfiguration, IMongoDBConfig
     apiKey()
     {
         return apiKey;
+    }
+
+    public String
+    getHostname()
+    {
+        return hostname;
+    }
+
+    public int
+    getPort()
+    {
+        return port;
     }
 }

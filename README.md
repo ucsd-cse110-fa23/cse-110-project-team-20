@@ -8,13 +8,14 @@ This project contains PantryPal app and server by Team 20 CSE110 Fall 2023.
 
 1. Download the repository in full. Ensure you have Java JDK, JavaFX, and Gradle installed.
 2. Open a terminal and navigate to the root folder "CSE-110-PROJECT-TEAM-20". We recommend Powershell or Git Bash.
-3. If you want to use non-mock data, rename `server.dist.properties` to `server.properties` and add a OpenAI API key for Whipser and ChatGPT, Dall-E, and add database connection string as described below.
+3. If you want to use non-mock data, rename `server.dist.properties` to `server.properties` and add a OpenAI API key, and server setting. Also add database connection string as described in Server Configuration section.
 4. Run these commands in order, letting each one fully complete before the next:
 
 ```
 ./gradlew runServer # will display available ip addresses
-./gradlew runServer --args="<ip address> <port>"
 ```
+
+**NOTE:** If the server need to be accessed from outside of localhost, please make sure to update the config as well.
 
 # How to Use
 
@@ -35,7 +36,7 @@ This project contains PantryPal app and server by Team 20 CSE110 Fall 2023.
 
 ### MongoDB Atlas Cluster setup
 
-Update `app.properties` with a MongoDB connection string from [MongoDB Atlas](https://cloud.mongodb.com/v2). Check [the lab 6](https://docs.google.com/document/d/1mzgUjWQSn3IV68H4V07r1A1fGs21yY9rm188HWWr2Hs/edit#heading=h.z1qnwebb5puw) to get connection string.
+Update `server.properties` with a MongoDB connection string from [MongoDB Atlas](https://cloud.mongodb.com/v2). Check [the lab 6](https://docs.google.com/document/d/1mzgUjWQSn3IV68H4V07r1A1fGs21yY9rm188HWWr2Hs/edit#heading=h.z1qnwebb5puw) to get connection string.
 
 ```
 mongodb.connection_string=mongodb+srv://<username>:<password>@cluster0.ttsc32s.mongodb.net/?retryWrites=true&w=majority
@@ -54,7 +55,7 @@ docker run -d --name pantrypal-mongo -p 27017:27017  \
       mongo
 ```
 
-Update `app.properties` with a MongoDB connection string.
+Update `server.properties` with a MongoDB connection string.
 
 ```
 mongodb.connection_string=mongodb://mongoadmin:secret@localhost:27017/

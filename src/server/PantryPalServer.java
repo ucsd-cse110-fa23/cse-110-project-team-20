@@ -41,18 +41,13 @@ public class PantryPalServer {
     public static void
     main(String[] args) throws IOException
     {
-        // helper for identify the current server
-        if (args.length < 2) {
-            printArgsRequired();
-            return;
-        }
+        ServerConfiguration configuration = new ServerConfiguration();
 
-        try {
-            SERVER_HOSTNAME = args[0]; // expected to be server IP
-            SERVER_PORT = Integer.valueOf(args[1]); // expected to be server port
-        } catch (Exception e) {
-            printArgsParseError();
-            return;
+        SERVER_HOSTNAME = configuration.getHostname(); // expected to be server IP
+        SERVER_PORT = configuration.getPort(); // expected to be server port
+        
+        if (SERVER_HOSTNAME.equals("localhost")) {
+            printServerSettingInfo();
         }
 
         // create a thread pool to handle requests
@@ -62,8 +57,6 @@ public class PantryPalServer {
         // create a server
         HttpServer server =
             HttpServer.create(new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT), 0);
-
-        ServerConfiguration configuration = new ServerConfiguration();
 
         IAccountContext accountContext = new AccountContext();
 
@@ -135,28 +128,20 @@ public class PantryPalServer {
         server.setExecutor(threadPoolExecutor);
         server.start();
 
-        System.out.println("[INFO] Server started on " + SERVER_HOSTNAME + " under port " + SERVER_PORT);
+        System.out.println("[config:INFO] Server started on " + SERVER_HOSTNAME + " under port " + SERVER_PORT);
     }
 
     private static void
-    printArgsRequired()
+    printServerSettingInfo()
     {
-        System.out.println("[INFO] The server is not running because of missing IP address.");
-        System.out.println("[INFO] Please choose one of IP address from above and pass it as an argument.");
+        System.out.println("[config:INFO] The server is up and running on localhost. This server is only open");
+        System.out.println("[config:INFO]   to access from the same computer.");
+        System.out.println("[config:INFO] If the server need to be public choose one of IP address from below");
+        System.out.println("[config:INFO]   and update the configuration in server.properties.");
         System.out.println("");
-
         printCurrentServerAddress();
-
         System.out.println("");
-        System.out.println("[INFO] Then, start the server with argument. e.g. ./gradlew runServer --args=\"<ip address> <port>\"");
         System.out.println("");
-    }
-
-    private static void
-    printArgsParseError()
-    {
-        System.err.println("[ERROR] Failed to parse arguments.");
-        System.err.println("[INFO] Please use this format: ./gradlew runServer --args=\"<ip address> <port>\"");
     }
 
     private static void
