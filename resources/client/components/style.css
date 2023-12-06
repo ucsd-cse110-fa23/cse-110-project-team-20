@@ -35,10 +35,7 @@
 }
 
 .recipe-image {
-  -fx-clip-path: circle();
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 0);
-
-  clip-path: circle();
 }
 
 /**
@@ -230,7 +227,6 @@
 
 
   background-color: #e0e0e0;
-  transform: scale(0.7, 0.7);
 }
 
 .filter-combo-box .arrow-button:hover {
