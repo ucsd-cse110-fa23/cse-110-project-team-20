@@ -19,13 +19,9 @@ public class AppConfiguration {
 
         try {
             properties.load(new FileInputStream(PROPERTIES_FILENAME));
-
             apiUrl = properties.getProperty("server.api_url", apiUrl);
-        } catch (FileNotFoundException e) {
-            System.out.println("[WARNING] app.properties is missing.");
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("[INFO] Cannot load app.properties config. The app is running with a default setting.");
         }
     }
 
