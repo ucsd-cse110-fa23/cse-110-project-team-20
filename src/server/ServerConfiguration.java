@@ -10,7 +10,7 @@ import server.mongodb.IMongoDBConfiguration;
  */
 public class ServerConfiguration implements IOpenAIConfiguration, IMongoDBConfiguration {
     // default file name for the configuration file
-    private static final String PROPERTIES_FILENAME = "app.properties";
+    private static final String PROPERTIES_FILENAME = "server.properties";
 
     private String connectionString;
     private String apiKey;
