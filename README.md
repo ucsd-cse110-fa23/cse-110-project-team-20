@@ -12,10 +12,10 @@ This project contains PantryPal app and server by Team 20 CSE110 Fall 2023.
 4. Run these commands in order, letting each one fully complete before the next:
 
 ```
-./gradlew runServer # will display available ip addresses
+./gradlew runServer
 ```
 
-**NOTE:** If the server need to be accessed from outside of localhost, please make sure to update the config as well.
+**NOTE:** If the server need to be accessed from outside of localhost, please make sure to update the config as well. If the server indicates that `localhost` is in the config, it will prompt possible IP addresses for the configuration.
 
 # How to Use
 
