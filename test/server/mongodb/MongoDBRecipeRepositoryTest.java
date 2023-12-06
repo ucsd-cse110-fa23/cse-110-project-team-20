@@ -14,6 +14,7 @@ import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import java.util.Date;
 import java.util.List;
+import java.util.Calendar;
 import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,9 @@ public class MongoDBRecipeRepositoryTest {
     private IMongoDBConfiguration config;
     private ISharedRecipeConfiguration shareConfig;
     private IAccountContext accountContext;
+
+    private Date oldDate;
+    private Date recentDate;
 
     @BeforeEach
     void
@@ -51,6 +55,13 @@ public class MongoDBRecipeRepositoryTest {
         shareConfig = () -> "http://localhost/recipe/shared?id=";
 
         accountContext = new AccountContext();
+
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(2023, 11, 1);
+        oldDate = cal.getTime();
+        cal.set(2023, 12, 1);
+        recentDate = cal.getTime();
     }
 
     @AfterEach
@@ -95,14 +106,14 @@ public class MongoDBRecipeRepositoryTest {
                                  .append("ingredients", "some ingredients 0")
                                  .append("meal_type", "some meal type 0")
                                  .append("shared_url", "some-shared-url")
-                                 .append("created_at", new Date()));
+                                 .append("created_at", oldDate));
         collection.insertOne(new Document()
                                  .append("username", "some username")
                                  .append("title", "some title 1")
                                  .append("description", "some desc 1")
                                  .append("ingredients", "some ingredients 1")
                                  .append("meal_type", "some meal type 1")
-                                 .append("created_at", new Date()));
+                                 .append("created_at", recentDate));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
@@ -138,14 +149,14 @@ public class MongoDBRecipeRepositoryTest {
                                  .append("description", "some desc 0")
                                  .append("ingredients", "some ingredients 0")
                                  .append("meal_type", "some meal type 0")
-                                 .append("created_at", new Date()));
+                                 .append("created_at", oldDate));
         collection.insertOne(new Document()
                                  .append("username", "some username")
                                  .append("title", "some title 3")
                                  .append("description", "some desc 1")
                                  .append("ingredients", "some ingredients 1")
                                  .append("meal_type", "some meal type 1")
-                                 .append("created_at", new Date()));
+                                 .append("created_at", recentDate));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
@@ -173,14 +184,14 @@ public class MongoDBRecipeRepositoryTest {
                                  .append("description", "some desc 0")
                                  .append("ingredients", "some ingredients 0")
                                  .append("meal_type", "some meal type 0")
-                                 .append("created_at", new Date()));
+                                 .append("created_at", oldDate));
         collection.insertOne(new Document()
                                  .append("username", "some username")
                                  .append("title", "some title 1")
                                  .append("description", "some desc 1")
                                  .append("ingredients", "some ingredients 1")
                                  .append("meal_type", "some meal type 1")
-                                 .append("created_at", new Date()));
+                                 .append("created_at", recentDate));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
@@ -206,14 +217,14 @@ public class MongoDBRecipeRepositoryTest {
                                  .append("description", "some desc 0")
                                  .append("ingredients", "some ingredients 0")
                                  .append("meal_type", "some meal type 0")
-                                 .append("created_at", new Date()));
+                                 .append("created_at", oldDate));
         collection.insertOne(new Document()
                                  .append("username", "some username")
                                  .append("title", "some title 1")
                                  .append("description", "some desc 1")
                                  .append("ingredients", "some ingredients 1")
                                  .append("meal_type", "some meal type 1")
-                                 .append("created_at", new Date()));
+                                 .append("created_at", recentDate));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
@@ -258,7 +269,7 @@ public class MongoDBRecipeRepositoryTest {
                         .append("description", "some desc 0")
                         .append("ingredients", "some ingredients 0")
                         .append("meal_type", "some meal type 0")
-                        .append("created_at", new Date()));
+                        .append("created_at", oldDate));
         collection
                 .insertOne(new Document()
                         .append("username", "some username")
@@ -266,7 +277,7 @@ public class MongoDBRecipeRepositoryTest {
                         .append("description", "some desc 1")
                         .append("ingredients", "some ingredients 1")
                         .append("meal_type", "some meal type 1")
-                        .append("created_at", new Date()));
+                        .append("created_at", recentDate));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
@@ -291,7 +302,7 @@ public class MongoDBRecipeRepositoryTest {
                         .append("description", "some desc 0")
                         .append("ingredients", "some ingredients 0")
                         .append("meal_type", "some meal type 0")
-                        .append("created_at", new Date()));
+                        .append("created_at", oldDate));
         collection
                 .insertOne(new Document()
                         .append("username", "some username")
@@ -299,7 +310,7 @@ public class MongoDBRecipeRepositoryTest {
                         .append("description", "some desc 1")
                         .append("ingredients", "some ingredients 1")
                         .append("meal_type", "some meal type 1")
-                        .append("created_at", new Date()));
+                        .append("created_at", recentDate));
 
         accountContext.setUsername("some username");
         MongoDBRecipeRepository repository = new MongoDBRecipeRepository(config, shareConfig, accountContext);
