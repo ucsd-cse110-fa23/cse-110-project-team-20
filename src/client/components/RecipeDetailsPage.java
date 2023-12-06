@@ -15,6 +15,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /*
@@ -26,7 +27,7 @@ import javafx.scene.paint.Color;
  */
 public class RecipeDetailsPage extends BorderPane {
     private RecipeHeader header;
-    private Label body;
+    private VBox body;
     private DetailsFooter footer;
 
     public RecipeDetailsPage()
@@ -39,12 +40,11 @@ public class RecipeDetailsPage extends BorderPane {
         header.getStyleClass().add("recipedetails-header");
 
         // style body
-        body = new Label();
-        body.setWrapText(true);
-        body.getStyleClass().add("recipe-body");
+        body = new VBox();
 
         ScrollPane scrollPane = new ScrollPane(body);
         scrollPane.getStyleClass().add("recipe-scroll-pane");
+        scrollPane.setFitToWidth(true);
 
         // style footer
         footer = new DetailsFooter();
@@ -86,13 +86,19 @@ public class RecipeDetailsPage extends BorderPane {
         recipeTitle.setWrapText(true);
         recipeTitle.getStyleClass().add("recipe-title");
         this.header.setCenter(recipeTitle);
-        this.body.setText(recipe.getDescription());
+
+        Label recipeDescription = new Label(recipe.getDescription());
+        recipeDescription.getStyleClass().add("recipe-body");
         String imageurl = recipe.getImageUrl();
         ImageView imageView = new ImageView(new Image(imageurl));
-        imageView.setFitWidth(100);
-        imageView.setFitHeight(100);
+        imageView.setFitWidth(200);
+        imageView.setFitHeight(200);
         imageView.getStyleClass().add("recipe-image");
-        this.setLeft(imageView);
+        BorderPane pane = new BorderPane();
+        pane.setPrefSize(500, 200);
+        pane.setCenter(imageView);
+
+        this.body.getChildren().addAll(pane, recipeDescription);
     }
 }
 
